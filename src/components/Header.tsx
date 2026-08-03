@@ -72,7 +72,7 @@ export default function Header() {
 
   return (
     <div className="sticky top-0 z-50 w-full px-4 pt-3 pb-1 md:px-8 md:pt-4 md:pb-2 bg-transparent">
-      <header className="mx-auto max-w-7xl rounded-full bg-[#EAEAEA]/80 backdrop-blur-md pl-8 pr-4 py-3 flex items-center justify-between shadow-sm">
+      <header className="mx-auto max-w-7xl rounded-full bg-[#EAEAEA]/80 dark:bg-zinc-900/85 border border-zinc-200/50 dark:border-zinc-800/80 backdrop-blur-md pl-8 pr-4 py-3 flex items-center justify-between shadow-sm transition-all duration-200">
         {/* Logo */}
         <Link href="/" className="relative w-36 h-9 md:w-44 md:h-11 overflow-hidden flex items-center justify-center">
           <Image
@@ -80,7 +80,15 @@ export default function Header() {
             alt="Digitory Logo"
             width={400}
             height={400}
-            className="w-36 h-36 md:w-44 md:h-44 object-contain shrink-0"
+            className="w-36 h-36 md:w-44 md:h-44 object-contain shrink-0 dark:hidden"
+            priority
+          />
+          <Image
+            src="/Digitory-03.png"
+            alt="Digitory Logo"
+            width={400}
+            height={400}
+            className="w-36 h-36 md:w-44 md:h-44 object-contain shrink-0 hidden dark:block"
             priority
           />
         </Link>
@@ -91,7 +99,7 @@ export default function Header() {
             <Link
               key={link.label}
               href={link.href}
-              className="text-[15px] font-medium text-zinc-650 hover:text-black transition-colors duration-200"
+              className="text-[15px] font-medium text-zinc-650 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors duration-200"
             >
               {link.label}
             </Link>
@@ -117,7 +125,7 @@ export default function Header() {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 hover:bg-black/5"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/10"
             aria-label="Toggle navigation menu"
           >
             {isMenuOpen ? (
@@ -136,7 +144,7 @@ export default function Header() {
       {/* Mobile Menu Panel */}
       <div
         className={`md:hidden transition-all duration-200 ease-in-out ${isMenuOpen
-          ? 'max-h-96 opacity-100 mt-3 border border-zinc-100 rounded-3xl bg-[#EAEAEA]/90 backdrop-blur-md p-6 shadow-lg'
+          ? 'max-h-96 opacity-100 mt-3 border border-zinc-100 dark:border-zinc-800 rounded-3xl bg-[#EAEAEA]/90 dark:bg-zinc-900/90 backdrop-blur-md p-6 shadow-lg'
           : 'max-h-0 opacity-0 overflow-hidden pointer-events-none'
           }`}
       >
@@ -146,12 +154,12 @@ export default function Header() {
               key={link.label}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
-              className="text-[15px] font-medium text-zinc-700 hover:text-black transition-colors"
+              className="text-[15px] font-medium text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors"
             >
               {link.label}
             </Link>
           ))}
-          <div className="mt-2 pt-4 border-t border-zinc-200">
+          <div className="mt-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
             <Link
               href="/request-demo"
               onClick={() => setIsMenuOpen(false)}
