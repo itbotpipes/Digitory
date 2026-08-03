@@ -1,0 +1,66 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+export default function AboutHero() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 md:px-8 pt-8 pb-6 md:pt-12 md:pb-10 lg:pt-16 lg:pb-12">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8 items-center">
+        
+        {/* Left Content Column */}
+        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] transition-colors duration-300">
+            Software for Real
+            <br />
+            <span className="text-[#FF4F18]">Restaurant Problems</span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-2xl leading-relaxed transition-colors duration-300">
+            Digitory started on restaurant floors, not in an office. We help restaurants run better with one simple system for billing, inventory, and reports.
+          </p>
+
+          <div className="flex flex-wrap gap-4 items-center pt-2">
+            <Link
+              href="/request-demo"
+              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+            >
+              Book a demo
+            </Link>
+            <Link
+              href="/solutions"
+              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+            >
+              See how it works
+            </Link>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-100 dark:border-zinc-900/60 transition-colors duration-300">
+            <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-450 font-medium">
+              Made in India. Made for Indian restaurants.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Image Column */}
+        <div className="lg:col-span-5 flex justify-center w-full relative">
+          <div className="relative w-full max-w-[420px] aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden flex items-center justify-center">
+            {/* Subtle glow background */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#FF4F18]/5 to-[#FF4F18]/10 dark:from-[#FF4F18]/10 dark:to-transparent rounded-[32px] blur-2xl -z-10" />
+            
+            <Image
+              src="/abouthero.jpeg"
+              alt="About Digitory"
+              width={420}
+              height={525}
+              priority
+              className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500 ease-out"
+            />
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
