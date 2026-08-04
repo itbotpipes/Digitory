@@ -14,21 +14,21 @@ export default function RestaurantOSHero() {
             <div className="flex items-center gap-2 bg-[#FFF3EF] px-3.5 py-1.5 rounded-full select-none">
               <span className="h-2 w-2 rounded-full bg-[#FF4F18]"></span>
               <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
-                Restaurant Operating System
+                Solutions
               </span>
             </div>
           </div>
 
           {/* Heading */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-            Manage rush hours,
+            Spend less time managing problems.
             <br />
-            <span className="text-[#FF4F18]">not rush.</span>
+            <span className="text-[#FF4F18]">Spend more time serving customers.</span>
           </h2>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-xl leading-relaxed">
-            From lightning-fast billing counters and kitchen display screens to automated inventory auto-deduction and multi-outlet reporting — Digitory helps you operate smarter and grow profitably.
+            Running a restaurant is busy enough. Digitory brings billing, orders, inventory, kitchen management, and reports into one simple system, so your team can work faster and with fewer mistakes.
           </p>
 
           {/* Action CTAs */}
@@ -37,7 +37,7 @@ export default function RestaurantOSHero() {
               Book a Live Demo
             </button>
             <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-              Explore Features <span className="text-zinc-600 font-normal">↓</span>
+              Explore Features
             </button>
           </div>
 

@@ -20,20 +20,30 @@ export default function RestaurantTypes() {
       title: "Quick Service Restaurants (QSR)",
       description: "Lightning-fast billing, kitchen display sync, token systems, and self-ordering kiosks to handle long lines easily.",
     },
-    "Cloud Kitchen": {
+    "Cloud Kitchens": {
       innerBadge: "CLOUD KITCHEN SUITE",
       title: "Cloud Kitchens & Delivery Brands",
       description: "2-way integrations with Swiggy and Zomato, automated order dispatching, unified menu pushes, and central inventory management.",
     },
-    "Café": {
+    "Cafés": {
       innerBadge: "COFFEE & BAKERY SUITE",
       title: "Cafés, Bakeries & Quick Bites",
       description: "Customized order billing modifiers, combo items, loyalty reward programs, and offline-first terminal reliability.",
     },
+    "Bars & Breweries": {
+      innerBadge: "BAR & BREWERY SUITE",
+      title: "Bars & Breweries",
+      description: "Open tab management, quick bartender reordering, table-side drink service, and liquor inventory tracking.",
+    },
+    "Multi-Outlet Chains": {
+      innerBadge: "ENTERPRISE CHAIN SUITE",
+      title: "Multi-Outlet Restaurant Chains",
+      description: "Compare outlet metrics, centrally push menus, sync price sheets, and streamline stock transfers.",
+    },
   };
 
   const [activeTab, setActiveTab] = useState<string>("Fine Dining");
-  const activeData = types[activeTab];
+  const activeData = types[activeTab] || types["Fine Dining"];
 
   return (
     <section id="restaurant-types" className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
@@ -41,11 +51,14 @@ export default function RestaurantTypes() {
       {/* Header Block */}
       <div className="text-left mb-10 md:mb-12">
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          F&B Model Tailored
+          Tailored to your needs
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
-          Built for <span className="text-[#FF4F18]">your restaurant type</span>
+          Built for <span className="text-[#FF4F18]">every type of restaurant</span>
         </h2>
+        <p className="text-base md:text-lg text-[#555] leading-relaxed">
+          Whether you own a single café or a growing restaurant chain, Digitory is designed to fit the way you work.
+        </p>
       </div>
 
       {/* Category Tab Selector */}

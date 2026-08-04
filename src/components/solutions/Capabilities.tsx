@@ -49,14 +49,11 @@ export default function Capabilities() {
       {/* 1. Header Area */}
       <div className="mb-12">
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          System Capability Matrix
+          Features Matrix
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
-          6 Core Platform <span className="text-[#FF4F18]">Capabilities</span>
+          Six powerful features to <span className="text-[#FF4F18]">help your restaurant run better</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-2xl">
-          Engineered without compromise for high-turnover F&B operators.
-        </p>
       </div>
 
       {/* 2. Grid Area */}
@@ -78,10 +75,10 @@ export default function Capabilities() {
 
             {/* Title & Description */}
             <h3 className="text-2xl font-black text-[#111111] tracking-tight">
-              Orders & billing
+              Orders & Billing
             </h3>
             <p className="text-sm text-zinc-600 leading-relaxed max-w-xl">
-              From dine-in to online and direct orders, every bill, every payment and every table flows through one seamless system.
+              Take dine-in, takeaway, online, and direct orders from one system. Create bills quickly, accept different payment methods, and keep every order organised without switching between multiple apps.
             </p>
           </div>
 
@@ -169,10 +166,10 @@ export default function Capabilities() {
 
             <div className="space-y-3">
               <h3 className="text-xl font-black text-[#111111]">
-                Kitchen display system
+                Kitchen Display System (KDS)
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
-                Every order reaches the right station instantly. Less shouting. Less confusion. Faster service.
+                Orders reach the kitchen instantly. Your chefs know exactly what to prepare and in what order, reducing confusion, missed orders, and waiting time. Serve customers faster, even during busy hours.
               </p>
             </div>
           </div>
@@ -187,8 +184,8 @@ export default function Capabilities() {
 
       </div>
 
-      {/* Row 2 - Cards 3, 4, 5 (Equal 3-column width) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+      {/* Row 2 - Cards 3, 4, 5, 6 (Equal 4-column width on desktop) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
         
         {/* Card 3: Smart Inventory */}
         <div className="bg-white border border-zinc-200/60 rounded-[32px] p-6 md:p-8 flex flex-col justify-between gap-8 shadow-2xs">
@@ -206,10 +203,10 @@ export default function Capabilities() {
 
             <div className="space-y-3">
               <h3 className="text-xl font-black text-[#111111]">
-                Inventory that thinks ahead
+                Smart Inventory
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
-                Every dish updates your inventory automatically. Know what's running low before your chef does.
+                Keep track of your stock automatically. Whenever a dish is sold, the required ingredients are updated in your inventory. Know what's running low before you run out, and restock on time.
               </p>
             </div>
           </div>
@@ -238,10 +235,10 @@ export default function Capabilities() {
 
             <div className="space-y-3">
               <h3 className="text-xl font-black text-[#111111]">
-                Live business dashboard
+                Live Business Dashboard
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
-                Sales. Orders. Inventory. Outlet performance. Everything you need to know, in one place, in real time.
+                See how your restaurant is performing at any moment. Track sales, orders, inventory, staff performance, and business reports from one easy dashboard. Whether you're in the restaurant or away from it, you always stay connected.
               </p>
             </div>
           </div>
@@ -254,11 +251,11 @@ export default function Capabilities() {
           </div>
         </div>
 
-        {/* Card 5: One Flow & Chains */}
+        {/* Card 5: Multi-Outlet Management */}
         <div className="bg-white border border-zinc-200/60 rounded-[32px] p-6 md:p-8 flex flex-col justify-between gap-8 shadow-2xs">
           <div className="space-y-6">
             <span className="bg-[#FFF3EF] text-[#FF4F18] text-[10px] font-extrabold px-3 py-1.5 rounded-lg uppercase tracking-wider inline-block">
-              05 & 06 • One Flow & Chains
+              05 • Multi-Outlet Management
             </span>
 
             {/* Icon */}
@@ -273,7 +270,7 @@ export default function Capabilities() {
                 Multi-Outlet Management
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
-                Whether you're managing 1 outlet or 20, get complete visibility without chasing managers.
+                Managing multiple outlets shouldn't mean managing more stress. Digitory lets you monitor all your locations from one place, making it easy to compare sales, update menus, manage stock, and keep every outlet running smoothly.
               </p>
             </div>
           </div>
@@ -283,6 +280,38 @@ export default function Capabilities() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zM2.25 12h19.5m-3.18-5.25H5.43m13.14 10.5H5.43M12 3a15.3 15.3 0 014 9 15.3 15.3 0 01-4 9 15.3 15.3 0 01-4-9z" />
             </svg>
             Global Menu & Price Push
+          </div>
+        </div>
+
+        {/* Card 6: One Connected System */}
+        <div className="bg-white border border-zinc-200/60 rounded-[32px] p-6 md:p-8 flex flex-col justify-between gap-8 shadow-2xs">
+          <div className="space-y-6">
+            <span className="bg-[#FFF3EF] text-[#FF4F18] text-[10px] font-extrabold px-3 py-1.5 rounded-lg uppercase tracking-wider inline-block">
+              06 • One Connected System
+            </span>
+
+            {/* Icon */}
+            <div className="w-12 h-12 rounded-2xl bg-[#FFF3EF] text-[#FF4F18] flex items-center justify-center shadow-3xs">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+              </svg>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-xl font-black text-[#111111]">
+                One Connected System
+              </h3>
+              <p className="text-sm text-zinc-550 leading-relaxed">
+                No more jumping between different software. Billing, kitchen, inventory, reports, and customer information all work together, helping your team save time and reduce mistakes. Everything stays connected, so your restaurant runs more efficiently.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#FFF3EF] text-[#FF4F18] text-xs font-extrabold px-4 py-3.5 rounded-2xl flex items-center gap-2 border border-orange-100">
+            <svg className="w-4 h-4 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            100% Real-Time Sync
           </div>
         </div>
 

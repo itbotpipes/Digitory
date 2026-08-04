@@ -65,23 +65,25 @@ export default function RoiCalculator() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
-      
+
       {/* Header Block */}
       <div className="text-left mb-10 md:mb-12">
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          ROI Calculator & Outcomes
+          Savings Calculator
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
-          Calculate your <span className="text-[#FF4F18]">Monthly Savings</span>
+          See how much <span className="text-[#FF4F18]">you can save</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
-          Adjust the sliders below to estimate how much food waste and labor hours Digitory saves for your business.
+        <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-3xl">
+          Small improvements every day can make a big difference. Use our savings calculator to see how Digitory can help reduce food waste, save staff time, and improve your restaurant's daily operations. Run your restaurant smarter, save more, and focus on what matters most—serving great food and creating happy customers.
+          <br />
+
         </p>
       </div>
 
       {/* Main Calculator Panel */}
       <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-2xs grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left mb-12">
-        
+
         {/* Left Side: Sliders (7 Cols) */}
         <div className="md:col-span-7 space-y-8 pr-0 md:pr-4">
           {/* Slider 1: Monthly Orders */}

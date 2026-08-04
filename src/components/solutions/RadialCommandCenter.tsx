@@ -123,13 +123,13 @@ export default function RadialCommandCenter() {
       {/* Header Block */}
       <div className="text-left mb-12 md:mb-16 animate-fade-in">
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Radial Command Center
+          Features Overview
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
-          The Centralized <span className="text-[#FF4F18]">Restaurant Brain</span>
+          Everything your restaurant needs, <span className="text-[#FF4F18]">in one place</span>
         </h2>
         <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
-          Click any module around the central Digitory brain to inspect real-time performance indicators and operational metrics.
+          Digitory connects every part of your restaurant, from the front counter to the kitchen and from inventory to business reports. With everything working together, your daily operations become simpler and easier to manage.
         </p>
       </div>
 
