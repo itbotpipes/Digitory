@@ -86,7 +86,7 @@ export default function Capabilities() {
           </div>
 
           {/* Interactive Simulator Box */}
-          <div className="bg-white rounded-2xl p-5 border border-zinc-150 shadow-3xs flex flex-col gap-5 select-none">
+          <div className="bg-white rounded-2xl p-5 border border-zinc-200/50 shadow-3xs flex flex-col gap-5 select-none">
             
             {/* Simulator Header */}
             <div className="flex items-center justify-between border-b border-zinc-100 pb-3">

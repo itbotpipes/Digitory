@@ -18,13 +18,13 @@ export default function RoiCalculator() {
   // (3500 * 0.008) + (2 * 4) = 36
   const hoursSaved = Math.round((orders * 0.008) + (outlets * 4));
 
-  // Animate/calculate outcomes on slider change
+  // Animate outcomes once on page load
   useEffect(() => {
-    // Dynamic values based on inputs
-    const targetTurnover = Math.min(Math.round(15 + outlets * 3.5), 35);
-    const targetWastage = Math.min(Math.round(18 + (orders / 250)), 35);
-    const targetAccuracy = Math.min(Math.round(92 + (orders / 600)), 99.8);
-    const targetSavedHrs = Math.round(5 + (orders * 0.002) + (outlets * 1.5));
+    // Standard static target values
+    const targetTurnover = 22;
+    const targetWastage = 32;
+    const targetAccuracy = 98;
+    const targetSavedHrs = 15;
 
     // Simple smooth stepping simulation for counter animation
     let currentTurnover = 0;
@@ -61,7 +61,7 @@ export default function RoiCalculator() {
     }, 20);
 
     return () => clearInterval(timer);
-  }, [orders, outlets]);
+  }, []);
 
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
@@ -129,7 +129,7 @@ export default function RoiCalculator() {
 
         {/* Right Side: Results Display Card (5 Cols) */}
         <div className="md:col-span-5">
-          <div className="bg-white rounded-2xl p-6 border border-zinc-150 flex flex-col items-center justify-center text-center shadow-3xs select-none min-h-[160px]">
+          <div className="bg-white rounded-2xl p-6 border border-zinc-200/50 flex flex-col items-center justify-center text-center shadow-3xs select-none min-h-[160px]">
             <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest mb-3 block">
               Estimated Monthly Savings
             </span>

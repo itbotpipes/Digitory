@@ -116,7 +116,7 @@ export default function ChainControlDeck() {
             </div>
 
             {/* Inner Revenue Display Card */}
-            <div className="bg-white rounded-2xl p-8 border border-zinc-150 flex flex-col items-center justify-center text-center shadow-3xs">
+            <div className="bg-white rounded-2xl p-8 border border-zinc-200/50 flex flex-col items-center justify-center text-center shadow-3xs">
               <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">
                 Location Revenue
               </span>

@@ -14,11 +14,11 @@ const FOOTER_COLUMNS = [
   },
   {
     title: "COMPANY",
-    links: ["About", "Blog", "Solutions", "Contact"]
+    links: ["About", "Blog", "Careers", "Partnership"]
   },
   {
     title: "CONTACT",
-    links: ["Book a Demo", "info@digitory.com", "+91 70225 11122"]
+    links: ["Book a Demo", "hello@digitory.in", "+91 95350 XXXXX"]
   }
 ];
 
@@ -55,37 +55,27 @@ export default function FooterPage() {
                 aria-label="LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white transition-colors cursor-pointer select-none"
+                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white text-[13px] font-bold transition-colors cursor-pointer select-none"
               >
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                  <rect x="2" y="9" width="4" height="12" />
-                  <circle cx="4" cy="4" r="2" />
-                </svg>
+                in
               </a>
               <a
-                href="https://www.facebook.com/DigitoryS"
-                aria-label="Facebook"
+                href="https://twitter.com/dinewithdigitory"
+                aria-label="Twitter"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white transition-colors cursor-pointer select-none"
+                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white text-[13px] font-bold transition-colors cursor-pointer select-none"
               >
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
+                tw
               </a>
               <a
                 href="https://www.instagram.com/dinewithdigitory/"
                 aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white transition-colors cursor-pointer select-none"
+                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white text-[13px] font-bold transition-colors cursor-pointer select-none"
               >
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
+                ig
               </a>
             </div>
           </div>
@@ -107,6 +97,8 @@ export default function FooterPage() {
                       "Solutions": "/solutions",
                       "Contact": "/contact",
                       "Book a Demo": "/request-demo",
+                      "Careers": "#",
+                      "Partnership": "#",
                     };
 
                     if (hrefMap[link]) {
@@ -114,11 +106,7 @@ export default function FooterPage() {
                         <li key={link}>
                           <Link
                             href={hrefMap[link]}
-                            className={
-                              link === "Book a Demo"
-                                ? "inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-2.5 text-[14px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_4px_12px_rgba(255,79,24,0.3)] active:scale-[0.98] mt-2"
-                                : "text-[14px] font-semibold text-[#888888] hover:text-white transition-colors block py-0.5"
-                            }
+                            className="text-[14px] font-semibold text-[#888888] hover:text-white transition-colors block py-0.5"
                           >
                             {link}
                           </Link>
@@ -146,9 +134,9 @@ export default function FooterPage() {
         {/* Bottom copyright row */}
         <div className="border-t border-[#1F2124]/70 pt-8 mt-16 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[13px] text-[#666666] font-medium">
-            © 2026 Digitory. All rights reserved.
+            © 2026 Digitory. All Rights Reserved.
           </p>
-          <div className="flex gap-4 text-[13px] text-[#666666] font-medium">
+          <div className="flex gap-1.5 text-[13px] text-[#666666] font-medium">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <span>·</span>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
