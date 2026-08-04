@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { api } from '../../lib/api';
 import Header from '../../components/Header';
 import FooterPage from '../../components/Footer';
 
@@ -30,8 +31,14 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      await api.post('/contact-messages', {
+        name: formState.name,
+        phone: formState.phone,
+        email: formState.email,
+        interested: formState.interested,
+        message: formState.message,
+      });
       setIsSubmitting(false);
       setSubmitStatus('success');
       setFormState({
@@ -41,7 +48,11 @@ export default function ContactPage() {
         interested: 'Commercial Ads',
         message: '',
       });
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      setSubmitStatus('error');
+    }
   };
 
   return (

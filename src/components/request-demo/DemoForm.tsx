@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { api } from '../../lib/api';
 
 export default function DemoForm() {
   const [formState, setFormState] = useState({
@@ -30,8 +31,14 @@ export default function DemoForm() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // Simulate submission
-    setTimeout(() => {
+    try {
+      await api.post('/demo-requests', {
+        name: formState.name,
+        phone: formState.phone,
+        email: formState.email,
+        locations: formState.outlets,
+        goal: formState.primaryGoal,
+      });
       setIsSubmitting(false);
       setSubmitStatus('success');
       setFormState({
@@ -43,7 +50,11 @@ export default function DemoForm() {
         primaryGoal: 'Kitchen communication',
         notes: '',
       });
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      setSubmitStatus('error');
+    }
   };
 
   return (

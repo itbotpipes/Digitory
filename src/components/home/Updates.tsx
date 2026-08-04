@@ -4,51 +4,59 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
+import { api } from "../../lib/api";
+
+type UpdateItem = {
+  id: string;
+  slug: string;
+  date: string;
+  month: string;
+  category: string;
+  title: string;
+  desc: string;
+  content?: string;
+  image?: string;
+};
 
 export default function Updates() {
-  const updatesList = [
-    {
-      date: "14",
-      month: "SEP",
-      category: "PRODUCT UPDATE",
-      title: "AI Sales Forecasting",
-      desc: "Predict busy hours and prepare your staff and inventory in advance.",
-    },
-    {
-      date: "02",
-      month: "OCT",
-      category: "NEW FEATURE",
-      title: "Kitchen Display System",
-      desc: "Track every order live and improve kitchen coordination.",
-    },
-    {
-      date: "18",
-      month: "OCT",
-      category: "PLATFORM UPDATE",
-      title: "Multi-Outlet Management",
-      desc: "Manage sales, inventory, staff, and operations across all your outlets.",
-    },
-    {
-      date: "30",
-      month: "OCT",
-      category: "INTEGRATION",
-      title: "Swiggy & Zomato Integration",
-      desc: "Receive and manage online orders automatically from one platform.",
-    },
-  ];
-
-  const [selectedUpdate, setSelectedUpdate] = useState<
-    (typeof updatesList)[0] | null
-  >(null);
+  const [updatesList, setUpdatesList] = useState<UpdateItem[]>([]);
+  
+  const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
   const [isFeaturedOpen, setIsFeaturedOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const handleItemClick = (item: (typeof updatesList)[0]) => {
+  const handleItemClick = (item: UpdateItem) => {
     setSelectedUpdate(item);
   };
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
+    
+    async function loadUpdates() {
+      try {
+        const response = await api.get('/posts?limit=4');
+        const posts = response.data.docs || response.data.results || response.data || [];
+        const mapped = posts.map((p: any) => {
+          const d = new Date(p.createdAt || p.publishedAt);
+          return {
+            id: p._id,
+            slug: p.slug,
+            date: d.getDate().toString().padStart(2, '0'),
+            month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
+            category: (p.category?.name || "UPDATE").toUpperCase(),
+            title: p.title,
+            desc: p.excerpt || p.title,
+            content: p.content,
+            image: p.featuredImage || '/featured.png'
+          };
+        });
+        setUpdatesList(mapped);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadUpdates();
+    
     return () => clearTimeout(timer);
   }, []);
 

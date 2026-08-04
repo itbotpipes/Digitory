@@ -1,39 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { api } from "../../lib/api";
 
-const INSIGHTS_ITEMS = [
-  {
-    id: 1,
-    slug: "why-restaurants-in-india-trust-digitory-for-smart-operations-growth",
-    badge: "FEATURED",
-    imageSrc: "/featured.png",
-    metadata: "Operations · 8 min read · June 2025",
-    title: "Why Restaurants in India Face Operational Burnout — And What the Numbers Tell Us"
-  },
-  {
-    id: 2,
-    slug: "kitchen-automation-how-to-future-proof-restaurant-backends",
-    badge: "KITCHEN",
-    imageSrc: "/kitchen.png",
-    metadata: "Kitchen · 5 min read",
-    title: "Future-Proof Your Kitchen: How Advanced KDS Changes Rush-Hour Service"
-  },
-  {
-    id: 3,
-    slug: "data-driven-kitchen-operations",
-    badge: "DATA",
-    imageSrc: "/data.png",
-    metadata: "Technology · 6 min read",
-    title: "Data-Driven Kitchens: How Forecasting Changes Real-Time Restaurant Operations"
-  }
-];
+type InsightItem = {
+  id: string;
+  slug: string;
+  badge: string;
+  imageSrc: string;
+  metadata: string;
+  title: string;
+};
 
 export default function InsightsPage() {
+  const [insightsItems, setInsightsItems] = useState<InsightItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchInsights() {
+      try {
+        const response = await api.get('/posts?limit=3');
+        const posts = response.data.docs || response.data.results || response.data || [];
+        const mapped = posts.map((p: any) => ({
+          id: p._id,
+          slug: p.slug,
+          badge: (p.category?.name || 'FEATURED').toUpperCase(),
+          imageSrc: p.featuredImage || '/featured.png',
+          metadata: `${p.category?.name || 'Operations'} · ${new Date(p.createdAt || p.publishedAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
+          title: p.title,
+        }));
+        setInsightsItems(mapped);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchInsights();
+  }, []);
 
   const minSwipeDistance = 50;
 
@@ -51,14 +56,15 @@ export default function InsightsPage() {
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
+    if (insightsItems.length === 0) return;
     if (isLeftSwipe) {
-      setActiveIndex((prev) => (prev + 1) % INSIGHTS_ITEMS.length);
+      setActiveIndex((prev) => (prev + 1) % insightsItems.length);
     } else if (isRightSwipe) {
-      setActiveIndex((prev) => (prev - 1 + INSIGHTS_ITEMS.length) % INSIGHTS_ITEMS.length);
+      setActiveIndex((prev) => (prev - 1 + insightsItems.length) % insightsItems.length);
     }
   };
 
-  const renderCard = (item: typeof INSIGHTS_ITEMS[0], isSlider: boolean = false) => {
+  const renderCard = (item: InsightItem, isSlider: boolean = false) => {
     return (
       <Link 
         href={`/blog/${item.slug}`}
@@ -122,8 +128,8 @@ export default function InsightsPage() {
         </div>
 
         {/* Desktop grid layout (hidden on mobile) */}
-        <div className="hidden md:grid grid-cols-3 gap-8 items-stretch">
-          {INSIGHTS_ITEMS.map((item) => (
+        <div className="hidden lg:grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 w-full max-w-[1280px]">
+          {insightsItems.map((item) => (
             <div key={item.id} className="h-full">
               {renderCard(item)}
             </div>
@@ -142,8 +148,8 @@ export default function InsightsPage() {
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
-              {INSIGHTS_ITEMS.map((item) => (
-                <div key={item.id} className="w-full shrink-0 px-1">
+              {insightsItems.map((item) => (
+                <div key={item.id} className="w-full shrink-0 px-2">
                   {renderCard(item, true)}
                 </div>
               ))}
@@ -153,7 +159,7 @@ export default function InsightsPage() {
           {/* Slider controls: Prev, Dots, Next */}
           <div className="flex justify-center items-center gap-4 mt-8 select-none">
             <button
-              onClick={() => setActiveIndex((prev) => (prev - 1 + INSIGHTS_ITEMS.length) % INSIGHTS_ITEMS.length)}
+              onClick={() => setActiveIndex((prev) => (prev - 1 + insightsItems.length) % insightsItems.length)}
               className="flex items-center justify-center w-10 h-10 rounded-full border border-zinc-200 text-[#111111] hover:bg-zinc-50 active:bg-zinc-100 transition-colors shadow-sm cursor-pointer"
               aria-label="Previous insight"
             >
@@ -162,8 +168,8 @@ export default function InsightsPage() {
               </svg>
             </button>
 
-            <div className="flex gap-2">
-              {INSIGHTS_ITEMS.map((_, idx) => (
+            <div className="flex justify-center gap-2">
+              {insightsItems.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveIndex(idx)}
@@ -176,7 +182,7 @@ export default function InsightsPage() {
             </div>
 
             <button
-              onClick={() => setActiveIndex((prev) => (prev + 1) % INSIGHTS_ITEMS.length)}
+              onClick={() => setActiveIndex((prev) => (prev + 1) % insightsItems.length)}
               className="flex items-center justify-center w-10 h-10 rounded-full border border-zinc-200 text-[#111111] hover:bg-zinc-50 active:bg-zinc-100 transition-colors shadow-sm cursor-pointer"
               aria-label="Next insight"
             >

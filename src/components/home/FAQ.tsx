@@ -61,7 +61,7 @@ export default function FAQPage() {
         </div>
 
         {/* Accordions Container */}
-        <div className="border-t border-zinc-100">
+        <div className="max-w-4xl mx-auto border-t border-zinc-100">
           {FAQ_ITEMS.map((item) => {
             const isOpen = openId === item.id;
             return (
