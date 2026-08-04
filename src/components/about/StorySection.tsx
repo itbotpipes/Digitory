@@ -105,10 +105,10 @@ export default function StorySection() {
         
         {/* Title */}
         <div className="max-w-3xl mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white transition-colors duration-300">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             Our <span className="text-[#FF4F18]">Story</span>
           </h2>
-          <p className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 mt-3 font-semibold">
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 mt-3 font-semibold">
             We started in kitchens, not in a boardroom.
           </p>
         </div>
@@ -148,17 +148,17 @@ export default function StorySection() {
                         {milestone.year}
                       </span>
                       <h4
-                        className={`text-lg sm:text-xl font-extrabold transition-colors duration-300 ${
-                          isActive ? 'text-zinc-900 dark:text-white' : 'text-zinc-650 dark:text-zinc-400'
+                        className={`text-lg sm:text-xl transition-all duration-300 ${
+                          isActive ? 'font-bold text-zinc-900 dark:text-white' : 'font-semibold text-zinc-450 dark:text-zinc-500'
                         }`}
                       >
                         {milestone.title}
                       </h4>
                       <p
-                        className={`text-sm sm:text-base transition-all duration-350 leading-relaxed ${
+                        className={`text-sm sm:text-base transition-all duration-300 leading-relaxed ${
                           isActive
-                            ? 'text-zinc-600 dark:text-zinc-300 font-medium'
-                            : 'text-zinc-450 dark:text-zinc-500 opacity-80'
+                            ? 'text-zinc-600 dark:text-zinc-300 font-normal'
+                            : 'text-zinc-400 dark:text-zinc-600'
                         }`}
                       >
                         {milestone.description}
@@ -171,7 +171,7 @@ export default function StorySection() {
           </div>
 
           {/* Right Column - Flowchart visual */}
-          <div className="lg:col-span-7 rounded-3xl bg-[#F8F9FA] dark:bg-[#121214] border border-zinc-200/50 dark:border-[#2a2a2e]/40 p-5 sm:p-6 flex flex-col gap-5 shadow-sm">
+          <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#121214] border border-zinc-200/50 dark:border-[#2a2a2e]/40 p-5 sm:p-6 flex flex-col gap-5 shadow-sm">
             
             {/* BEFORE Section */}
             <div className="space-y-3">

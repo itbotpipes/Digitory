@@ -23,7 +23,7 @@ export default function Features() {
       num: '03',
       title: 'Smart Inventory',
       desc: "Every order automatically updates your stock. Know what's running low before it becomes a problem.",
-      borderClasses: 'border-b border-zinc-200 md:border-b-0 md:border-r-0',
+      borderClasses: 'border-b border-zinc-200 md:border-b',
       imageSrc: '/image 7.png',
     },
     {
@@ -68,7 +68,7 @@ export default function Features() {
 
           {/* Description & Action */}
           <div className="lg:col-span-5 flex flex-col items-start gap-6">
-            <p className="text-zinc-650 text-base md:text-lg leading-relaxed max-w-md">
+            <p className="text-zinc-600 text-base md:text-lg leading-relaxed max-w-md">
               Connect your orders, kitchen, inventory, billing, and reports in one platform so your team can work faster and make fewer mistakes.
             </p>
             <Link

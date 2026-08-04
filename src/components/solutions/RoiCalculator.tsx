@@ -74,7 +74,7 @@ export default function RoiCalculator() {
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
           Calculate your <span className="text-[#FF4F18]">Monthly Savings</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-650 leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
           Adjust the sliders below to estimate how much food waste and labor hours Digitory saves for your business.
         </p>
       </div>

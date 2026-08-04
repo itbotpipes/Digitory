@@ -76,7 +76,7 @@ export default function ChainControlDeck() {
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base md:text-lg text-zinc-650 leading-relaxed max-w-xl">
+          <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-xl">
             Monitor revenue, stock transfers, and store health across cities directly from your smartphone.
           </p>
 

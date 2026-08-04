@@ -143,7 +143,7 @@ export default function OrdersPage() {
     TAB_DATA[activeTab as keyof typeof TAB_DATA] || TAB_DATA.orders;
 
   return (
-    <div className="bg-[#F8F9FA] font-sans antialiased">
+    <div className="bg-white dark:bg-[#0f1015] font-sans antialiased">
       {/* 1. Header Section */}
       <header className="w-full pt-10 md:pt-12">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

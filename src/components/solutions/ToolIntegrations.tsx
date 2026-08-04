@@ -86,7 +86,7 @@ export default function ToolIntegrations() {
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
           Connects with <span className="text-[#FF4F18]">your favorite apps</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-650 leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
           1-click setup with Swiggy, Zomato, Razorpay, Paytm, Tally, WhatsApp, and POS hardware.
         </p>
       </div>

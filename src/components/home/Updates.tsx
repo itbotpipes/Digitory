@@ -106,7 +106,7 @@ export default function Updates() {
                 <h3 className="text-base md:text-lg font-bold text-zinc-950 leading-snug">
                   Restaurant operations made simple.
                 </h3>
-                <p className="text-zinc-650 text-xs md:text-sm mt-1.5 leading-relaxed line-clamp-2">
+                <p className="text-zinc-600 text-xs md:text-sm mt-1.5 leading-relaxed line-clamp-2">
                   Digitory brings together POS, kitchen management, inventory,
                   reports, and delivery apps into one platform. Save time,
                   reduce waste, and make better business decisions with
@@ -140,7 +140,7 @@ export default function Updates() {
                   <h3 className="text-base md:text-lg font-bold text-zinc-950 leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-zinc-650 text-xs md:text-sm mt-1.5 leading-relaxed">
+                  <p className="text-zinc-600 text-xs md:text-sm mt-1.5 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -172,7 +172,7 @@ export default function Updates() {
                   Restaurant operations made simple .
                 </h3>
 
-                <p className="text-zinc-650 text-xs md:text-sm leading-relaxed mb-6">
+                <p className="text-zinc-600 text-xs md:text-sm leading-relaxed mb-6">
                   Digitory brings together POS, kitchen management, inventory,
                   reports, and delivery apps into one platform. Save time,
                   reduce waste, and make better business decisions with
@@ -254,7 +254,7 @@ export default function Updates() {
                 {/* Close Button (Matching square 'X' box in screenshot) */}
                 <button
                   onClick={() => setSelectedUpdate(null)}
-                  className="absolute top-0 right-0 p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 cursor-pointer"
+                  className="absolute top-0 right-0 p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 cursor-pointer"
                   aria-label="Close details"
                 >
                   <svg
@@ -277,7 +277,7 @@ export default function Updates() {
 
               {/* Content Area */}
               <div className="flex-1 overflow-y-auto pb-4">
-                <p className="text-zinc-650 dark:text-zinc-400 text-[14px] sm:text-base leading-relaxed mb-6 font-medium">
+                <p className="text-zinc-600 dark:text-zinc-400 text-[14px] sm:text-base leading-relaxed mb-6 font-medium">
                   {selectedUpdate.desc}
                 </p>
 
@@ -313,7 +313,7 @@ export default function Updates() {
               {/* Close Button */}
               <button
                 onClick={() => setIsFeaturedOpen(false)}
-                className="absolute top-6 right-6 p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-650 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 cursor-pointer z-20"
+                className="absolute top-6 right-6 p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 cursor-pointer z-20"
                 aria-label="Close details"
               >
                 <svg
@@ -351,7 +351,7 @@ export default function Updates() {
                   Restaurant operations made simple .
                 </h3>
 
-                <p className="text-zinc-650 dark:text-zinc-400 text-[14px] sm:text-base leading-relaxed mb-6 font-medium">
+                <p className="text-zinc-600 dark:text-zinc-400 text-[14px] sm:text-base leading-relaxed mb-6 font-medium">
                   Digitary brings together POS, Kitchen Display System,
                   Inventory Management, Analytics, and Delivery Integrations
                   into one intelligent platform. Automate daily operations,

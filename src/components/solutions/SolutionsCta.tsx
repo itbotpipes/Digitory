@@ -16,7 +16,7 @@ export default function SolutionsCta() {
             Elevate your restaurant <br />
             <span className="text-[#FF4F18]">operations today.</span>
           </h2>
-          <p className="text-base md:text-lg text-zinc-650 dark:text-zinc-400 leading-relaxed">
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Schedule a personalized 15-minute demo with our F&B solution architect.
           </p>
         </div>

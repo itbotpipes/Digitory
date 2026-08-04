@@ -124,7 +124,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             </div>
 
             {/* Right 5 columns: Intro Text */}
-            <div className="lg:col-span-5 text-base md:text-lg text-zinc-650 dark:text-zinc-300 space-y-4 leading-relaxed font-normal">
+            <div className="lg:col-span-5 text-base md:text-lg text-zinc-600 dark:text-zinc-300 space-y-4 leading-relaxed font-normal">
               <p>{article.introText}</p>
               <p>{article.secondaryIntro}</p>
             </div>
@@ -278,12 +278,12 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
                     {section.heading}
                   </h2>
                   {section.paragraphs.map((para, idx) => (
-                    <p key={idx} className="text-zinc-650 dark:text-zinc-300 leading-relaxed">
+                    <p key={idx} className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
                       {para}
                     </p>
                   ))}
                   {section.bulletPoints && (
-                    <ul className="list-disc pl-5 space-y-2 text-zinc-650 dark:text-zinc-300 pt-2">
+                    <ul className="list-disc pl-5 space-y-2 text-zinc-600 dark:text-zinc-300 pt-2">
                       {section.bulletPoints.map((item, bIdx) => (
                         <li key={bIdx}>{item}</li>
                       ))}
@@ -323,7 +323,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
                         <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 mb-1">
                           {comment.date}
                         </p>
-                        <p className="text-xs text-zinc-650 dark:text-zinc-400 leading-relaxed font-normal">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
                           {comment.text}
                         </p>
                       </div>

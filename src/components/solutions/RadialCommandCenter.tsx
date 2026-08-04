@@ -128,7 +128,7 @@ export default function RadialCommandCenter() {
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
           The Centralized <span className="text-[#FF4F18]">Restaurant Brain</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-650 leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
           Click any module around the central Digitory brain to inspect real-time performance indicators and operational metrics.
         </p>
       </div>
@@ -188,7 +188,7 @@ export default function RadialCommandCenter() {
                 <h3 className="text-2xl font-black text-[#111111] tracking-tight">
                   {activeModule.inspectorTitle}
                 </h3>
-                <p className="text-sm text-zinc-650 leading-relaxed">
+                <p className="text-sm text-zinc-600 leading-relaxed">
                   {activeModule.inspectorDesc}
                 </p>
               </div>

@@ -54,7 +54,7 @@ export default function Capabilities() {
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
           6 Core Platform <span className="text-[#FF4F18]">Capabilities</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-650 leading-relaxed max-w-2xl">
+        <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-2xl">
           Engineered without compromise for high-turnover F&B operators.
         </p>
       </div>
@@ -80,7 +80,7 @@ export default function Capabilities() {
             <h3 className="text-2xl font-black text-[#111111] tracking-tight">
               Orders & billing
             </h3>
-            <p className="text-sm text-zinc-650 leading-relaxed max-w-xl">
+            <p className="text-sm text-zinc-600 leading-relaxed max-w-xl">
               From dine-in to online and direct orders, every bill, every payment and every table flows through one seamless system.
             </p>
           </div>

@@ -153,30 +153,10 @@ export default function RestaurantOSPage() {
     <div className="bg-white font-sans antialiased text-[#111111]">
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-16">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-[#111111]">
-            What our customers say <br />
-            {/* <span className="text-[#FF4F18]">restaurant has an OS.</span> */}
+        <div className="mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-[#111111] dark:text-white">
+            What our <span className="text-[#FF4F18]">customers say</span>
           </h2>
-
-          <div>
-            <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-              <span>All stories</span>
-              <svg
-                className="w-4 h-4 text-[#111111]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                />
-              </svg>
-            </button>
-          </div>
         </div>
 
         {/* Desktop grid layout (hidden on mobile) */}

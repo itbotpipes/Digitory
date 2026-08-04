@@ -38,7 +38,7 @@ export default function BeliefsSection() {
       <div className="mx-auto max-w-7xl px-6 md:px-8 space-y-20">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 p-8 rounded-3xl bg-[#F8F9FA] dark:bg-[#121214] border border-zinc-200/50 dark:border-[#2a2a2e]/40 shadow-xs divide-y-2 divide-zinc-200/20 md:divide-y-0 md:divide-x-2 dark:divide-[#2a2a2e]/20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 p-8 rounded-3xl bg-white dark:bg-[#121214] border border-zinc-200/50 dark:border-[#2a2a2e]/40 shadow-xs divide-y-2 divide-zinc-200/20 md:divide-y-0 md:divide-x-2 dark:divide-[#2a2a2e]/20">
           {stats.map((stat, idx) => (
             <div key={idx} className="flex flex-col items-center text-center p-4 md:first:pl-0 md:last:pr-0">
               <span className="text-4xl sm:text-5xl font-extrabold text-[#FF4F18]">
@@ -58,30 +58,27 @@ export default function BeliefsSection() {
         <div className="space-y-12">
           {/* Header */}
           <div className="max-w-3xl">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15] transition-colors duration-300">
-              A few simple things <span className="text-[#FF4F18]">we believe in.</span>
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+              A few simple things <span className="text-[#FF4F18]">we <br className="hidden md:inline" />believe in.</span>
             </h2>
           </div>
 
-          {/* Grid list of beliefs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {/* 4-Column Row of Beliefs */}
+          <div className="grid grid-cols-1 md:grid-cols-4 rounded-3xl bg-white dark:bg-[#121214] border border-zinc-200/60 dark:border-zinc-800/80 divide-y md:divide-y-0 md:divide-x divide-zinc-200/60 dark:divide-zinc-800/65 shadow-2xs overflow-hidden">
             {beliefs.map((belief, idx) => (
               <div
                 key={idx}
-                className="p-8 rounded-2xl bg-[#F8F9FA] dark:bg-[#121214] border border-zinc-200/40 dark:border-[#2a2a2e]/40 shadow-[0_2px_8px_rgba(0,0,0,0.01)] hover:border-[#FF4F18]/40 hover:shadow-[0_8px_24px_rgba(255,79,24,0.05)] transition-all duration-300 group flex flex-col justify-between"
+                className="p-6 sm:p-8 flex flex-col justify-start gap-4 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 group"
               >
-                <div className="space-y-4">
-                  {/* Big Number Icon indicator */}
-                  <span className="text-sm sm:text-base font-extrabold text-zinc-400 dark:text-zinc-550 block select-none">
-                    {belief.num}
-                  </span>
-                  
-                  <h4 className="text-lg sm:text-xl font-extrabold text-zinc-900 dark:text-white group-hover:text-[#FF4F18] transition-colors duration-300">
-                    {belief.title}
-                  </h4>
-                </div>
+                <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 block">
+                  {belief.num}
+                </span>
                 
-                <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 mt-4 leading-relaxed transition-colors duration-300">
+                <h4 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-[#FF4F18] transition-colors duration-300">
+                  {belief.title}
+                </h4>
+                
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
                   {belief.description}
                 </p>
               </div>

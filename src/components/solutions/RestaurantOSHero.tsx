@@ -37,14 +37,14 @@ export default function RestaurantOSHero() {
               Book a Live Demo
             </button>
             <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-              Explore Features <span className="text-zinc-650 font-normal">↓</span>
+              Explore Features <span className="text-zinc-600 font-normal">↓</span>
             </button>
           </div>
 
           {/* Trust and Social Proof */}
           <div className="flex items-center gap-4 pt-6 border-t border-zinc-100">
             <div className="flex -space-x-3 select-none">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECECEC] text-zinc-650 font-extrabold text-[11px] border-2 border-white shadow-2xs">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECECEC] text-zinc-600 font-extrabold text-[11px] border-2 border-white shadow-2xs">
                 R
               </div>
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF3EF] text-[#FF4F18] font-extrabold text-[11px] border-2 border-white shadow-2xs">

@@ -79,15 +79,15 @@ export default function TeamSection() {
   ];
 
   return (
-    <section className="bg-[#F8F9FA] dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         
         {/* Header Block */}
         <div className="max-w-3xl mb-16 text-center mx-auto space-y-4">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white transition-colors duration-300">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             The people behind <span className="text-[#FF4F18]">Digitory</span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-550 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed transition-colors duration-300">
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
             Our team has spent real time on restaurant floors — not just behind computer screens.
           </p>
         </div>

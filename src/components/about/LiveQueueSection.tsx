@@ -55,18 +55,18 @@ export default function LiveQueueSection() {
   ];
 
   return (
-    <section className="bg-[#F8F9FA] dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column - Content */}
           <div className="lg:col-span-6 space-y-6 md:space-y-8">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15] transition-colors duration-300">
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
               We build Digitory together with the{' '}
               <span className="text-[#FF4F18]">restaurants that use it every day.</span>
             </h2>
             
-            <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-400 leading-relaxed transition-colors duration-300">
+            <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
               We don't build alone and hand over a finished app. We work closely with restaurant owners and teams — bars, breweries, cafés, cloud kitchens, and multi-outlet chains — to make sure Digitory works the way real restaurants work, even on the busiest nights.
             </p>
 
@@ -107,14 +107,14 @@ export default function LiveQueueSection() {
               {/* Tickets list */}
               <div className="divide-y divide-zinc-100 dark:divide-[#2a2a2e]/40 p-4 sm:p-6 space-y-3.5">
                 {tickets.map((t) => {
-                  let statusBg = 'bg-zinc-50 dark:bg-[#1C1C20] text-zinc-650 dark:text-zinc-400';
+                  let statusBg = 'bg-zinc-50 dark:bg-[#1C1C20] text-zinc-600 dark:text-zinc-400';
                   let isWarning = t.status === 'warning';
                   let isServed = t.status === 'served';
 
                   if (isWarning) {
                     statusBg = 'bg-orange-50 dark:bg-[#FF4F18]/15 text-[#FF4F18] border border-[#FF4F18]/25 font-extrabold';
                   } else if (isServed) {
-                    statusBg = 'bg-zinc-100 dark:bg-zinc-800/85 text-zinc-650 dark:text-zinc-350 border border-zinc-200/50 dark:border-zinc-700/60 font-extrabold';
+                    statusBg = 'bg-zinc-100 dark:bg-zinc-800/85 text-zinc-600 dark:text-zinc-350 border border-zinc-200/50 dark:border-zinc-700/60 font-extrabold';
                   }
 
                   return (

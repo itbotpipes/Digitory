@@ -18,7 +18,7 @@ export default function DemoHero() {
   };
 
   const trustCircles = [
-    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-650' },
+    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
     { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
     { text: 'B', bg: 'bg-[#FFE5D9]', textCol: 'text-orange-600' },
     { text: 'K', bg: 'bg-[#E8EAFF]', textCol: 'text-indigo-600' },

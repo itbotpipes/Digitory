@@ -80,7 +80,7 @@ export default function RestaurantTypes() {
           <h3 className="text-2xl md:text-3xl font-black text-zinc-950 tracking-tight mb-4">
             {activeData.title}
           </h3>
-          <p className="text-sm md:text-base text-zinc-650 leading-relaxed max-w-2xl">
+          <p className="text-sm md:text-base text-zinc-600 leading-relaxed max-w-2xl">
             {activeData.description}
           </p>
         </div>

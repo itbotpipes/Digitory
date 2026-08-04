@@ -12,13 +12,13 @@ export default function MissionCta() {
         <div className="text-center space-y-8 max-w-4xl mx-auto">
           
           {/* Main Statement */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15] transition-colors duration-300">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             We want every restaurant in India to run smoothly,{' '}
             <span className="text-[#FF4F18]">without chaos.</span>
           </h2>
 
           {/* Subtext */}
-          <div className="space-y-6 text-zinc-650 dark:text-zinc-400 text-base sm:text-lg leading-relaxed transition-colors duration-300 max-w-3xl mx-auto">
+          <div className="space-y-6 text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
             <p>
               Today, that means bringing billing, kitchen, inventory, and reports into one easy system. In the future, we want every restaurant — big or small — to run as smoothly as the biggest restaurant chains, without needing a big team to do it.
             </p>

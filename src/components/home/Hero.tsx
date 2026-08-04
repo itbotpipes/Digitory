@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Hero() {
   const trustCircles = [
-    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-650' },
+    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
     { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
     { text: 'B', bg: 'bg-[#FFE5D9]', textCol: 'text-orange-600' },
     { text: 'K', bg: 'bg-[#E8EAFF]', textCol: 'text-indigo-600' },
@@ -65,14 +65,14 @@ export default function Hero() {
           </div>
 
           {/* Heading */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 leading-[1.1]">
-            Manage busy hours with <span className="text-[#FF4F18]">ease</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+            Manage busy hours <span className="text-[#FF4F18]">with ease</span>
             <br />
             {/* <span className="text-[#FF4F18]">not chaos.</span> */}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-zinc-600 max-w-xl leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-xl leading-relaxed">
             From billing and inventory to customer loyalty and reports, Digitory helps you run your restaurant smoothly and grow your business.          </p>
 
           {/* CTAs */}

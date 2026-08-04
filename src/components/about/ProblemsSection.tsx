@@ -61,24 +61,21 @@ export default function ProblemsSection() {
   ];
 
   return (
-    <section className="bg-[#F8F9FA] dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         
         {/* Header Block */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
-          <div className="lg:col-span-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15] transition-colors duration-300">
+          <div className="lg:col-span-7">
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
               Running a restaurant
               <br />
               today is hard. <span className="text-[#FF4F18]">Here’s why.</span>
             </h2>
           </div>
-          <div className="lg:col-span-6 text-zinc-650 dark:text-zinc-400 space-y-4 text-base sm:text-lg leading-relaxed transition-colors duration-300">
+          <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-400 space-y-4 text-base md:text-lg leading-relaxed">
             <p>
-              Every restaurant owner deals with the same problems. Orders from many places. Many outlets to manage. A busy kitchen. Staff that keeps changing.
-            </p>
-            <p>
-              Most owners work very hard. But hard work is not enough if you can't see what's happening in your own restaurant.
+              Every restaurant owner deals with the same problems. Orders from many places. Many outlets to manage. A busy kitchen. Staff that keeps changing. Most owners work very hard. But hard work is not enough if you can't see what's happening in your own restaurant.
             </p>
           </div>
         </div>

@@ -12,12 +12,12 @@ export default function AboutHero() {
         {/* Left Content Column */}
         <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] transition-colors duration-300">
-            Software for Real
+            Software for <span className="text-[#FF4F18]">Real</span>
             <br />
             <span className="text-[#FF4F18]">Restaurant Problems</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-2xl leading-relaxed transition-colors duration-300">
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-xl leading-relaxed transition-colors duration-300">
             Digitory started on restaurant floors, not in an office. We help restaurants run better with one simple system for billing, inventory, and reports.
           </p>
 
