@@ -61,9 +61,9 @@ export default function ProblemsSection() {
   ];
 
   return (
-    <section className="bg-white dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-8 md:py-12 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
-        
+
         {/* Header Block */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
           <div className="lg:col-span-7">
@@ -75,17 +75,15 @@ export default function ProblemsSection() {
           </div>
           <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-400 space-y-4 text-base md:text-lg leading-relaxed">
             <p>
-              Managing a restaurant today is more challenging than ever. Orders come from the dine-in counter, Swiggy, Zomato, and other platforms. The kitchen has to keep up. Staff members change. If you have more than one outlet, keeping everything under control becomes even harder.
+              Running a restaurant today is more complex than ever, with orders coming from dine-in, Swiggy, Zomato, and other platforms. Managing kitchens, staff, and multiple outlets without real-time visibility can be challenging. Digitory simplifies restaurant operations by bringing everything together in one smart system.
             </p>
-            <p>
-              Restaurant owners work incredibly hard. But without the right system, it's difficult to know what's happening in real time. That's where Digitory helps.
-            </p>
+
           </div>
         </div>
 
         {/* Content Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-          
+
           {/* Left Column - Problems */}
           <div className="lg:col-span-6 flex flex-col justify-between gap-6">
             <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
@@ -93,7 +91,7 @@ export default function ProblemsSection() {
             </h3>
             <div className="space-y-6 flex-1">
               {problems.map((prob, idx) => (
-                <div 
+                <div
                   key={idx}
                   className="flex gap-4 p-6 rounded-2xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-300 group hover:-translate-y-0.5"
                 >
@@ -124,11 +122,10 @@ export default function ProblemsSection() {
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl transition-all duration-300 ${
-                      isFixed 
-                        ? 'bg-orange-50/10 dark:bg-[#FF4F18]/5 border-2 border-[#FF4F18]/30' 
+                    className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl transition-all duration-300 ${isFixed
+                        ? 'bg-orange-50/10 dark:bg-[#FF4F18]/5 border-2 border-[#FF4F18]/30'
                         : 'bg-[#F9FAFB] dark:bg-[#1C1C20]/50 border border-zinc-100 dark:border-zinc-900/30'
-                    } hover:translate-x-1`}
+                      } hover:translate-x-1`}
                   >
                     <div className="space-y-1">
                       <p className={`text-sm sm:text-base font-bold ${isFixed ? 'text-zinc-900 dark:text-white' : 'text-zinc-800 dark:text-zinc-200'}`}>

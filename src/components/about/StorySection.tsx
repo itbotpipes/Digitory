@@ -101,7 +101,7 @@ export default function StorySection() {
 
 
   return (
-    <section className="bg-white dark:bg-[#0d0d0e] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#0d0d0e] py-8 md:py-12 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         
         {/* Title */}

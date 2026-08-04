@@ -66,7 +66,7 @@ export default function TeamSection() {
   ];
 
   return (
-    <section className="bg-white dark:bg-[#121214] py-16 md:py-24 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-8 md:py-12 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         
         {/* Header Block */}
