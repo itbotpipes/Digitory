@@ -14,11 +14,11 @@ export default function AboutHero() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] transition-colors duration-300">
             Software for <span className="text-[#FF4F18]">Real</span>
             <br />
-            <span className="text-[#FF4F18]">Restaurant Problems</span>
+            <span className="text-[#FF4F18]">restaurant problems</span>
           </h1>
 
           <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-xl leading-relaxed transition-colors duration-300">
-            Digitory started on restaurant floors, not in an office. We help restaurants run better with one simple system for billing, inventory, and reports.
+            Digitory was built after spending time inside real restaurants, not in a meeting room. We know how difficult it is to manage orders, billing, inventory, and staff every day. That's why we created one simple system that helps restaurants run smoothly.
           </p>
 
           <div className="flex flex-wrap gap-4 items-center pt-2">
@@ -30,7 +30,7 @@ export default function AboutHero() {
             </Link>
             <Link
               href="/solutions"
-              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+              className="inline-flex justify-center items-center text-center rounded-full border border-zinc-300 dark:border-zinc-700 px-6 py-3 text-[15px] font-semibold text-zinc-700 dark:text-zinc-300 transition-all duration-200 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white active:scale-[0.98] cursor-pointer"
             >
               See how it works
             </Link>

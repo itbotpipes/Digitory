@@ -6,7 +6,7 @@ export default function ProblemsSection() {
   const problems = [
     {
       title: 'You find out about problems too late',
-      description: 'Stock runs out. Orders get delayed. But you only hear about it after it happens — often from a WhatsApp message at night.',
+      description: 'Stock runs out. Orders get delayed. A customer complains. Most of the time, you only find out after the problem has already happened.',
       icon: (
         <svg className="w-6 h-6 text-[#FF4F18]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -14,8 +14,8 @@ export default function ProblemsSection() {
       ),
     },
     {
-      title: 'More outlets mean more confusion',
-      description: 'What works for one outlet often breaks at the next one. More outlets should mean more growth, not more chaos.',
+      title: 'More outlets should mean more growth, not more stress',
+      description: 'Running one outlet is challenging. Running multiple outlets without one connected system can quickly become confusing. Every outlet should work together, not separately.',
       icon: (
         <svg className="w-6 h-6 text-[#FF4F18]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -23,8 +23,8 @@ export default function ProblemsSection() {
       ),
     },
     {
-      title: 'Your tools don’t work together',
-      description: 'Billing is in one place. Inventory is in another. Staff talk on WhatsApp. Connecting all of this wastes time you could spend on your customers.',
+      title: 'Too many tools. Too much confusion.',
+      description: 'Billing is on one app. Inventory is somewhere else. Staff updates come on WhatsApp. Reports are stored in another place. Switching between different tools wastes time and increases mistakes.',
       icon: (
         <svg className="w-6 h-6 text-[#FF4F18]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -35,26 +35,26 @@ export default function ProblemsSection() {
 
   const scenarios = [
     {
-      text: 'Paneer ran out mid service',
-      subtext: 'Three tables already ordered it',
+      text: 'Paneer finishes during dinner service',
+      subtext: 'Customers have already ordered it',
       status: 'Stock',
       badgeClass: 'bg-zinc-100 dark:bg-zinc-800/80 text-zinc-650 dark:text-zinc-350 border border-zinc-200 dark:border-zinc-700/60',
     },
     {
-      text: 'Zomato order missed',
-      subtext: 'Printed somewhere on the floor',
+      text: 'A Zomato order gets missed',
+      subtext: 'The printout is lost during the rush',
       status: 'Lost',
       badgeClass: 'bg-zinc-100 dark:bg-zinc-800/80 text-zinc-650 dark:text-zinc-350 border border-zinc-200 dark:border-zinc-700/60',
     },
     {
-      text: 'Cash mismatch at closing',
-      subtext: 'An hour of late night reconciling',
+      text: 'The cash doesn\'t match at closing',
+      subtext: 'The team spends another hour checking every bill',
       status: 'Delay',
       badgeClass: 'bg-zinc-100 dark:bg-zinc-800/80 text-zinc-650 dark:text-zinc-350 border border-zinc-200 dark:border-zinc-700/60',
     },
     {
-      text: 'This is exactly why we built Digitory',
-      subtext: 'One system. No more guessing.',
+      text: 'That\'s exactly why we built Digitory',
+      subtext: 'One system. Less confusion. Better control.',
       status: 'Fixed',
       badgeClass: 'bg-orange-50 dark:bg-[#FF4F18]/15 text-[#FF4F18] border border-[#FF4F18]/25',
     },
@@ -68,14 +68,17 @@ export default function ProblemsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
           <div className="lg:col-span-7">
             <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-              Running a restaurant
+              About Digitory
               <br />
-              today is hard. <span className="text-[#FF4F18]">Here’s why.</span>
+              <span className="text-[#FF4F18]">Running a restaurant isn't easy. We understand why.</span>
             </h2>
           </div>
           <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-400 space-y-4 text-base md:text-lg leading-relaxed">
             <p>
-              Every restaurant owner deals with the same problems. Orders from many places. Many outlets to manage. A busy kitchen. Staff that keeps changing. Most owners work very hard. But hard work is not enough if you can't see what's happening in your own restaurant.
+              Managing a restaurant today is more challenging than ever. Orders come from the dine-in counter, Swiggy, Zomato, and other platforms. The kitchen has to keep up. Staff members change. If you have more than one outlet, keeping everything under control becomes even harder.
+            </p>
+            <p>
+              Restaurant owners work incredibly hard. But without the right system, it's difficult to know what's happening in real time. That's where Digitory helps.
             </p>
           </div>
         </div>
@@ -86,7 +89,7 @@ export default function ProblemsSection() {
           {/* Left Column - Problems */}
           <div className="lg:col-span-6 flex flex-col justify-between gap-6">
             <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
-              Three simple problems
+              The everyday challenges restaurants face
             </h3>
             <div className="space-y-6 flex-1">
               {problems.map((prob, idx) => (
@@ -113,7 +116,7 @@ export default function ProblemsSection() {
           {/* Right Column - Friday Night Scenarios */}
           <div className="lg:col-span-6 flex flex-col justify-between gap-6">
             <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
-              A typical friday night
+              A busy Friday night — The problems restaurants face every day
             </h3>
             <div className="flex-1 flex flex-col gap-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
               {scenarios.map((scene, idx) => {

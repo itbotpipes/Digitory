@@ -10,10 +10,7 @@ export default function TeamSection() {
       initials: 'SM',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'Seasoned entrepreneur in IT & ITES industry',
-        'MSRIT alumni',
-        'Business development & sales expert',
-        '20+ years experience',
+        '20+ years of experience in business development and technology.',
       ],
     },
     {
@@ -22,11 +19,8 @@ export default function TeamSection() {
       initials: 'SK',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'Veteran Technologist',
-        'MS Virginia',
-        'Serial Entrepreneur',
-        'Ex Walmart, P&G, SAP & TEG',
-        '25+ years experience',
+        'Experienced entrepreneur in the IT & ITES industry, MSRIT alumni',
+        '25+ years of experience in technology, with leadership roles at Walmart, P&G, SAP, and TEG.',
       ],
     },
     {
@@ -35,10 +29,8 @@ export default function TeamSection() {
       initials: 'AS',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'Retail & consumer business expert',
-        'ISB alumni',
-        'Ex Reliance, Shoppers Stop & Landmark',
-        '20+ years experience',
+        'Retail & consumer business expert, ISB alumni, Ex-Reliance, Shoppers Stop & Landmark',
+        '20+ years of experience in retail, consumer business, and marketing.',
       ],
     },
     {
@@ -47,10 +39,8 @@ export default function TeamSection() {
       initials: 'SS',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'Expert delivery & operations leader',
-        'Ex Infosys',
-        'MSRIT alumni',
-        '20+ years experience',
+        'Ex-Infosys, MSRIT alumni',
+        '20+ years of experience in operations, implementation, and customer success.',
       ],
     },
     {
@@ -59,10 +49,8 @@ export default function TeamSection() {
       initials: 'BS',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'Product development expert',
-        'COEG alumni',
-        'Software & Consulting head',
-        '30+ years experience',
+        'Product development expert, COEG alumni, Software & Consulting head',
+        '30+ years of experience building software products and business solutions.',
       ],
     },
     {
@@ -71,9 +59,8 @@ export default function TeamSection() {
       initials: 'PV',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
-        'B.E - Industrial engineering and Mngt',
-        'MBA Marketing',
-        'Passionate Entrepreneur',
+        'B.E - Industrial Engineering and management, MBA Marketing, Passionate Entrepreneur',
+        'Entrepreneur with expertise in industrial engineering and marketing.',
       ],
     },
   ];
@@ -88,7 +75,7 @@ export default function TeamSection() {
             The people behind <span className="text-[#FF4F18]">Digitory</span>
           </h2>
           <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
-            Our team has spent real time on restaurant floors — not just behind computer screens.
+            Our team has years of experience in technology, business, product development, and restaurant operations. More importantly, we've spent time inside real restaurants to understand the challenges owners and staff face every day.
           </p>
         </div>
 

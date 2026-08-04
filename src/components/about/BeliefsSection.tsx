@@ -4,32 +4,32 @@ import React from 'react';
 
 export default function BeliefsSection() {
   const stats = [
-    { value: '100+', label: 'outlets', sublabel: 'using Digitory' },
-    { value: '2M+', label: 'orders', sublabel: 'handled monthly' },
-    { value: '10+', label: 'years of', sublabel: "solving restaurant's problem" },
+    { value: '100+', label: 'restaurant outlets', sublabel: 'using Digitory' },
+    { value: '2M+', label: 'orders', sublabel: 'handled every month' },
+    { value: '10+', label: 'years of experience', sublabel: 'solving restaurant challenges' },
     { value: '150+', label: 'cities', sublabel: 'across India' },
   ];
 
   const beliefs = [
     {
       num: '01',
-      title: 'Good systems run the restaurant, not just the people.',
-      description: 'If your best manager takes a day off, your restaurant should still run smoothly.',
+      title: 'Good systems make restaurants stronger.',
+      description: 'A restaurant should run smoothly even when your best manager is on leave.',
     },
     {
       num: '02',
-      title: 'Seeing clearly is better than working harder.',
-      description: "You don't need to work more hours. You need to see what's happening in your restaurant, right now.",
+      title: 'Clear information leads to better decisions.',
+      description: "You don't need to work longer hours. You simply need to know what's happening in your restaurant at the right time.",
     },
     {
       num: '03',
-      title: 'Growing should be easy, not stressful.',
-      description: 'Opening a new outlet should feel exciting, not chaotic.',
+      title: 'Growing your business should feel exciting.',
+      description: 'Opening a new outlet should help your business grow, not create more confusion.',
     },
     {
       num: '04',
-      title: 'We stay with you. We don’t just sell and leave.',
-      description: 'We help set things up, we fix problems together, and we keep improving as your restaurant grows.',
+      title: 'We stay with our customers.',
+      description: 'Our work doesn\'t end after installation. We help you set up the system, solve problems, and keep improving as your business grows.',
     },
   ];
 
@@ -59,7 +59,7 @@ export default function BeliefsSection() {
           {/* Header */}
           <div className="max-w-3xl">
             <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-              A few simple things <span className="text-[#FF4F18]">we <br className="hidden md:inline" />believe in.</span>
+              What we believe
             </h2>
           </div>
 
@@ -68,13 +68,13 @@ export default function BeliefsSection() {
             {beliefs.map((belief, idx) => (
               <div
                 key={idx}
-                className="p-6 sm:p-8 flex flex-col justify-start gap-4 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 group"
+                className="p-6 sm:p-8 flex flex-col justify-start gap-4 transition-all duration-300 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 group"
               >
                 <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 block">
                   {belief.num}
                 </span>
                 
-                <h4 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-[#FF4F18] transition-colors duration-300">
+                <h4 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-white leading-snug transition-colors duration-300">
                   {belief.title}
                 </h4>
                 

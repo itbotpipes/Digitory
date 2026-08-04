@@ -62,7 +62,7 @@ export default function InsightsPage() {
     return (
       <Link 
         href={`/blog/${item.slug}`}
-        className={`flex flex-col h-full bg-white rounded-[28px] border border-zinc-200/60 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-transform duration-300 ${
+        className={`flex flex-col h-full bg-white rounded-[28px] border border-zinc-200/60 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50 ${
           isSlider ? "" : "hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.025)]"
         } group block cursor-pointer`}
       >
@@ -89,8 +89,7 @@ export default function InsightsPage() {
               {item.metadata}
             </p>
             
-            {/* Title */}
-            <h3 className="text-[18px] md:text-[20px] font-extrabold text-[#111111] leading-snug group-hover:text-[#FF4F18] transition-colors">
+            <h3 className="text-[18px] md:text-[20px] font-extrabold text-[#111111] leading-snug transition-colors">
               {item.title}
             </h3>
           </div>
@@ -112,10 +111,10 @@ export default function InsightsPage() {
           <div>
             <Link
               href="/blog"
-              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+              className="inline-flex justify-center items-center text-center rounded-full border border-zinc-200 bg-white px-6 py-2.5 text-[15px] font-semibold text-zinc-900 transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] cursor-pointer"
             >
               <span>View all</span>
-              <svg className="w-4 h-4 text-[#111111]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
             </Link>

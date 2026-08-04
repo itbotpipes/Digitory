@@ -9,8 +9,8 @@ export default function StorySection() {
   const milestones = [
     {
       year: '2019',
-      title: 'We saw the chaos',
-      description: 'Restaurant owners were using 8+ different tools to run their business.',
+      title: 'Built with restaurants, from day one',
+      description: 'We spent time with restaurant owners and saw the daily challenges they faced. Many restaurants were using eight or more different tools just to manage one business.',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -20,7 +20,7 @@ export default function StorySection() {
     {
       year: '2020',
       title: 'We started building',
-      description: 'We decided to build one simple, connected system.',
+      description: 'We decided there had to be a better way. So we started building one connected system that could handle everything in one place.',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -30,7 +30,7 @@ export default function StorySection() {
     {
       year: '2022',
       title: 'First restaurant went live',
-      description: 'Our first customer trusted us. We built, learned and improved every single day.',
+      description: 'Our first restaurant trusted Digitory. We learned from real users, improved the product, and kept making it better every day.',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -40,7 +40,7 @@ export default function StorySection() {
     {
       year: 'Today',
       title: 'Helping restaurants grow',
-      description: '100+ restaurants trust Digitory to run their operations without chaos.',
+      description: 'More than 100 restaurants use Digitory to manage their daily operations with confidence.',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -50,15 +50,15 @@ export default function StorySection() {
   ];
 
   const beforeItems = [
-    { label: 'Different Apps', desc: 'Siloed tools' },
-    { label: 'Manual Work', desc: 'Wasted labor' },
-    { label: 'Missing Reports', desc: 'No clear numbers' },
-    { label: 'No Real-time Visibility', desc: 'Running blind' },
+    { label: 'Different software for different tasks', desc: 'Siloed tools' },
+    { label: 'Manual work', desc: 'Wasted labor' },
+    { label: 'Missing reports', desc: 'No clear numbers' },
+    { label: 'No clear view of the business', desc: 'Too much guesswork' },
   ];
 
   const afterItems = [
     {
-      label: 'Orders Synced',
+      label: 'Everything works together',
       icon: (
         <svg className="w-5 h-5 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -66,7 +66,7 @@ export default function StorySection() {
       ),
     },
     {
-      label: 'Inventory Updated',
+      label: 'Orders synced',
       icon: (
         <svg className="w-5 h-5 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -74,7 +74,7 @@ export default function StorySection() {
       ),
     },
     {
-      label: 'Kitchen in Control',
+      label: 'Inventory updates automatically',
       icon: (
         <svg className="w-5 h-5 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -82,7 +82,7 @@ export default function StorySection() {
       ),
     },
     {
-      label: 'Reports Live',
+      label: 'Kitchen stays organised',
       icon: (
         <svg className="w-5 h-5 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 01-2 2h-2a2 2 0 01-2-2zm9-10v10a2 2 0 01-2 2h-2a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2z" />
@@ -90,7 +90,7 @@ export default function StorySection() {
       ),
     },
     {
-      label: 'Customers Engaged',
+      label: 'Reports available instantly',
       icon: (
         <svg className="w-5 h-5 text-[#FF4F18] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -99,6 +99,7 @@ export default function StorySection() {
     },
   ];
 
+
   return (
     <section className="bg-white dark:bg-[#0d0d0e] py-16 md:py-24 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
@@ -106,10 +107,10 @@ export default function StorySection() {
         {/* Title */}
         <div className="max-w-3xl mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            Our <span className="text-[#FF4F18]">Story</span>
+            Our <span className="text-[#FF4F18]">Journey</span>
           </h2>
           <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 mt-3 font-semibold">
-            We started in kitchens, not in a boardroom.
+            Built with restaurants, from day one.
           </p>
         </div>
 
@@ -118,7 +119,7 @@ export default function StorySection() {
           
           {/* Left Column - Milestones Timeline */}
           <div className="lg:col-span-5 relative pl-4 sm:pl-6 border-l-2 border-zinc-100 dark:border-zinc-900/60">
-            <div className="space-y-12">
+            <div className="space-y-5">
               {milestones.map((milestone, idx) => {
                 const isActive = activeTimeline === idx;
                 return (
@@ -132,14 +133,14 @@ export default function StorySection() {
                       className={`absolute -left-[27px] sm:-left-[37px] top-1.5 flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full border-2 transition-all duration-300 ${
                         isActive
                           ? 'bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_0_12px_rgba(255,79,24,0.4)]'
-                          : 'bg-white dark:bg-[#0d0d0e] border-zinc-200 dark:border-zinc-800 text-zinc-450 dark:text-zinc-500 group-hover:border-[#FF4F18] group-hover:text-[#FF4F18]'
+                          : 'bg-white dark:bg-[#0d0d0e] border-zinc-200 dark:border-zinc-800 text-zinc-450 dark:text-zinc-500 group-hover:border-zinc-300 dark:group-hover:border-zinc-700'
                       }`}
                     >
                       {milestone.icon}
                     </div>
 
                     {/* Node Details */}
-                    <div className="space-y-1 pl-4">
+                    <div className="space-y-1 p-4 -ml-4 -mt-2.5 rounded-2xl group-hover:bg-zinc-50/80 dark:group-hover:bg-zinc-900/50 transition-colors duration-300">
                       <span
                         className={`text-sm sm:text-base font-extrabold uppercase tracking-widest transition-colors duration-300 ${
                           isActive ? 'text-[#FF4F18]' : 'text-zinc-450 dark:text-zinc-500'
@@ -189,7 +190,7 @@ export default function StorySection() {
                 {beforeItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col p-3 rounded-xl bg-white dark:bg-[#17171a] border border-zinc-200 dark:border-zinc-800/80 shadow-xs hover:border-[#FF4F18]/50 transition-colors"
+                    className="flex flex-col p-3 rounded-xl bg-white dark:bg-[#17171a] border border-zinc-200 dark:border-zinc-800/80 shadow-xs hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors"
                   >
                     <span className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-150">{item.label}</span>
                     <span className="text-[10px] sm:text-xs text-zinc-450 dark:text-zinc-500 mt-0.5">{item.desc}</span>
@@ -229,7 +230,7 @@ export default function StorySection() {
                 {afterItems.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-[#17171a] border border-zinc-200 dark:border-zinc-800 shadow-xs hover:border-[#FF4F18]/45 transition-all"
+                    className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-[#17171a] border border-zinc-200 dark:border-zinc-800 shadow-xs hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-all"
                   >
                     <div className="scale-90 origin-left">{item.icon}</div>
                     <span className="text-[11px] sm:text-xs font-bold text-zinc-800 dark:text-zinc-200 leading-tight">

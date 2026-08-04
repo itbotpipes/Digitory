@@ -51,7 +51,7 @@ export default function FAQPage() {
 
   return (
     <div className="bg-white font-sans antialiased text-[#111111] py-10 md:py-16">
-      <div className="max-w-4xl mx-auto px-6 md:px-12">
+      <div className="max-w-7xl mx-auto px-6 md:px-8">
 
         {/* Title */}
         <div className="mb-14">

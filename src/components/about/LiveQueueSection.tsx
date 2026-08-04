@@ -62,12 +62,12 @@ export default function LiveQueueSection() {
           {/* Left Column - Content */}
           <div className="lg:col-span-6 space-y-6 md:space-y-8">
             <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-              We build Digitory together with the{' '}
-              <span className="text-[#FF4F18]">restaurants that use it every day.</span>
+              Built with restaurants,{' '}
+              <span className="text-[#FF4F18]">not just for them</span>
             </h2>
             
             <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              We don't build alone and hand over a finished app. We work closely with restaurant owners and teams — bars, breweries, cafés, cloud kitchens, and multi-outlet chains — to make sure Digitory works the way real restaurants work, even on the busiest nights.
+              We don't build software and expect restaurants to adjust. Instead, we work closely with restaurant owners, managers, chefs, and staff to understand how restaurants actually operate. Their feedback helps us improve Digitory every day, making it useful even during the busiest shifts. Whether it's a café, brewery, cloud kitchen, or multi-outlet restaurant, we build features that solve real problems.
             </p>
 
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -73,7 +73,7 @@ export default function Features() {
             </p>
             <Link
               href="#"
-              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+              className="inline-flex justify-center items-center text-center rounded-full bg-[#111111] dark:bg-white px-8 py-3 text-[15px] font-semibold text-white dark:text-zinc-900 transition-all duration-200 hover:bg-black dark:hover:bg-zinc-100 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
             >
               Explore Platform
             </Link>

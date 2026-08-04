@@ -34,17 +34,19 @@ export default function MissionCta() {
           
           {/* Main Statement */}
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            We want every restaurant in India to run smoothly,{' '}
-            <span className="text-[#FF4F18]">without chaos.</span>
+            Our vision
           </h2>
 
           {/* Subtext */}
           <div className="space-y-6 text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
             <p>
-              Today, that means bringing billing, kitchen, inventory, and reports into one easy system. In the future, we want every restaurant — big or small — to run as smoothly as the biggest restaurant chains, without needing a big team to do it.
+              We want every restaurant in India, big or small, to run smoothly without unnecessary stress.
+            </p>
+            <p>
+              Today, Digitory brings billing, inventory, kitchen management, and reports together in one simple system.
             </p>
             <p className="font-bold text-zinc-800 dark:text-zinc-200">
-              We want restaurant owners to spend their time on good food and happy customers. Not on fixing problems all day.
+              Tomorrow, we want every restaurant owner to spend less time solving problems and more time serving great food and creating happy customers.
             </p>
           </div>
 
@@ -54,7 +56,7 @@ export default function MissionCta() {
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              Let’s Make It Simple
+              Let's make restaurant management simple.
             </span>
           </div>
 
@@ -111,9 +113,9 @@ export default function MissionCta() {
               </Link>
               <Link
                 href="/contact"
-                className="w-full inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+                className="w-full inline-flex justify-center items-center text-center rounded-full border border-zinc-300 dark:border-zinc-700 px-6 py-3 text-[15px] font-semibold text-zinc-700 dark:text-zinc-300 transition-all duration-200 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white active:scale-[0.98] cursor-pointer"
               >
-                <svg className="w-5 h-5 text-[#FF4F18]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
                 Talk to an Expert

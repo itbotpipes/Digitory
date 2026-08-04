@@ -182,9 +182,9 @@ export default function Updates() {
                 {/* Read Full Story Button */}
                 <button
                   onClick={() => setIsFeaturedOpen(true)}
-                  className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+                  className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer"
                 >
-                  Read Full Story →
+                  READ FULL STORY →
                 </button>
               </div>
             </div>
@@ -363,9 +363,9 @@ export default function Updates() {
                 <div className="mb-6">
                   <Link
                     href="#"
-                    className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer"
                   >
-                    Read Full Story →
+                    READ FULL STORY →
                   </Link>
                 </div>
               </div>
