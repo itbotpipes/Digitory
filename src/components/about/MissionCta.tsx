@@ -1,9 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function MissionCta() {
+  const containerRef = useRef<HTMLHeadingElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.01 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  const words = [
+    "Want", "to", "see", "how", "Digitory", "can", "help", "your", "restaurant?"
+  ];
   return (
     <section className="bg-white dark:bg-[#0d0d0e] py-16 md:py-24 transition-colors duration-300">
       <div className="mx-auto max-w-5xl px-6 md:px-8 space-y-16">
@@ -46,8 +67,32 @@ export default function MissionCta() {
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF4F18]/5 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white leading-snug transition-colors duration-300">
-              Want to see how <span className="text-[#FF4F18]">Digitory</span> can help your restaurant?
+            <h3
+              ref={containerRef}
+              className={`text-2xl sm:text-3xl font-extrabold leading-snug transition-all duration-1000 transform select-none ${
+                isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-30"
+              }`}
+            >
+              {words.map((word, idx) => {
+                const isSpecial = word === "Digitory";
+                return (
+                  <span
+                    key={idx}
+                    className={`inline-block mr-[0.25em] transition-colors duration-500 ${
+                      isVisible
+                        ? isSpecial
+                          ? "text-[#FF4F18]"
+                          : "text-zinc-900 dark:text-white"
+                        : "text-zinc-300 dark:text-zinc-700"
+                    }`}
+                    style={{
+                      transitionDelay: isVisible ? `${idx * 120 + 350}ms` : "0ms"
+                    }}
+                  >
+                    {word}
+                  </span>
+                );
+              })}
             </h3>
             
             <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-450 leading-relaxed max-w-xl mx-auto">
