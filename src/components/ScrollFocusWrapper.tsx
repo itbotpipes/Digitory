@@ -45,7 +45,7 @@ export default function ScrollFocusWrapper({ children }: ScrollFocusWrapperProps
       className={`transition-all duration-500 ease-in-out ${
         isActive 
           ? 'blur-0 opacity-100 scale-100' 
-          : 'blur-[1.5px] opacity-50 scale-[0.99] pointer-events-none'
+          : 'blur-[1.5px] opacity-50 scale-[0.99]'
       }`}
     >
       {children}

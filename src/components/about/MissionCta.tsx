@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 
 export default function MissionCta() {
   const containerRef = useRef<HTMLHeadingElement>(null);
@@ -10,11 +9,9 @@ export default function MissionCta() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.01 }
+      { threshold: 0.1 }
     );
     if (containerRef.current) {
       observer.observe(containerRef.current);
@@ -27,7 +24,7 @@ export default function MissionCta() {
   ];
   return (
     <section className="bg-white dark:bg-[#0d0d0e] py-8 md:py-12 transition-colors duration-300">
-      <div className="mx-auto max-w-5xl px-6 md:px-8 space-y-16">
+      <div className="mx-auto max-w-7xl px-6 md:px-8 space-y-16">
         
         {/* Mission Statement Block */}
         <div className="text-center space-y-8 max-w-4xl mx-auto">
@@ -63,7 +60,7 @@ export default function MissionCta() {
         </div>
 
         {/* Call to Action Card */}
-        <div className="rounded-[32px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 p-8 sm:p-12 text-center shadow-lg relative overflow-hidden transition-all duration-300">
+        <div className="rounded-[32px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 py-20 md:py-32 px-8 sm:px-16 text-center shadow-lg relative overflow-hidden transition-all duration-300">
           {/* Visual gradient backdrop */}
           <div className="absolute top-0 right-0 w-48 h-48 bg-[#FF4F18]/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF4F18]/5 rounded-full blur-3xl pointer-events-none" />
@@ -100,27 +97,6 @@ export default function MissionCta() {
             <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-450 leading-relaxed max-w-xl mx-auto">
               Book a personalized demo and see how Digitory can simplify your restaurant operations.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-              <Link
-                href="/request-demo"
-                className="w-full inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Book a Free Demo
-              </Link>
-              <Link
-                href="/contact"
-                className="w-full inline-flex justify-center items-center text-center rounded-full border border-zinc-300 dark:border-zinc-700 px-6 py-3 text-[15px] font-semibold text-zinc-700 dark:text-zinc-300 transition-all duration-200 hover:border-zinc-400 hover:text-zinc-900 dark:hover:text-white active:scale-[0.98] cursor-pointer"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                Talk to an Expert
-              </Link>
-            </div>
           </div>
         </div>
 
