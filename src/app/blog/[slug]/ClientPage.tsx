@@ -11,7 +11,10 @@ interface ClientPageProps {
   similarArticles: any[];
 }
 
+import { useRouter } from 'next/navigation';
+
 export default function ClientPage({ article, similarArticles }: ClientPageProps) {
+  const router = useRouter();
 
   const [copied, setCopied] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
@@ -57,23 +60,10 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
     e.preventDefault();
     if (!newCommentName.trim() || !newCommentText.trim()) return;
 
-    const commentObj: Comment = {
-      id: Date.now().toString(),
-      name: newCommentName.trim(),
-      text: newCommentText.trim(),
-      date: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-    };
-
-    const updatedComments = [...comments, commentObj];
-    setComments(updatedComments);
-    localStorage.setItem(`blog-comments-${article.slug}`, JSON.stringify(updatedComments));
-    setNewCommentName('');
-    setNewCommentText('');
+    // Redirect to login page for authentication
+    router.push('/login?required=comment');
   };
+
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -394,7 +384,7 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                       {simArticle.title}
                     </h3>
                     <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 mt-auto">
-                      {simArticle.createdAt ? new Date(simArticle.createdAt).toLocaleDateString() : simArticle.date}
+                      {simArticle.createdAt ? new Date(simArticle.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : simArticle.date}
                     </p>
                   </Link>
                 ))}

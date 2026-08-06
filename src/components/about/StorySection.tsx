@@ -109,7 +109,7 @@ export default function StorySection() {
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             Our <span className="text-[#FF4F18]">Journey</span>
           </h2>
-          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 mt-3 font-semibold">
+          <p className="text-[17px] text-zinc-600 dark:text-zinc-400 mt-3 font-medium">
             Built with restaurants, from day one.
           </p>
         </div>

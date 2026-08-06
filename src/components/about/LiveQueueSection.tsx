@@ -66,7 +66,7 @@ export default function LiveQueueSection() {
               <span className="text-[#FF4F18]">not just for them</span>
             </h2>
             
-            <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-[17px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
               We don't build software and expect restaurants to adjust. Instead, we work closely with restaurant owners, managers, chefs, and staff to understand how restaurants actually operate. Their feedback helps us improve Digitory every day, making it useful even during the busiest shifts. Whether it's a café, brewery, cloud kitchen, or multi-outlet restaurant, we build features that solve real problems.
             </p>
 
@@ -78,7 +78,7 @@ export default function LiveQueueSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base font-bold text-zinc-800 dark:text-zinc-200 transition-colors duration-300">
+                  <span className="text-[15px] font-medium text-zinc-800 dark:text-zinc-200 transition-colors duration-300">
                     {bullet}
                   </span>
                 </li>

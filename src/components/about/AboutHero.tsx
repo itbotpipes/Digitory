@@ -17,7 +17,7 @@ export default function AboutHero() {
             <span className="text-[#FF4F18]">restaurant problems</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed transition-colors duration-300">
+          <p className="text-[17px] text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed transition-colors duration-300">
             Digitory was built after spending time inside real restaurants, not in a meeting room. We know how difficult it is to manage orders, billing, inventory, and staff every day. That's why we created one simple system that helps restaurants run smoothly.
           </p>
 

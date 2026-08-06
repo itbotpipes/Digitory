@@ -27,7 +27,7 @@ export default function RestaurantOSHero() {
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
+          <p className="text-[17px] text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
             Running a restaurant is busy enough. Digitory brings billing, orders, inventory, kitchen management, and reports into one simple system, so your team can work faster and with fewer mistakes.
           </p>
 

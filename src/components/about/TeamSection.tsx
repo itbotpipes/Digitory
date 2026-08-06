@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 export default function TeamSection() {
   const team = [
     {
       name: 'Shiv Mogali',
       role: 'Founder and CEO',
-      initials: 'SM',
+      image: '/founder.jpg',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         '20+ years of experience in business development and technology.',
@@ -16,7 +17,7 @@ export default function TeamSection() {
     {
       name: 'Sudhanshu Killedar',
       role: 'CTO',
-      initials: 'SK',
+      image: '/cto.png',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Experienced entrepreneur in the IT & ITES industry, MSRIT alumni',
@@ -26,7 +27,7 @@ export default function TeamSection() {
     {
       name: 'Ashish Sharnagat',
       role: 'Strategy & Marketing',
-      initials: 'AS',
+      image: '/strategy.jpg',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Retail & consumer business expert, ISB alumni, Ex-Reliance, Shoppers Stop & Landmark',
@@ -36,7 +37,7 @@ export default function TeamSection() {
     {
       name: 'Sandeep S',
       role: 'Delivery and Client Relations',
-      initials: 'SS',
+      image: '/delivery.png',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Ex-Infosys, MSRIT alumni',
@@ -46,7 +47,7 @@ export default function TeamSection() {
     {
       name: 'Bala Sundrasamy',
       role: 'Product & Design',
-      initials: 'BS',
+      image: '/product.png',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Product development expert, COEG alumni, Software & Consulting head',
@@ -56,7 +57,7 @@ export default function TeamSection() {
     {
       name: 'Panjury V',
       role: 'Marketing Director',
-      initials: 'PV',
+      image: '/marketing.png',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'B.E - Industrial Engineering and management, MBA Marketing, Passionate Entrepreneur',
@@ -86,13 +87,19 @@ export default function TeamSection() {
               key={idx}
               className="flex flex-col items-center bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-3xl p-8 shadow-[0_4px_15px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300 group"
             >
-              {/* Profile Avatar with dynamic gradient */}
+              {/* Profile Avatar with Photo */}
               <div className="relative mb-6 select-none shrink-0">
-                <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${member.gradient} flex items-center justify-center text-white text-3xl font-extrabold shadow-[0_8px_20px_rgba(0,0,0,0.1)] group-hover:scale-105 transition-transform duration-300`}>
-                  {member.initials}
+                <div className="w-24 h-24 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.1)] group-hover:scale-105 transition-transform duration-300 overflow-hidden relative z-10">
+                  <Image 
+                    src={member.image} 
+                    alt={member.name} 
+                    fill 
+                    className="object-cover"
+                    sizes="96px"
+                  />
                 </div>
                 {/* Visual ring overlay */}
-                <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-zinc-250/30 dark:border-zinc-800/40 group-hover:rotate-45 transition-transform duration-700" />
+                <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-[#FF4F18]/40 dark:border-[#FF4F18]/50 group-hover:rotate-45 transition-transform duration-700 z-0" />
               </div>
 
               {/* Identity */}
@@ -100,7 +107,7 @@ export default function TeamSection() {
                 <h3 className="text-xl font-extrabold text-zinc-950 dark:text-white transition-colors duration-300">
                   {member.name}
                 </h3>
-                <span className="text-sm font-bold text-[#FF4F18] mt-1 block">
+                <span className="text-[13px] font-bold text-[#FF4F18] mt-1 block uppercase tracking-wide">
                   {member.role}
                 </span>
               </div>
@@ -111,7 +118,7 @@ export default function TeamSection() {
                   {member.highlights.map((highlight, itemIdx) => (
                     <li
                       key={itemIdx}
-                      className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-snug font-medium transition-colors duration-300"
+                      className="text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium transition-colors duration-300"
                     >
                       {highlight}
                     </li>

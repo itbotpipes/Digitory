@@ -216,7 +216,7 @@ export default function OrdersPage() {
                         />
                       </svg>
                     </span>
-                    <span className="text-black font-semibold text-[15px] group-hover:text-zinc-800 transition-colors">
+                    <span className="text-black font-medium text-[15px] group-hover:text-zinc-800 transition-colors">
                       {item}
                     </span>
                   </li>

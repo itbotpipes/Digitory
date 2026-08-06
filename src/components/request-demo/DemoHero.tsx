@@ -29,12 +29,12 @@ export default function DemoHero() {
       {/* 
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 max-w-7xl mx-auto px-6 md:px-8 text-center space-y-12 z-10">
         {/* Badge */}
-        {/* <span className="inline-block px-4 py-1.5 rounded-full bg-[#FF4F18]/10 text-xs sm:text-sm font-semibold text-[#FF4F18] uppercase tracking-widest">
+      {/* <span className="inline-block px-4 py-1.5 rounded-full bg-[#FF4F18]/10 text-xs sm:text-sm font-semibold text-[#FF4F18] uppercase tracking-widest">
           Request a Demo
         </span> */}
 
-        {/* Hero Content */}
-        {/* <div className="max-w-4xl mx-auto space-y-6">
+      {/* Hero Content */}
+      {/* <div className="max-w-4xl mx-auto space-y-6">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
             See Digitory in action.
             <br />
@@ -45,8 +45,8 @@ export default function DemoHero() {
           </p>
         </div> */}
 
-        {/* Trust Circles (Trustship) */}
-        {/* <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+      {/* Trust Circles (Trustship) */}
+      {/* <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <div className="flex -space-x-3">
             {trustCircles.map((circle, idx) => (
               <div
@@ -62,8 +62,8 @@ export default function DemoHero() {
           </p>
         </div> */}
 
-        {/* Short Intro Video */}
-        {/* <div className="relative max-w-4xl mx-auto aspect-16/9 rounded-[32px] overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-xl group">
+      {/* Short Intro Video */}
+      {/* <div className="relative max-w-4xl mx-auto aspect-16/9 rounded-[32px] overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-xl group">
           <video
             ref={videoRef}
             autoPlay
@@ -78,7 +78,7 @@ export default function DemoHero() {
             Your browser does not support the video tag.
           </video>
           {/* Play/Pause Overlay Button */}
-          {/* <button
+      {/* <button
             onClick={togglePlay}
             className="absolute bottom-6 right-6 p-4 rounded-full bg-white/90 dark:bg-zinc-900/90 text-zinc-900 dark:text-white backdrop-blur-md shadow-lg border border-zinc-200/50 dark:border-zinc-800/50 hover:scale-105 active:scale-95 transition-all z-10 cursor-pointer"
             aria-label={isPlaying ? 'Pause video' : 'Play video'}
@@ -94,7 +94,7 @@ export default function DemoHero() {
             )}
           </button>
           {/* Subtle Dark Overlay */}
-          {/* <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+      {/* <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>
       </section> */}
 
@@ -110,7 +110,7 @@ export default function DemoHero() {
             preload="auto"
             className="w-full h-full object-cover scale-[1.01]"
           >
-            <source src="/video.mp4" type="video/mp4" />
+            <source src="/DigitoryHow-QR-Code-Order-Pay-for-Restaurants-Works-1920x1080-2-1.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           {/* Overlay Gradient for high contrast */}
