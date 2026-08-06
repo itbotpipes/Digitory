@@ -226,13 +226,13 @@ export default function OrdersPage() {
 
             {/* Right Column - Live Order Queue Card (static across all tabs) */}
             <div className="lg:col-span-5 w-full">
-              <div className="bg-white rounded-[24px] border border-zinc-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] p-8 space-y-6">
+              <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 space-y-6 w-full max-w-[500px] mx-auto lg:mx-0">
                 {/* Card Header */}
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-[#111111] text-[16px]">
+                  <h3 className="font-bold text-zinc-900 dark:text-white text-[16px]">
                     Live Order Queue
                   </h3>
-                  <div className="inline-flex items-center gap-1.5 bg-[#EAF9F0] text-[#13B257] px-3 py-1 rounded-full text-xs font-bold">
+                  <div className="inline-flex items-center gap-1.5 bg-[#EAF9F0] dark:bg-[#13B257]/15 text-[#13B257] px-3 py-1 rounded-full text-xs font-bold">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#13B257] opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#13B257]"></span>
@@ -253,7 +253,7 @@ export default function OrdersPage() {
                         onClick={() => handleToggleStatus(order.id)}
                         className={`
                           flex items-center justify-between p-4 rounded-xl transition-all duration-200 cursor-pointer select-none
-                          bg-[#F8F9FA] hover:bg-[#F1F3F5] border border-transparent hover:border-zinc-200/20
+                          bg-[#F8F9FA] dark:bg-zinc-800/50 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800/80 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50
                           transform hover:-translate-y-0.5
                         `}
                       >
@@ -261,7 +261,7 @@ export default function OrdersPage() {
                           <span
                             className={`w-2 h-2 rounded-full flex-shrink-0 ${order.dotColor}`}
                           />
-                          <span className="ml-3.5 text-[14px] font-semibold text-[#111111] truncate">
+                          <span className="ml-3.5 text-[14px] font-semibold text-zinc-900 dark:text-zinc-100 truncate">
                             {order.text}
                           </span>
                         </div>
@@ -298,9 +298,9 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="text-center pt-2">
-                  <p className="text-[11px] text-[#A0A0A0]">
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
                     Click on any card in the queue to toggle its status.
-                  </p>
+                  </span>
                 </div>
               </div>
             </div>

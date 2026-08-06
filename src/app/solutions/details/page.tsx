@@ -49,7 +49,7 @@ function SolutionsDetailsContent() {
             </span>
             
             {/* Minimalist Inline Typography Switcher Title */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[900] tracking-tight text-zinc-900 dark:text-white leading-[1.25] pt-3 relative">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] pt-3 relative">
               Explore details for{' '}
               <span className="relative inline-block text-left align-middle">
                 <button
@@ -101,7 +101,7 @@ function SolutionsDetailsContent() {
               </span>
             </h1>
 
-            <p className="text-sm md:text-base text-zinc-500 max-w-xl mx-auto pt-3">
+            <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto pt-3">
               Click on the dropdown above to toggle between different modules and view specifications.
             </p>
           </div>
@@ -127,7 +127,7 @@ function SolutionsDetailsContent() {
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[900] tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
                   {solution.title.split(' ').map((word, idx) => (
                     idx === 0 ? <span key={idx}>{word} </span> : <span key={idx} className={idx === 1 || idx === 2 ? 'text-[#FF4F18]' : ''}>{word} </span>
                   ))}
@@ -290,7 +290,7 @@ function SolutionsDetailsContent() {
                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
                   Benefits Focus
                 </span>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-zinc-900 dark:text-white mt-2">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-zinc-900 dark:text-white mt-2">
                   Why choose Digitory?
                 </h3>
               </div>
@@ -365,7 +365,7 @@ function SolutionsDetailsContent() {
                 <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
                   Application Verticals
                 </span>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-zinc-900 dark:text-white mt-2">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-zinc-900 dark:text-white mt-2">
                   Made for every kind of food business
                 </h3>
               </div>
@@ -386,7 +386,7 @@ function SolutionsDetailsContent() {
                       )}
                       {item.name}
                     </h4>
-                    <p className="text-xs text-zinc-555 dark:text-zinc-400 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -403,10 +403,10 @@ function SolutionsDetailsContent() {
                 <div className="lg:col-span-6 space-y-10">
                   {solution.extraGrowth && (
                     <div className="space-y-4">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                      <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         {solution.extraGrowth.title}
                       </h3>
-                      <p className="text-sm md:text-base text-zinc-655 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         {solution.extraGrowth.desc}
                       </p>
                     </div>
@@ -414,10 +414,10 @@ function SolutionsDetailsContent() {
 
                   {solution.extraOwnersChoice && (
                     <div className="space-y-4">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                      <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         {solution.extraOwnersChoice.title}
                       </h3>
-                      <p className="text-sm md:text-base text-zinc-655 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         {solution.extraOwnersChoice.desc}
                       </p>
                     </div>
@@ -425,7 +425,7 @@ function SolutionsDetailsContent() {
 
                   {solution.integrations && (
                     <div className="space-y-6 pt-4">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                      <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         Connect with the tools you already use
                       </h3>
                       <div className="space-y-4">
@@ -447,7 +447,7 @@ function SolutionsDetailsContent() {
                 <div className="lg:col-span-6 space-y-10 lg:pl-8">
                   {solution.supportItems && (
                     <div className="space-y-6">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                      <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         Support you can count on
                       </h3>
                       <ul className="space-y-3.5">
@@ -463,7 +463,7 @@ function SolutionsDetailsContent() {
 
                   {solution.securityItems && (
                     <div className="space-y-6">
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                      <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         Safe and secure
                       </h3>
                       <ul className="space-y-3.5">

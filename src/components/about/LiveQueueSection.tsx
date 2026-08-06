@@ -88,64 +88,78 @@ export default function LiveQueueSection() {
 
           {/* Right Column - Live Queue Mockup */}
           <div className="lg:col-span-6 flex justify-center w-full">
-            <div className="w-full max-w-[480px] rounded-3xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_10px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.18)] overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 space-y-6 w-full max-w-[500px] mx-auto lg:mx-0">
               
-              {/* Header of Queue */}
-              <div className="bg-zinc-50 dark:bg-[#1f1f23] px-6 py-4 flex items-center justify-between border-b border-zinc-100 dark:border-[#2a2a2e]/60">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-sm sm:text-base text-zinc-800 dark:text-zinc-100">
-                    Live Order Queue
-                  </h3>
-                  <span className="inline-flex items-center rounded-full bg-orange-50 dark:bg-[#FF4F18]/15 px-2.5 py-0.5 text-xs font-bold text-[#FF4F18] border border-[#FF4F18]/20">
-                    <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-[#FF4F18] animate-pulse" />
-                    14 active
+              {/* Card Header */}
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-zinc-900 dark:text-white text-[16px]">
+                  Live Order Queue
+                </h3>
+                <span className="inline-flex items-center gap-1.5 bg-[#EAF9F0] dark:bg-[#13B257]/15 text-[#13B257] px-3 py-1 rounded-full text-xs font-bold">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#13B257] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#13B257]"></span>
                   </span>
-                </div>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">Auto-refreshing</span>
+                  <span>14 active</span>
+                </span>
               </div>
 
               {/* Tickets list */}
-              <div className="divide-y divide-zinc-100 dark:divide-[#2a2a2e]/40 p-4 sm:p-6 space-y-3.5">
+              <div className="space-y-3">
                 {tickets.map((t) => {
-                  let statusBg = 'bg-zinc-50 dark:bg-[#1C1C20] text-zinc-600 dark:text-zinc-400';
-                  let isWarning = t.status === 'warning';
-                  let isServed = t.status === 'served';
-
-                  if (isWarning) {
-                    statusBg = 'bg-orange-50 dark:bg-[#FF4F18]/15 text-[#FF4F18] border border-[#FF4F18]/25 font-extrabold';
-                  } else if (isServed) {
-                    statusBg = 'bg-zinc-100 dark:bg-zinc-800/85 text-zinc-600 dark:text-zinc-350 border border-zinc-200/50 dark:border-zinc-700/60 font-extrabold';
-                  }
+                  const isWarning = t.status === 'warning';
+                  const isServed = t.status === 'served';
 
                   return (
                     <div
                       key={t.id}
-                      className="flex items-center justify-between pt-3.5 first:pt-0 group hover:translate-x-0.5 transition-transform"
+                      className="flex items-center justify-between p-4 rounded-xl transition-all duration-200 cursor-pointer select-none bg-[#F8F9FA] dark:bg-zinc-800/50 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800/80 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 transform hover:-translate-y-0.5"
                     >
-                      <div className="space-y-1">
-                        <span className="text-xs font-extrabold text-zinc-450 dark:text-zinc-550 uppercase tracking-wider block">
-                          {t.source}
+                      <div className="flex items-center min-w-0 pr-4">
+                        <span
+                          className={`w-2 h-2 rounded-full flex-shrink-0 ${isWarning ? 'bg-[#FF4F18]' : isServed ? 'bg-[#13B257]' : 'bg-[#4285F4]'}`}
+                        />
+                        <span className="ml-3.5 text-[14px] font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                          {t.source} — {t.detail}
                         </span>
-                        <p className="text-sm sm:text-base font-bold text-zinc-900 dark:text-white transition-colors duration-300">
-                          {t.detail}
-                        </p>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold ${statusBg}`}>
-                          {isWarning && (
-                            <svg className="w-3.5 h-3.5 text-[#FF4F18] shrink-0 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      <div className="flex-shrink-0 flex items-center">
+                        {isServed ? (
+                          <span className="text-[#13B257] font-bold text-[13px]">
+                            Served
+                          </span>
+                        ) : isWarning ? (
+                          <span className="text-[#FF3B30] font-bold text-[13px] flex items-center gap-1">
+                            {t.time}
+                            <svg
+                              className="w-4 h-4 text-amber-500 flex-shrink-0"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              />
                             </svg>
-                          )}
-                          {t.time}
-                        </span>
+                          </span>
+                        ) : (
+                          <span className="text-[#888888] font-semibold text-[13px]">
+                            {t.time}
+                          </span>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
 
+              <div className="text-center pt-2">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                  Auto-refreshing live queue connection.
+                </span>
+              </div>
             </div>
           </div>
 

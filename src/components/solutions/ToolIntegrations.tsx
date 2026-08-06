@@ -83,10 +83,10 @@ export default function ToolIntegrations() {
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
           Tool Integrations
         </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
           Connects with <span className="text-[#FF4F18]">your favorite apps</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
           1-click setup with Swiggy, Zomato, Razorpay, Paytm, Tally, WhatsApp, and POS hardware.
         </p>
       </div>
@@ -124,7 +124,7 @@ export default function ToolIntegrations() {
             </div>
 
             {/* Title & Subtext */}
-            <h4 className="text-base font-black text-zinc-950 tracking-tight mb-1">
+            <h4 className="text-base font-extrabold text-zinc-950 dark:text-white tracking-tight mb-1">
               {item.name}
             </h4>
             <p className="text-xs text-zinc-500 leading-relaxed font-semibold">

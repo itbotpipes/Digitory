@@ -45,16 +45,13 @@ export default function SolutionDetailPage() {
             <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8">
               {/* Badge */}
               <div className="inline-flex">
-                <div className="flex items-center gap-2 bg-[#FFF3EF] px-3.5 py-1.5 rounded-full select-none">
-                  <span className="h-2 w-2 rounded-full bg-[#FF4F18]"></span>
-                  <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
-                    {solution.badge}
-                  </span>
-                </div>
+                <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] bg-[#FFF3EF] dark:bg-orange-950/30 px-3.5 py-1.5 rounded-full select-none">
+                  {solution.badge}
+                </span>
               </div>
 
               {/* Heading */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-[900] tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
                 {solution.title.split(' ').map((word, idx) => (
                   idx === 0 ? <span key={idx}>{word} </span> : <span key={idx} className={idx === 1 || idx === 2 ? 'text-[#FF4F18]' : ''}>{word} </span>
                 ))}
@@ -217,7 +214,7 @@ export default function SolutionDetailPage() {
               <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
                 Benefits Focus
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-zinc-900 dark:text-white mt-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-zinc-900 dark:text-white mt-2">
                 Why choose Digitory?
               </h2>
             </div>
@@ -234,7 +231,7 @@ export default function SolutionDetailPage() {
                   <h3 className="text-lg md:text-xl font-bold text-zinc-900 dark:text-white">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-zinc-605 dark:text-zinc-400 leading-relaxed">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -292,7 +289,7 @@ export default function SolutionDetailPage() {
               <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
                 Application Verticals
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-zinc-900 dark:text-white mt-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-zinc-900 dark:text-white mt-2">
                 Made for every kind of food business
               </h2>
             </div>
@@ -313,7 +310,7 @@ export default function SolutionDetailPage() {
                     )}
                     {item.name}
                   </h3>
-                  <p className="text-xs text-zinc-555 dark:text-zinc-400 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -330,10 +327,10 @@ export default function SolutionDetailPage() {
               <div className="lg:col-span-6 space-y-10">
                 {solution.extraGrowth && (
                   <div className="space-y-4">
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                       {solution.extraGrowth.title}
                     </h3>
-                    <p className="text-sm md:text-base text-zinc-655 dark:text-zinc-400 leading-relaxed">
+                    <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {solution.extraGrowth.desc}
                     </p>
                   </div>
@@ -341,10 +338,10 @@ export default function SolutionDetailPage() {
 
                 {solution.extraOwnersChoice && (
                   <div className="space-y-4">
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                       {solution.extraOwnersChoice.title}
                     </h3>
-                    <p className="text-sm md:text-base text-zinc-655 dark:text-zinc-400 leading-relaxed">
+                    <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       {solution.extraOwnersChoice.desc}
                     </p>
                   </div>
@@ -352,7 +349,7 @@ export default function SolutionDetailPage() {
 
                 {solution.integrations && (
                   <div className="space-y-6 pt-4">
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                       Connect with the tools you already use
                     </h3>
                     <div className="space-y-4">
@@ -374,7 +371,7 @@ export default function SolutionDetailPage() {
               <div className="lg:col-span-6 space-y-10 lg:pl-8">
                 {solution.supportItems && (
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                       Support you can count on
                     </h3>
                     <ul className="space-y-3.5">
@@ -390,7 +387,7 @@ export default function SolutionDetailPage() {
 
                 {solution.securityItems && (
                   <div className="space-y-6">
-                    <h3 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
+                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                       Safe and secure
                     </h3>
                     <ul className="space-y-3.5">

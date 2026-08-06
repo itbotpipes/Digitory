@@ -71,10 +71,10 @@ export default function RoiCalculator() {
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
           Savings Calculator
         </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
           See how much <span className="text-[#FF4F18]">you can save</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-3xl">
+        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-3xl">
           Small improvements every day can make a big difference. Use our savings calculator to see how Digitory can help reduce food waste, save staff time, and improve your restaurant's daily operations. Run your restaurant smarter, save more, and focus on what matters most—serving great food and creating happy customers.
           <br />
 
@@ -147,7 +147,7 @@ export default function RoiCalculator() {
       </div>
 
       {/* Bottom Outcomes Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+      <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center max-w-5xl mx-auto">
         {[
           { value: `${turnover}%`, label: "Faster Table Turnover" },
           { value: `${wastage}%`, label: "Less Raw Wastage" },
@@ -156,14 +156,14 @@ export default function RoiCalculator() {
         ].map((item, idx) => (
           <div
             key={idx}
-            className="bg-white border border-zinc-200/60 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-3xs hover:border-zinc-300 transition-all duration-200"
+            className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0"
           >
-            <span className="text-3xl md:text-4xl font-black text-[#FF4F18] leading-none mb-2">
-              {item.value}
-            </span>
-            <span className="text-xs font-bold text-zinc-800">
-              {item.label}
-            </span>
+            <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+              <span className="text-[#FF4F18]">{item.value}</span>
+            </h3>
+            <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+              <span className="text-zinc-900 dark:text-white">{item.label}</span>
+            </h3>
           </div>
         ))}
       </div>

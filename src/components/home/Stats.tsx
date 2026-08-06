@@ -29,11 +29,11 @@ export default function Stats() {
   return (
     <div className="w-full">
       {/* Horizontal Divider Line */}
-      <hr className="border-t border-zinc-200 w-full" />
+      <hr className="border-t border-zinc-200 dark:border-zinc-800 w-full" />
 
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Section Heading */}
-        <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-16 md:mb-20">
+        <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15] mb-16 md:mb-20">
           Stay ready for your busiest hours, <span className="text-[#FF4F18]">always</span>
         </h2>
 
@@ -42,17 +42,16 @@ export default function Stats() {
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 last:border-r-0"
+              className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0"
             >
               <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
                 <span className="text-[#FF4F18]">{stat.value}</span>{" "}
 
               </h3>
               <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-
-                <span className="text-[#111111]">{stat.label}</span>
+                <span className="text-zinc-900 dark:text-white">{stat.label}</span>
               </h3>
-              <p className="text-black text-sm mt-3 max-w-[260px] leading-relaxed">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-3 max-w-[260px] leading-relaxed">
                 {stat.desc}
               </p>
             </div>

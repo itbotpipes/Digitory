@@ -125,10 +125,10 @@ export default function RadialCommandCenter() {
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
           Features Overview
         </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
           Everything your restaurant needs, <span className="text-[#FF4F18]">in one place</span>
         </h2>
-        <p className="text-base md:text-lg text-zinc-600 leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
           Digitory connects every part of your restaurant, from the front counter to the kitchen and from inventory to business reports. With everything working together, your daily operations become simpler and easier to manage.
         </p>
       </div>
@@ -170,7 +170,7 @@ export default function RadialCommandCenter() {
 
         {/* Right Column: Module Inspector Panel */}
         <div className="lg:col-span-5 flex h-full">
-          <div className="w-full bg-white dark:bg-zinc-900/50 rounded-2xl p-8 border border-zinc-200 dark:border-zinc-800 flex flex-col justify-between gap-8 select-none transition-all duration-300 shadow-2xs h-full">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 flex flex-col justify-between gap-8 select-none transition-all duration-300 h-full w-full max-w-[500px] mx-auto lg:mx-0">
 
             {/* Top Inspector Status info */}
             <div className="flex flex-col gap-6">
@@ -178,28 +178,28 @@ export default function RadialCommandCenter() {
                 <span className="text-[10px] font-extrabold tracking-widest text-[#FF4F18] uppercase">
                   Module Inspector
                 </span>
-                <div className="flex items-center gap-1.5 bg-[#FFF3EF] border border-[#FF4F18]/20 px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#FF4F18] uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 bg-[#FFF3EF] dark:bg-[#FF4F18]/15 border border-[#FF4F18]/20 px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#FF4F18] uppercase tracking-wider">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18] animate-pulse" />
                   Connected
                 </div>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-2xl font-black text-[#111111] tracking-tight">
+                <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                   {activeModule.inspectorTitle}
                 </h3>
-                <p className="text-sm text-zinc-600 leading-relaxed">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
                   {activeModule.inspectorDesc}
                 </p>
               </div>
             </div>
 
             {/* Bottom Inspector Metric Highlight */}
-            <div className="bg-white rounded-2xl p-6 md:p-8 border border-zinc-200 flex flex-col items-center justify-center text-center shadow-3xs">
-              <span className="text-4xl md:text-5xl font-black text-[#FF4F18] leading-none mb-2">
+            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-xl p-6 md:p-8 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 flex flex-col items-center justify-center text-center transition-all duration-200">
+              <span className="text-4xl md:text-5xl font-extrabold text-[#FF4F18] leading-none mb-2">
                 {activeModule.metricValue}
               </span>
-              <span className="text-xs font-extrabold text-zinc-400 uppercase tracking-wide">
+              <span className="text-xs font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
                 {activeModule.metricLabel}
               </span>
             </div>

@@ -58,10 +58,10 @@ export default function Capabilities() {
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
           Features Matrix
         </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
           Six powerful features to <span className="text-[#FF4F18]">help your restaurant run better</span>
         </h2>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400">
           Click on any feature card below to open its full specifications and details on a new page.
         </p>
       </div>
@@ -86,7 +86,7 @@ export default function Capabilities() {
             </div>
 
             {/* Title & Description */}
-            <h3 className="text-2xl font-black text-[#111111] tracking-tight">
+            <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
               Orders & Billing
             </h3>
             <p className="text-sm text-zinc-600 leading-relaxed max-w-xl">
@@ -187,7 +187,7 @@ export default function Capabilities() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-[#111111]">
+              <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
                 Kitchen Display System (KDS)
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
@@ -227,7 +227,7 @@ export default function Capabilities() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-[#111111]">
+              <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
                 Smart Inventory
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
@@ -262,7 +262,7 @@ export default function Capabilities() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-[#111111]">
+              <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
                 Live Business Dashboard
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
@@ -297,7 +297,7 @@ export default function Capabilities() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-[#111111]">
+              <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
                 Multi-Outlet Management
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">
@@ -332,7 +332,7 @@ export default function Capabilities() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-xl font-black text-[#111111]">
+              <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white">
                 One Connected System
               </h3>
               <p className="text-sm text-zinc-550 leading-relaxed">

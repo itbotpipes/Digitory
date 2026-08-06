@@ -69,14 +69,14 @@ export default function ChainControlDeck() {
           </div>
 
           {/* Heading */}
-          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15]">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             One Dashboard.
             <br />
             <span className="text-[#FF4F18]">Every location in sync.</span>
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-xl">
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
             Monitor revenue, stock transfers, and store health across cities directly from your smartphone.
           </p>
 
@@ -103,24 +103,24 @@ export default function ChainControlDeck() {
 
         {/* Right Column: Dynamic Location Details Panel */}
         <div className="lg:col-span-6 flex justify-center w-full">
-          <div className="w-full max-w-[500px] bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-8 border border-zinc-200 dark:border-zinc-800 flex flex-col gap-6 shadow-2xs select-none">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 space-y-6 w-full max-w-[500px] mx-auto lg:mx-0 select-none">
             
             {/* Header: Title and Status badge */}
-            <div className="flex items-center justify-between border-b border-orange-100/20 pb-4">
-              <span className="text-xs font-bold text-zinc-800">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-zinc-900 dark:text-white text-[16px]">
                 {activeData.title}
-              </span>
+              </h3>
               <span className={`text-[10px] font-extrabold px-3 py-1 rounded-full border ${activeData.statusColor}`}>
                 {activeData.statusBadge}
               </span>
             </div>
 
             {/* Inner Revenue Display Card */}
-            <div className="bg-white rounded-2xl p-8 border border-zinc-200/50 flex flex-col items-center justify-center text-center shadow-3xs">
+            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-xl p-8 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 transition-all duration-200 flex flex-col items-center justify-center text-center">
               <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-2">
                 Location Revenue
               </span>
-              <span className="text-4xl md:text-5xl font-black text-zinc-950 leading-none mb-3">
+              <span className="text-4xl md:text-5xl font-extrabold text-zinc-900 dark:text-white leading-none mb-3">
                 {activeData.revenue}
               </span>
               <span className={`text-xs font-extrabold flex items-center gap-1.5 ${activeData.metricColor}`}>

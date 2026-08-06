@@ -53,10 +53,10 @@ export default function RestaurantTypes() {
         <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
           Tailored to your needs
         </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
           Built for <span className="text-[#FF4F18]">every type of restaurant</span>
         </h2>
-        <p className="text-base md:text-lg text-[#555] leading-relaxed">
+        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
           Whether you own a single café or a growing restaurant chain, Digitory is designed to fit the way you work.
         </p>
       </div>
@@ -90,10 +90,10 @@ export default function RestaurantTypes() {
           </div>
 
           {/* Title & Description */}
-          <h3 className="text-2xl md:text-3xl font-black text-zinc-950 tracking-tight mb-4">
+          <h3 className="text-2xl md:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight mb-4">
             {activeData.title}
           </h3>
-          <p className="text-sm md:text-base text-zinc-600 leading-relaxed max-w-2xl">
+          <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
             {activeData.description}
           </p>
         </div>

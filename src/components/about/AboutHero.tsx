@@ -8,16 +8,16 @@ export default function AboutHero() {
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 pt-8 pb-6 md:pt-12 md:pb-10 lg:pt-16 lg:pb-12">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8 items-center">
-        
+
         {/* Left Content Column */}
         <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] transition-colors duration-300">
-            Software for <span className="text-[#FF4F18]">Real</span>
+            Software for <span className="text-[#FF4F18]">real</span>
             <br />
             <span className="text-[#FF4F18]">restaurant problems</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-xl leading-relaxed transition-colors duration-300">
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed transition-colors duration-300">
             Digitory was built after spending time inside real restaurants, not in a meeting room. We know how difficult it is to manage orders, billing, inventory, and staff every day. That's why we created one simple system that helps restaurants run smoothly.
           </p>
 
@@ -48,7 +48,7 @@ export default function AboutHero() {
           <div className="relative w-full max-w-[420px] aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden flex items-center justify-center">
             {/* Subtle glow background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF4F18]/5 to-[#FF4F18]/10 dark:from-[#FF4F18]/10 dark:to-transparent rounded-[32px] blur-2xl -z-10" />
-            
+
             <Image
               src="/abouthero.jpeg"
               alt="About Digitory"

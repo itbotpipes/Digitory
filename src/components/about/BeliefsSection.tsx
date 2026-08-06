@@ -38,18 +38,18 @@ export default function BeliefsSection() {
       <div className="mx-auto max-w-7xl px-6 md:px-8 space-y-20">
         
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 p-8 rounded-3xl bg-white dark:bg-[#121214] border border-zinc-200/50 dark:border-[#2a2a2e]/40 shadow-xs divide-y-2 divide-zinc-200/20 md:divide-y-0 md:divide-x-2 dark:divide-[#2a2a2e]/20">
+        <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
           {stats.map((stat, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center p-4 md:first:pl-0 md:last:pr-0">
-              <span className="text-4xl sm:text-5xl font-extrabold text-[#FF4F18]">
-                {stat.value}
-              </span>
-              <span className="text-sm font-bold text-zinc-900 dark:text-white mt-2 block transition-colors duration-300">
-                {stat.label}
-              </span>
-              <span className="text-xs sm:text-sm text-zinc-450 dark:text-zinc-550 mt-0.5 leading-normal">
+            <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
+              <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+                <span className="text-[#FF4F18]">{stat.value}</span>
+              </h3>
+              <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+                <span className="text-zinc-900 dark:text-white">{stat.label}</span>
+              </h3>
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-3 max-w-[260px] leading-relaxed">
                 {stat.sublabel}
-              </span>
+              </p>
             </div>
           ))}
         </div>

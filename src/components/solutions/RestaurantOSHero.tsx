@@ -27,7 +27,7 @@ export default function RestaurantOSHero() {
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-350 max-w-xl leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
             Running a restaurant is busy enough. Digitory brings billing, orders, inventory, kitchen management, and reports into one simple system, so your team can work faster and with fewer mistakes.
           </p>
 
@@ -62,7 +62,7 @@ export default function RestaurantOSHero() {
 
         {/* Right Column: POS Terminal Static Mockup (Matches Uploaded Image) */}
         <div className="lg:col-span-6 flex justify-center w-full">
-          <div className="w-full max-w-[500px] bg-white dark:bg-zinc-950 rounded-[32px] p-6 md:p-8 text-zinc-900 dark:text-white shadow-2xl border border-zinc-200 dark:border-zinc-800/80 flex flex-col gap-4 md:gap-5 relative select-none">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col gap-4 md:gap-5 relative select-none text-zinc-900 dark:text-white">
             
             {/* 1. Terminal Topbar */}
             <div className="flex items-center justify-between">
@@ -114,35 +114,35 @@ export default function RestaurantOSHero() {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex justify-between items-center py-2 px-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-                  <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">+ Paneer Masala</span>
+                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
+                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Paneer Masala</span>
                   <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹280</span>
                 </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-                  <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">+ Butter Naan</span>
+                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
+                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Butter Naan</span>
                   <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹70</span>
                 </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-                  <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">+ Chicken Biryani</span>
+                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
+                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Chicken Biryani</span>
                   <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹320</span>
                 </div>
-                <div className="flex justify-between items-center py-2 px-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-                  <span className="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">+ Mango Lassi</span>
+                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
+                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Mango Lassi</span>
                   <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹110</span>
                 </div>
               </div>
             </div>
 
             {/* 4. Order List Receipt (Static matching reference image) */}
-            <div className="bg-zinc-50 dark:bg-zinc-950 rounded-2xl p-3 border border-zinc-200 dark:border-zinc-800 flex-grow min-h-[90px] flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-4 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 transition-all duration-200 flex-grow min-h-[90px] flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-[13px] font-semibold text-zinc-900 dark:text-zinc-100">
                   <span>1x Paneer Butter Masala</span>
-                  <span className="font-extrabold text-zinc-600 dark:text-zinc-400">₹280</span>
+                  <span className="font-extrabold text-zinc-500 dark:text-zinc-400">₹280</span>
                 </div>
-                <div className="flex justify-between items-center text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                <div className="flex justify-between items-center text-[13px] font-semibold text-zinc-900 dark:text-zinc-100">
                   <span>2x Butter Naan</span>
-                  <span className="font-extrabold text-zinc-600 dark:text-zinc-400">₹140</span>
+                  <span className="font-extrabold text-zinc-500 dark:text-zinc-400">₹140</span>
                 </div>
               </div>
             </div>
