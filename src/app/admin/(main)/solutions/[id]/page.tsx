@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, use } from 'react';
-import { api } from '../../../../lib/api';
+import { api } from '@/lib/api';
 import Link from 'next/link';
 
 interface SolutionEditorProps {

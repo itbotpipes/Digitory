@@ -43,6 +43,28 @@ export const api = {
 
     return res.json();
   },
+
+  put: async (endpoint: string, body: any, token?: string) => {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
+      const error = await res.text();
+      throw new Error(error || 'API request failed');
+    }
+
+    return res.json();
+  },
   
   patch: async (endpoint: string, body: any, token?: string) => {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
