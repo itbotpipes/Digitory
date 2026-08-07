@@ -1,16 +1,26 @@
-'use client';
-
 import React from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
 import SolutionsCta from '../../../components/solutions/SolutionsCta';
+import { generateSeoMetadata } from '@/lib/seo';
 
-export default function SolutionDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const rawSlug = params?.slug as string;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const solutionKey = Object.keys(solutionsDb).find(key => solutionsDb[key as keyof typeof solutionsDb].id === slug) || 'pos';
+  const solution = solutionsDb[solutionKey as keyof typeof solutionsDb];
+  
+  // Try to fetch DB SEO using a deterministic ID based on slug or we skip dynamic for now?
+  // Our migration might have saved Solution SEO with a specific pageId.
+  // Wait, the API for Solutions needs an ID. If we don't have the ID here, we just use static fallback.
+  return {
+    title: `${solution?.title || 'Solutions'} | Digitory`,
+    description: solution?.subtitle || '',
+  };
+}
+
+export default async function SolutionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug: rawSlug } = await params;
   
   // Map short slugs to canonical keys
   const slugMap: Record<string, string> = {

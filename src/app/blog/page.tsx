@@ -1,36 +1,30 @@
-'use client';
+import BlogList from "@/features/Blog/BlogList";
+import { api } from "@/lib/api";
+import React from "react";
 
-import React, { useState } from 'react';
-import Header from '../../components/Header';
-import BlogHero from '../../components/blog/BlogHero';
-import LatestStories from '../../components/blog/LatestStories';
-import FooterPage from '../../components/Footer';
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export default function BlogPage() {
-  const [selectedCategory, setSelectedCategory] = useState('All Articles');
-  const [searchQuery, setSearchQuery] = useState('');
+async function Blog() {
+  let blogs = [];
+  try {
+    const res = await api.get('/posts');
+    if (res.docs) {
+      blogs = res.docs;
+    }
+  } catch (err) {
+    console.error("Failed to fetch blogs", err);
+  }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">
-      {/* Header */}
-      <Header />
-
-      {/* Main Content */}
-      <main className="flex-1 w-full text-zinc-900 dark:text-zinc-100">
-        <BlogHero
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-        <LatestStories
-          selectedCategory={selectedCategory}
-          searchQuery={searchQuery}
-        />
-      </main>
-
-      {/* Footer */}
-      <FooterPage />
+    <div className="pt-24 min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">Knowledge Hub</h1>
+        <p className="text-gray-600 mb-12">Discover our latest articles and insights.</p>
+        <BlogList blogs={blogs} />
+      </div>
     </div>
   );
 }
+
+export default Blog;

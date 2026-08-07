@@ -11,6 +11,10 @@ export const api = {
     });
     
     if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
       const error = await res.text();
       throw new Error(error || 'API request failed');
     }
@@ -29,6 +33,10 @@ export const api = {
     });
 
     if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
       const error = await res.text();
       throw new Error(error || 'API request failed');
     }
@@ -47,6 +55,31 @@ export const api = {
     });
 
     if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
+      const error = await res.text();
+      throw new Error(error || 'API request failed');
+    }
+
+    return res.json();
+  },
+  
+  delete: async (endpoint: string, token?: string) => {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
       const error = await res.text();
       throw new Error(error || 'API request failed');
     }
