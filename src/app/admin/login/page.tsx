@@ -10,7 +10,7 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (localStorage.getItem('admin_token')) {
-      window.location.href = '/admin/dashboard';
+      window.location.href = '/admin/dashboard?tab=leads';
     }
   }, []);
 
@@ -21,7 +21,7 @@ export default function AdminLogin() {
       const res = await api.post('/auth/login', { email, password });
       if (res.data?.token) {
         localStorage.setItem('admin_token', res.data.token);
-        window.location.href = '/admin/dashboard';
+        window.location.href = '/admin/dashboard?tab=leads';
       }
     } catch (err: any) {
       setError(err.message || 'Login failed');

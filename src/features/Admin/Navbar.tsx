@@ -2,9 +2,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Route } from "next";
-import { HomeIcon, SettingsIcon, SearchIcon, FileText, CheckCircle } from "lucide-react";
+import { HomeIcon, SettingsIcon, SearchIcon, FileText, CheckCircle, MessageSquare, Inbox, Users } from "lucide-react";
 
 interface NavbarProps {
   className?: string;
@@ -12,19 +12,40 @@ interface NavbarProps {
 
 interface ILink {
   label: string;
-  href: Route;
+  href: string;
   Icon: typeof HomeIcon;
 }
+
 const links: ILink[] = [
   {
-    label: "Dashboard",
-    href: "/admin",
-    Icon: HomeIcon,
+    label: "Demo Requests",
+    href: "/admin/dashboard?tab=leads",
+    Icon: Inbox,
   },
   {
-    label: "Blogs",
-    href: "/admin/blogs",
+    label: "Contact Messages",
+    href: "/admin/dashboard?tab=contacts",
+    Icon: MessageSquare,
+  },
+  {
+    label: "Blog Posts",
+    href: "/admin/dashboard?tab=blogs",
     Icon: FileText,
+  },
+  {
+    label: "Solutions",
+    href: "/admin/dashboard?tab=solutions",
+    Icon: CheckCircle,
+  },
+  {
+    label: "Comments",
+    href: "/admin/dashboard?tab=comments",
+    Icon: MessageSquare,
+  },
+  {
+    label: "Users",
+    href: "/admin/dashboard?tab=users",
+    Icon: Users,
   },
   {
     label: "SEO Management",
@@ -35,6 +56,7 @@ const links: ILink[] = [
 
 const Navbar: React.FC<NavbarProps> = ({ className }) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   return (
     <div className={clsx("w-64 flex-shrink-0 bg-white dark:bg-[#121214] border-r border-zinc-200 dark:border-zinc-800/80 transition-colors duration-300", className)}>
@@ -53,7 +75,18 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         {/* Main Navigation */}
         <div className="flex h-full flex-col gap-1.5 overflow-y-auto pr-2 custom-scrollbar">
           {links.map((link, indx) => {
-            const isActive = pathname === link.href || (link.href !== '/admin' && pathname.startsWith(link.href));
+            // Determine active state by checking path and tab query param
+            const linkUrl = new URL(link.href, 'http://localhost');
+            const linkTab = linkUrl.searchParams.get('tab');
+            const currentTab = searchParams.get('tab');
+            
+            const isTabMatch = linkTab 
+              ? currentTab === linkTab 
+              : !currentTab; // default match if tab is undefined
+              
+            const isPathMatch = pathname === linkUrl.pathname || (linkUrl.pathname !== '/admin/dashboard' && pathname.startsWith(linkUrl.pathname));
+            const isActive = isPathMatch && isTabMatch;
+
             return (
               <NavItem key={indx} {...link} isActive={isActive} />
             );

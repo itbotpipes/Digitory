@@ -3,11 +3,36 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'leads' | 'contacts' | 'blogs' | 'solutions' | 'comments'>('leads');
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get('tab') || 'leads';
+  const activeTab = ['leads', 'contacts', 'blogs', 'solutions', 'comments', 'users'].includes(tabParam)
+    ? (tabParam as 'leads' | 'contacts' | 'blogs' | 'solutions' | 'comments' | 'users')
+    : 'leads';
+
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [roles, setRoles] = useState<any[]>([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newUser, setNewUser] = useState({ name: '', email: '', password: '', roleId: '' });
+  const [creatingUser, setCreatingUser] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'users') {
+      const token = localStorage.getItem('admin_token');
+      if (token) {
+        api.get('/users/roles', token).then((res) => {
+          setRoles(res.data || []);
+          if (res.data && res.data.length > 0 && !newUser.roleId) {
+            setNewUser((prev) => ({ ...prev, roleId: res.data[0]._id }));
+          }
+        }).catch(console.error);
+      }
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -27,6 +52,7 @@ export default function AdminDashboard() {
       if (activeTab === 'blogs') endpoint = '/posts';
       if (activeTab === 'solutions') endpoint = '/solutions';
       if (activeTab === 'comments') endpoint = '/comments';
+      if (activeTab === 'users') endpoint = '/users';
 
       const res = await api.get(endpoint, token);
       setData(res.data?.docs || res.data?.results || res.data || []);
@@ -53,6 +79,37 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteUser = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    try {
+      const token = localStorage.getItem('admin_token');
+      await api.delete(`/users/${id}`, token || '');
+      setData((prev) => prev.filter((item: any) => item._id !== id));
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to delete user');
+    }
+  };
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreatingUser(true);
+    try {
+      const token = localStorage.getItem('admin_token');
+      const res = await api.post('/users', newUser, token || '');
+      const createdUser = res.data?.doc || res.data || res;
+      setData((prev) => [createdUser, ...prev]);
+      setShowCreateModal(false);
+      setNewUser({ name: '', email: '', password: '', roleId: roles[0]?._id || '' });
+      alert('User created successfully');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to create user');
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-end justify-between">
@@ -60,28 +117,6 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">Dashboard Overview</h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1">Monitor your leads, content, and engagement metrics.</p>
         </div>
-      </div>
-
-      <div className="flex gap-2 border-b border-zinc-200 dark:border-zinc-800/80 pb-4 overflow-x-auto custom-scrollbar">
-        {[
-          { id: 'leads', label: 'Demo Requests' },
-          { id: 'contacts', label: 'Contact Messages' },
-          { id: 'blogs', label: 'Blog Posts' },
-          { id: 'solutions', label: 'Solutions' },
-          { id: 'comments', label: 'Comments' }
-        ].map((tab) => (
-          <button 
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-5 py-2.5 font-bold rounded-full text-sm whitespace-nowrap transition-all duration-200 ${
-              activeTab === tab.id 
-                ? 'bg-[#FF4F18] text-white shadow-[0_4px_12px_rgba(255,79,24,0.3)]' 
-                : 'bg-zinc-100 dark:bg-[#1A1A1D] text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-[#252528] hover:text-zinc-900 dark:hover:text-white'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
       </div>
 
       {loading ? (
@@ -103,6 +138,16 @@ export default function AdminDashboard() {
               <Link href="/admin/solutions/new" className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200">
                 + Create New Solution
               </Link>
+            </div>
+          )}
+          {activeTab === 'users' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
+              <button 
+                onClick={() => setShowCreateModal(true)} 
+                className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200"
+              >
+                + Create New User
+              </button>
             </div>
           )}
           
@@ -150,6 +195,15 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Comment</th>
                       <th className="px-6 py-4 font-semibold">Post</th>
                       <th className="px-6 py-4 font-semibold">Date</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
+                    </>
+                  )}
+                  {activeTab === 'users' && (
+                    <>
+                      <th className="px-6 py-4 font-semibold">Name</th>
+                      <th className="px-6 py-4 font-semibold">Email</th>
+                      <th className="px-6 py-4 font-semibold">Role</th>
+                      <th className="px-6 py-4 font-semibold">Date Created</th>
                       <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
@@ -221,6 +275,23 @@ export default function AdminDashboard() {
                         </td>
                       </>
                     )}
+                    {activeTab === 'users' && (
+                      <>
+                        <td className="px-6 py-4 font-medium">{item.name}</td>
+                        <td className="px-6 py-4">{item.email}</td>
+                        <td className="px-6 py-4">
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#FFF3EF] text-[#FF4F18]">
+                            {item.roleId?.name || 'User'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">
+                          <button onClick={() => handleDeleteUser(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                            Delete
+                          </button>
+                        </td>
+                      </>
+                    )}
                   </tr>
                 ))}
                 {data.length === 0 && (
@@ -232,6 +303,82 @@ export default function AdminDashboard() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setShowCreateModal(false)} />
+          <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl z-10">
+            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-6">Create New User</h2>
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Name</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newUser.name}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Full Name"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Email Address</label>
+                <input 
+                  type="email" 
+                  required
+                  value={newUser.email}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="email@example.com"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Password</label>
+                <input 
+                  type="password" 
+                  required
+                  minLength={8}
+                  value={newUser.password}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
+                  placeholder="Min 8 characters"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Role</label>
+                <select 
+                  required
+                  value={newUser.roleId}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, roleId: e.target.value }))}
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white cursor-pointer"
+                >
+                  <option value="" disabled>Select Role</option>
+                  {roles.map((role) => (
+                    <option key={role._id} value={role._id}>{role.name}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowCreateModal(false)}
+                  className="flex-1 px-4 py-2.5 font-bold text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={creatingUser}
+                  className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+                >
+                  {creatingUser ? 'Creating...' : 'Create'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

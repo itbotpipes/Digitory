@@ -35,7 +35,7 @@ function BlogList({ blogs }: BlogListProps) {
             <div className="p-6 flex flex-col flex-grow">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">
-                  {blog.category || "General"}
+                  {typeof blog.category === 'object' && blog.category ? blog.category.name : (blog.category || "General")}
                 </span>
                 <span className="text-xs text-gray-400">
                   {new Date(blog.createdAt).toLocaleDateString()}

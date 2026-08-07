@@ -1,9 +1,8 @@
-'use client';
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from '../../components/Header';
 import FooterPage from '../../components/Footer';
 import ScrollFocusWrapper from '../../components/ScrollFocusWrapper';
+import { generateSeoMetadata } from "@/lib/seo";
 
 import AboutHero from '../../components/about/AboutHero';
 import ProblemsSection from '../../components/about/ProblemsSection';
@@ -13,11 +12,14 @@ import BeliefsSection from '../../components/about/BeliefsSection';
 import TeamSection from '../../components/about/TeamSection';
 import MissionCta from '../../components/about/MissionCta';
 
+export async function generateMetadata() {
+  return await generateSeoMetadata('Page', 'about', {
+    title: 'About Us | Digitory',
+    description: 'Learn about our journey, beliefs, and our mission.',
+  });
+}
+
 export default function AboutPage() {
-  // Set document title in client component matching other pages
-  useEffect(() => {
-    document.title = 'About Us - Digitory';
-  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">

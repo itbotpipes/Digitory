@@ -50,8 +50,8 @@ export default function AboutHero() {
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FF4F18]/5 to-[#FF4F18]/10 dark:from-[#FF4F18]/10 dark:to-transparent rounded-[32px] blur-2xl -z-10" />
 
             <Image
-              src="/abouthero.jpeg"
-              alt="About Digitory"
+              src="/Mascot  1.png"
+              alt="About Digitory Mascot"
               width={420}
               height={525}
               priority

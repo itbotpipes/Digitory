@@ -1,9 +1,14 @@
 import { Metadata } from 'next';
 import { api } from './api';
 
-export async function generateSeoMetadata(pageType: string, pageId: string, fallback: Partial<Metadata> = {}): Promise<Metadata> {
+export async function generateSeoMetadata(pageType: string, idOrSlug: string, fallback: Partial<Metadata> = {}): Promise<Metadata> {
   try {
-    const res = await api.get(`/seo/${pageType}/${pageId}`);
+    const isMongoId = /^[0-9a-fA-F]{24}$/.test(idOrSlug);
+    const endpoint = isMongoId 
+      ? `/seo/${pageType}/${idOrSlug}` 
+      : `/seo/${pageType}/slug/${idOrSlug}`;
+      
+    const res = await api.get(endpoint);
     const seo = res.data;
 
     if (!seo) {

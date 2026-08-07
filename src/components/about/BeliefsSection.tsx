@@ -59,7 +59,7 @@ export default function BeliefsSection() {
           {/* Header */}
           <div className="max-w-3xl">
             <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-              What we believe
+              What <span className="text-[#FF4F18]">we believe</span>
             </h2>
           </div>
 

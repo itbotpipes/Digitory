@@ -15,35 +15,35 @@ export default function Hero() {
   const chatMessages = [
     {
       role: 'Chef',
-      text: 'Orders reaching kitchen on time. ✅',
+      text: 'Orders reaching kitchen on time. 🍳',
       time: '7:42 PM',
       avatarColor: 'bg-emerald-100 text-emerald-700',
       avatarLabel: '👨‍🍳',
     },
     {
       role: 'Inventory',
-      text: 'Stock updated. No low stock. ✅',
+      text: 'Stock updated. No low stock. 📦',
       time: '7:45 PM',
       avatarColor: 'bg-orange-100 text-orange-700',
       avatarLabel: '📦',
     },
     {
       role: 'Cashier',
-      text: 'Billing running smoothly. ✅',
+      text: 'Billing running smoothly. 🧾',
       time: '7:48 PM',
       avatarColor: 'bg-blue-100 text-blue-700',
       avatarLabel: '💵',
     },
     {
       role: 'Captain',
-      text: 'All tables served on time. 😊',
+      text: 'All tables served on time. 🍽️',
       time: '7:52 PM',
       avatarColor: 'bg-indigo-100 text-indigo-700',
       avatarLabel: '🤵',
     },
     {
       role: 'Manager',
-      text: 'Sales looking great today! 👍',
+      text: 'Sales looking great today! 🚀',
       time: '7:53 PM',
       avatarColor: 'bg-amber-100 text-amber-700',
       avatarLabel: '👔',
@@ -129,7 +129,7 @@ export default function Hero() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#FF4F18]/20 blur-[100px] rounded-full z-0" />
           
           <div 
-            className="relative w-full max-w-[500px] aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] border-8 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 z-10 transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2"
+            className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] border-8 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 z-10 transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2"
           >
             <Image
               src="/home-hero.png"

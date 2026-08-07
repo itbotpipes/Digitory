@@ -10,6 +10,8 @@ export default function ContactPage() {
     name: '',
     phone: '',
     email: '',
+    restaurantName: '',
+    category: '',
     interested: 'Commercial Ads',
     message: '',
   });
@@ -36,6 +38,8 @@ export default function ContactPage() {
         name: formState.name,
         phone: formState.phone,
         email: formState.email,
+        restaurantName: formState.restaurantName,
+        category: formState.category || undefined, // send undefined if empty
         interested: formState.interested,
         message: formState.message,
       });
@@ -45,6 +49,8 @@ export default function ContactPage() {
         name: '',
         phone: '',
         email: '',
+        restaurantName: '',
+        category: '',
         interested: 'Commercial Ads',
         message: '',
       });
@@ -76,7 +82,7 @@ export default function ContactPage() {
               preload="auto"
               className="w-full h-full object-cover scale-[1.01]"
             >
-              <source src="/video.mp4" type="video/mp4" />
+              <source src="/DigitoryHow-QR-Code-Order-Pay-for-Restaurants-Works-1920x1080-2-1.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             {/* Overlay Gradient for high contrast */}
@@ -90,7 +96,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
             {/* Left Column (Cards and Map) */}
-            <div className="lg:col-span-5 flex flex-col gap-6">
+            <div className="lg:col-span-5 flex flex-col gap-6 h-full">
 
               {/* Phone and Email row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -142,7 +148,7 @@ export default function ContactPage() {
               </div>
 
               {/* Map Card */}
-              <div className="relative rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800/80 shadow-md h-[320px] w-full group">
+              <div className="relative rounded-2xl overflow-hidden border border-zinc-200/80 shadow-md min-h-[320px] flex-1 w-full group">
                 <a
                   href="https://www.google.com/maps/search/?api=1&query=Vaibhav+Bldg+Gandhi+Bazaar+Main+Road+Basavangudi+Bangalore"
                   target="_blank"
@@ -218,6 +224,45 @@ export default function ContactPage() {
                       placeholder="Email"
                       className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
                     />
+                  </div>
+
+                  {/* Restaurant Name */}
+                  <div className="space-y-2">
+                    <label htmlFor="restaurantName" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Restaurant Name<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="restaurantName"
+                      name="restaurantName"
+                      required
+                      value={formState.restaurantName}
+                      onChange={handleChange}
+                      placeholder="Restaurant Name"
+                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
+                    />
+                  </div>
+
+                  {/* Choose Category */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 block">
+                      Choose Category
+                    </label>
+                    <div className="flex flex-col gap-2.5">
+                      {['Restaurant', 'Hotel', 'Cloud Kitchen'].map((cat) => (
+                        <label key={cat} className="flex items-center gap-3 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300 font-medium">
+                          <input
+                            type="radio"
+                            name="category"
+                            value={cat}
+                            checked={formState.category === cat}
+                            onChange={handleChange}
+                            className="w-4 h-4 text-[#FF4F18] accent-[#FF4F18] border-zinc-300 focus:ring-[#FF4F18] dark:border-zinc-700 dark:bg-zinc-900"
+                          />
+                          <span>{cat}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Interested */}

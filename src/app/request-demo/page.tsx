@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Header from '../../components/Header';
 import DemoHero from '../../components/request-demo/DemoHero';
@@ -7,6 +5,14 @@ import DemoForm from '../../components/request-demo/DemoForm';
 import RestaurantOSPage from '../../components/home/RestaurantOS';
 import FAQPage from '../../components/home/FAQ';
 import FooterPage from '../../components/Footer';
+import { generateSeoMetadata } from "@/lib/seo";
+
+export async function generateMetadata() {
+  return await generateSeoMetadata('Page', 'request-demo', {
+    title: 'Book a Demo | Digitory',
+    description: 'Schedule a customized walkthrough of the Digitory Restaurant Operating System.',
+  });
+}
 
 export default function RequestDemoPage() {
   return (

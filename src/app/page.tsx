@@ -10,7 +10,14 @@ import RestaurantOSPage from "../components/home/RestaurantOS";
 import FAQPage from "../components/home/FAQ";
 import InsightsPage from "../components/home/Insights";
 import FooterPage from "../components/Footer";
+import { generateSeoMetadata } from "@/lib/seo";
 
+export async function generateMetadata() {
+  return await generateSeoMetadata('Page', 'home', {
+    title: 'Digitory | Restaurant Operating System',
+    description: 'Transform your restaurant operations and grow margins.',
+  });
+}
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">

@@ -56,7 +56,7 @@ export default function ProblemsSection() {
       text: 'That\'s exactly why we built Digitory',
       subtext: 'One system. Less confusion. Better control.',
       status: 'Fixed',
-      badgeClass: 'bg-orange-50 dark:bg-[#FF4F18]/15 text-[#FF4F18] border border-[#FF4F18]/25',
+      badgeClass: 'bg-[#EAF9F0] dark:bg-[#13B257]/15 text-[#13B257] border border-[#13B257]/25',
     },
   ];
 
@@ -67,17 +67,16 @@ export default function ProblemsSection() {
         {/* Header Block */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
           <div className="lg:col-span-7">
-            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-              About Digitory
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15]">
+              <span className="text-[#FF4F18]">About Digitory</span>
               <br />
-              <span className="text-[#FF4F18]">Running a restaurant isn't easy. We understand why.</span>
+              <span className="text-[#111111] dark:text-white">Running a restaurant isn't easy. We understand why.</span>
             </h2>
           </div>
-          <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-400 space-y-4 text-base md:text-lg leading-relaxed">
+          <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-400 space-y-4 text-sm md:text-base leading-relaxed lg:pt-[3.25rem]">
             <p>
-              Running a restaurant today is more complex than ever, with orders coming from dine-in, Swiggy, Zomato, and other platforms. Managing kitchens, staff, and multiple outlets without real-time visibility can be challenging. Digitory simplifies restaurant operations by bringing everything together in one smart system.
+              Managing dine-in, delivery platforms, kitchens, and staff simultaneously is incredibly complex. Digitory simplifies everything by unifying your restaurant's entire operation into one smart, real-time system.
             </p>
-
           </div>
         </div>
 
@@ -95,7 +94,7 @@ export default function ProblemsSection() {
                   key={idx}
                   className="flex gap-4 p-6 rounded-2xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] transition-all duration-300 group hover:-translate-y-0.5"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 dark:bg-[#FF4F18]/10 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 shrink-0 group-hover:scale-110 transition-transform duration-300">
                     {prob.icon}
                   </div>
                   <div className="space-y-1">
@@ -116,31 +115,71 @@ export default function ProblemsSection() {
             <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
               A busy Friday night — The problems restaurants face every day
             </h3>
-            <div className="flex-1 flex flex-col gap-4 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.15)]">
-              {scenarios.map((scene, idx) => {
-                const isFixed = scene.status === 'Fixed';
-                return (
-                  <div
-                    key={idx}
-                    className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl transition-all duration-300 ${isFixed
-                        ? 'bg-orange-50/10 dark:bg-[#FF4F18]/5 border-2 border-[#FF4F18]/30'
-                        : 'bg-[#F9FAFB] dark:bg-[#1C1C20]/50 border border-zinc-100 dark:border-zinc-900/30'
-                      } hover:translate-x-1`}
-                  >
-                    <div className="space-y-1">
-                      <p className={`text-sm sm:text-base font-bold ${isFixed ? 'text-zinc-900 dark:text-white' : 'text-zinc-800 dark:text-zinc-200'}`}>
-                        {scene.text}
-                      </p>
-                      <p className="text-xs sm:text-sm text-zinc-450 dark:text-zinc-450">
-                        {scene.subtext}
-                      </p>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${scene.badgeClass}`}>
-                      {scene.status}
+            
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 space-y-6 w-full max-w-[500px] mx-auto lg:mx-0 flex-1 flex flex-col justify-between">
+              <div>
+                {/* Card Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h4 className="font-bold text-zinc-900 dark:text-white text-[16px]">
+                    Friday Night Rush
+                  </h4>
+                  <span className="inline-flex items-center gap-1.5 bg-[#FFF0EA] dark:bg-[#FF4F18]/15 text-[#FF4F18] px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4F18] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#FF4F18]"></span>
                     </span>
-                  </div>
-                );
-              })}
+                    <span>4 alerts active</span>
+                  </span>
+                </div>
+
+                {/* Scenarios list */}
+                <div className="space-y-3">
+                  {scenarios.map((scene, idx) => {
+                    const isFixed = scene.status === 'Fixed';
+                    return (
+                      <div
+                        key={idx}
+                        className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 cursor-pointer select-none border transform hover:-translate-y-0.5 ${
+                          isFixed
+                            ? 'bg-[#EAF9F0]/30 dark:bg-[#13B257]/10 border-[#13B257]/30 hover:border-[#13B257]/50'
+                            : 'bg-[#F8F9FA] dark:bg-zinc-800/50 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800/80 border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50'
+                        }`}
+                      >
+                        <div className="flex items-start min-w-0 pr-4">
+                          <span
+                            className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${
+                              scene.status === 'Stock' ? 'bg-[#FF4F18]' :
+                              scene.status === 'Lost' ? 'bg-[#FF3B30]' :
+                              scene.status === 'Delay' ? 'bg-[#FFCC00]' :
+                              'bg-[#13B257]'
+                            }`}
+                          />
+                          <div className="ml-3.5 space-y-0.5">
+                            <p className="text-[14px] font-semibold text-zinc-900 dark:text-zinc-100">
+                              {scene.text}
+                            </p>
+                            <p className="text-[12px] text-zinc-500 dark:text-zinc-400">
+                              {scene.subtext}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex-shrink-0 flex items-center">
+                          <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${scene.badgeClass}`}>
+                            {scene.status}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-center pt-4 border-t border-zinc-100 dark:border-zinc-800/50 mt-4">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+                  Real-time restaurant operations simulated.
+                </span>
+              </div>
             </div>
           </div>
 

@@ -24,6 +24,14 @@ export default function Updates() {
   const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
   const [isFeaturedOpen, setIsFeaturedOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleItemClick = (item: UpdateItem) => {
     setSelectedUpdate(item);
@@ -113,7 +121,7 @@ export default function Updates() {
   }, []);
 
   useEffect(() => {
-    if (selectedUpdate || isFeaturedOpen) {
+    if ((selectedUpdate || isFeaturedOpen) && isMobile) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -121,7 +129,9 @@ export default function Updates() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedUpdate, isFeaturedOpen]);
+  }, [selectedUpdate, isFeaturedOpen, isMobile]);
+
+  const displayUpdate = selectedUpdate || updatesList[0];
 
   return (
     <div className="w-full pointer-events-auto">
@@ -131,8 +141,8 @@ export default function Updates() {
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Section Title */}
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] mb-10 leading-[1.15]">
-          Latest <span className="text-[#FF4F18]">Updates</span>
-          <br />& Announcements
+          Latest <span className="text-[#FF4F18]">updates</span>
+          <br />& announcements
         </h2>
 
         {/* 2-Column Grid */}
@@ -183,7 +193,7 @@ export default function Updates() {
                 className={`flex gap-6 py-6 lg:py-[32px] items-start border-b border-zinc-200/60 last:border-b-0 cursor-pointer hover:bg-zinc-50/40 dark:hover:bg-zinc-900/40 rounded-xl px-2 -mx-2 transition-all duration-250 pointer-events-auto`}
               >
                 {/* Date Badge */}
-                <div className="flex flex-col items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl border border-orange-200/50 bg-[#FAF6F0] shrink-0 shadow-2xs select-none">
+                <div className="flex flex-col items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shrink-0 shadow-2xs select-none">
                   <span className="text-2xl md:text-3xl font-extrabold text-[#FF4F18] leading-none">
                     {item.date}
                   </span>
@@ -212,40 +222,41 @@ export default function Updates() {
           <div className="hidden lg:block lg:col-span-6">
             <div className="rounded-[28px] overflow-hidden border border-zinc-200/80 bg-[#FFF] p-4 flex flex-col shadow-xs">
               {/* Featured Image */}
-              <div className="relative w-full aspect-16/10 rounded-[20px] overflow-hidden">
-                <Image
-                  src="/Background+HorizontalBorder.png"
-                  alt="Featured Update Mockup"
-                  fill
-                  className="object-cover"
-                  priority
-                />
+              <div className="relative w-full aspect-16/10 rounded-[20px] overflow-hidden bg-zinc-100">
+                {displayUpdate && (
+                  <Image
+                    src={displayUpdate.image || "/Background+HorizontalBorder.png"}
+                    alt={displayUpdate.title || "Featured Update"}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                )}
               </div>
 
               {/* Card Body */}
               <div className="px-2 py-6">
                 <span className="text-[10px] md:text-xs font-bold tracking-wider text-[#FF4F18] uppercase mb-2 block">
-                  FEATURED UPDATE
+                  {displayUpdate ? displayUpdate.category : "FEATURED UPDATE"}
                 </span>
 
                 <h3 className="text-xl md:text-2xl font-bold text-zinc-950 leading-snug mb-3">
-                  Restaurant operations made simple .
+                  {displayUpdate ? displayUpdate.title : "Loading..."}
                 </h3>
 
-                <p className="text-zinc-600 text-xs md:text-sm leading-relaxed mb-6">
-                  Digitory brings together POS, kitchen management, inventory,
-                  reports, and delivery apps into one platform. Save time,
-                  reduce waste, and make better business decisions with
-                  real-time information.
+                <p className="text-zinc-600 text-xs md:text-sm leading-relaxed mb-6 line-clamp-4">
+                  {displayUpdate ? displayUpdate.desc : ""}
                 </p>
 
                 {/* Read Full Story Button */}
-                <button
-                  onClick={() => setIsFeaturedOpen(true)}
-                  className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer"
-                >
-                  READ FULL STORY →
-                </button>
+                {displayUpdate && (
+                  <Link
+                    href={`/blog/${displayUpdate.slug}`}
+                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer w-max"
+                  >
+                    READ FULL STORY →
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -274,7 +285,7 @@ export default function Updates() {
 
       {/* Bottom Sheet Drawer / Modal */}
       {mounted &&
-        selectedUpdate &&
+        selectedUpdate && isMobile &&
         createPortal(
           <div className="fixed inset-0 z-[999] flex flex-col justify-end lg:justify-center lg:items-center p-0 lg:p-4">
             {/* Backdrop */}
@@ -356,7 +367,7 @@ export default function Updates() {
 
       {/* Featured Update Drawer / Modal */}
       {mounted &&
-        isFeaturedOpen &&
+        isFeaturedOpen && isMobile &&
         createPortal(
           <div className="fixed inset-0 z-[999] flex flex-col justify-end lg:justify-center lg:items-center p-0 lg:p-4">
             {/* Backdrop */}

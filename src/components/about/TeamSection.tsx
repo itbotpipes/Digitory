@@ -71,13 +71,17 @@ export default function TeamSection() {
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         
         {/* Header Block */}
-        <div className="max-w-3xl mb-16 text-center mx-auto space-y-4">
-          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            The people behind <span className="text-[#FF4F18]">Digitory</span>
-          </h2>
-          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
-            Our team has years of experience in technology, business, product development, and restaurant operations. More importantly, we've spent time inside real restaurants to understand the challenges owners and staff face every day.
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
+          <div className="lg:col-span-7">
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+              The people behind <span className="text-[#FF4F18]">Digitory</span>
+            </h2>
+          </div>
+          <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
+            <p>
+              Our team has years of experience in technology, business, product development, and restaurant operations. More importantly, we've spent time inside real restaurants to understand the challenges owners and staff face every day.
+            </p>
+          </div>
         </div>
 
         {/* Team Grid */}
@@ -99,7 +103,7 @@ export default function TeamSection() {
                   />
                 </div>
                 {/* Visual ring overlay */}
-                <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-[#FF4F18]/40 dark:border-[#FF4F18]/50 group-hover:rotate-45 transition-transform duration-700 z-0" />
+                <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-black dark:border-white group-hover:rotate-45 transition-transform duration-700 z-0" />
               </div>
 
               {/* Identity */}

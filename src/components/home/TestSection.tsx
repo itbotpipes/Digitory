@@ -39,35 +39,35 @@ export default function TestSection() {
   const chatMessages = [
     {
       role: 'Chef',
-      text: 'Orders reaching kitchen on time. ✅',
+      text: 'Orders reaching kitchen on time. 🍳',
       time: '7:42 PM',
       avatarColor: 'bg-emerald-100 text-emerald-700',
       avatarLabel: '👨‍🍳',
     },
     {
       role: 'Inventory',
-      text: 'Stock updated. No low stock. ✅',
+      text: 'Stock updated. No low stock. 📦',
       time: '7:45 PM',
       avatarColor: 'bg-orange-100 text-orange-700',
       avatarLabel: '📦',
     },
     {
       role: 'Cashier',
-      text: 'Billing running smoothly. ✅',
+      text: 'Billing running smoothly. 🧾',
       time: '7:48 PM',
       avatarColor: 'bg-blue-100 text-blue-700',
       avatarLabel: '💵',
     },
     {
       role: 'Captain',
-      text: 'All tables served on time. 😊',
+      text: 'All tables served on time. 🍽️',
       time: '7:52 PM',
       avatarColor: 'bg-indigo-100 text-indigo-700',
       avatarLabel: '🤵',
     },
     {
       role: 'Manager',
-      text: 'Sales looking great today! 👍',
+      text: 'Sales looking great today! 🚀',
       time: '7:53 PM',
       avatarColor: 'bg-amber-100 text-amber-700',
       avatarLabel: '👔',
@@ -83,7 +83,7 @@ export default function TestSection() {
         {/* Section Heading */}
         <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-10 md:mb-12">
           Can your restaurant handle a busy          <br />
-          <span className="text-[#FF4F18]">Saturday night?</span>
+          <span className="text-[#FF4F18]">saturday night?</span>
         </h2>
 
         {/* 2-Column Grid */}

@@ -1,9 +1,15 @@
-'use client';
-
 import React from 'react';
 import Header from '../../components/Header';
 import FooterPage from '../../components/Footer';
 import ScrollFocusWrapper from '../../components/ScrollFocusWrapper';
+import { generateSeoMetadata } from "@/lib/seo";
+
+export async function generateMetadata() {
+  return await generateSeoMetadata('Page', 'solutions', {
+    title: 'Solutions | Digitory',
+    description: 'Explore our restaurant operating system solutions.',
+  });
+}
 
 import RestaurantOSHero from '../../components/solutions/RestaurantOSHero';
 import RadialCommandCenter from '../../components/solutions/RadialCommandCenter';

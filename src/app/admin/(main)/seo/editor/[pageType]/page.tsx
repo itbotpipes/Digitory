@@ -3,7 +3,7 @@
 import React, { useEffect, useState, use } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
-import { ArrowLeft, Save, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Save, RefreshCw, FileJson } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SeoEditor({ params }: { params: Promise<{ pageType: string }> }) {
@@ -31,6 +31,41 @@ export default function SeoEditor({ params }: { params: Promise<{ pageType: stri
     schemaType: 'None',
     schemaData: ''
   });
+
+  const [jsonInput, setJsonInput] = useState('');
+  const [showJsonInput, setShowJsonInput] = useState(false);
+
+  const handleInjectJson = () => {
+    try {
+      const parsed = JSON.parse(jsonInput);
+      setSeo((prev: any) => ({
+        ...prev,
+        title: parsed.title ?? prev.title,
+        description: parsed.description ?? prev.description,
+        keywords: Array.isArray(parsed.keywords) ? parsed.keywords.join(', ') : parsed.keywords ?? prev.keywords,
+        canonicalUrl: parsed.canonicalUrl ?? prev.canonicalUrl,
+        slug: parsed.slug ?? prev.slug,
+        robotsIndex: parsed.robotsIndex ?? prev.robotsIndex,
+        robotsFollow: parsed.robotsFollow ?? prev.robotsFollow,
+        openGraph: {
+          title: parsed.openGraph?.title ?? prev.openGraph.title,
+          description: parsed.openGraph?.description ?? prev.openGraph.description,
+          image: parsed.openGraph?.image ?? prev.openGraph.image,
+        },
+        twitterCard: {
+          title: parsed.twitterCard?.title ?? prev.twitterCard.title,
+          description: parsed.twitterCard?.description ?? prev.twitterCard.description,
+          image: parsed.twitterCard?.image ?? prev.twitterCard.image,
+        },
+        schemaType: parsed.schemaType ?? prev.schemaType,
+        schemaData: parsed.schemaData ? (typeof parsed.schemaData === 'object' ? JSON.stringify(parsed.schemaData, null, 2) : parsed.schemaData) : prev.schemaData
+      }));
+      setShowJsonInput(false);
+      alert('JSON injected successfully! Click Save Changes to commit.');
+    } catch (e) {
+      alert('Failed to parse JSON. Please verify syntax.');
+    }
+  };
 
   useEffect(() => {
     if (!pageId) return;
@@ -114,6 +149,12 @@ export default function SeoEditor({ params }: { params: Promise<{ pageType: stri
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowJsonInput(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-bold text-sm rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+          >
+            <FileJson size={14} /> Inject JSON
+          </button>
           <button 
             onClick={handleAutoGenerate}
             className="flex items-center gap-2 px-4 py-2 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 font-bold text-sm rounded-xl hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
@@ -356,6 +397,41 @@ export default function SeoEditor({ params }: { params: Promise<{ pageType: stri
         </div>
 
       </div>
+
+      {showJsonInput && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setShowJsonInput(false)} />
+          <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl z-10">
+            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-4">Inject Raw SEO JSON</h2>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4 leading-relaxed font-medium">
+              Paste a raw JSON object containing SEO configurations (e.g. title, description, keywords, canonicalUrl, robotsIndex, robotsFollow, openGraph, twitterCard).
+            </p>
+            <textarea 
+              value={jsonInput}
+              onChange={(e) => setJsonInput(e.target.value)}
+              rows={12}
+              placeholder={`{\n  "title": "My Page Title",\n  "description": "Meta description content",\n  "keywords": ["tag1", "tag2"],\n  "robotsIndex": "index",\n  "openGraph": {\n    "title": "OG Title",\n    "image": "https://..."\n  }\n}`}
+              className="w-full bg-zinc-900 dark:bg-black text-green-400 border border-zinc-800 rounded-xl p-4 font-mono text-xs focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] transition-all resize-none custom-scrollbar"
+            />
+            <div className="pt-4 flex gap-3">
+              <button 
+                type="button" 
+                onClick={() => setShowJsonInput(false)}
+                className="flex-1 px-4 py-2.5 font-bold text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={handleInjectJson}
+                className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+              >
+                Apply & Inject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

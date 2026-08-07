@@ -33,8 +33,17 @@ async function migrateBlogs() {
   const catRes = await fetch('http://localhost:5000/api/categories', { headers });
   const catData = await catRes.json();
   
-  if (catData.data && catData.data.results && catData.data.results.length > 0) {
-    categoryId = catData.data.results[0]._id;
+  let categories = [];
+  if (Array.isArray(catData.data)) {
+    categories = catData.data;
+  } else if (catData.data && Array.isArray(catData.data.results)) {
+    categories = catData.data.results;
+  }
+
+  const existingCat = categories.find((c: any) => c.slug === 'articles');
+  
+  if (existingCat) {
+    categoryId = existingCat._id;
   } else {
     const newCatRes = await fetch('http://localhost:5000/api/categories', {
       method: 'POST',
@@ -42,6 +51,10 @@ async function migrateBlogs() {
       body: JSON.stringify({ name: 'Articles', slug: 'articles', description: 'Blog articles' })
     });
     const newCatData = await newCatRes.json();
+    if (!newCatRes.ok) {
+      console.error('Failed to create category:', newCatData);
+      process.exit(1);
+    }
     categoryId = newCatData.data._id;
   }
   

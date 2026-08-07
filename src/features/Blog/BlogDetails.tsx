@@ -65,7 +65,7 @@ function BlogDetails({ blog }: BlogDetailsProps) {
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-6 text-sm">
           <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
-            {blog.category || "Article"}
+            {typeof blog.category === 'object' && blog.category ? blog.category.name : (blog.category || "Article")}
           </span>
           <span className="text-gray-500 flex items-center">
             <Clock size={16} className="mr-1.5" /> {readTime} min read
