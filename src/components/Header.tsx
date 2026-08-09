@@ -76,7 +76,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/logo.png"
+            src="/Digitory-01.png"
             alt="Digitory Logo"
             width={112}
             height={28}

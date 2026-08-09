@@ -34,11 +34,11 @@ export default function FooterPage() {
           <div className="lg:col-span-4 space-y-6">
             <div className="flex items-center">
               <Image
-                src="/logo.png"
+                src="/Digitory-01 copy.png"
                 alt="Digitory Logo"
                 width={112}
                 height={28}
-                className="h-7 w-auto object-contain invert hue-rotate-180"
+                className="h-7 w-auto object-contain"
                 priority
               />
             </div>
