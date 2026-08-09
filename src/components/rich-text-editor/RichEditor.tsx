@@ -1045,9 +1045,9 @@ const RichEditor: React.FC<RichEditorProps> = ({
     if (defaultValue !== currentHtml && defaultValue !== currentJson) {
       try {
         const parsed = JSON.parse(defaultValue);
-        editor.commands.setContent(parsed, false);
+        editor.commands.setContent(parsed, { emitUpdate: false });
       } catch {
-        editor.commands.setContent(defaultValue, false);
+        editor.commands.setContent(defaultValue, { emitUpdate: false });
       }
     }
   }, [defaultValue, editor]);
