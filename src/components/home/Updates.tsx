@@ -61,7 +61,7 @@ export default function Updates() {
               title: p.title,
               desc: p.excerpt || p.title,
               content: p.content,
-              image: p.featuredImage || '/featured.png'
+              image: p.featuredImage && p.featuredImage.trim() !== "" ? p.featuredImage : '/Background+HorizontalBorder.png'
             };
           });
           setUpdatesList(mapped);
