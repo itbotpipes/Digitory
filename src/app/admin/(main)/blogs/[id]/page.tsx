@@ -37,6 +37,18 @@ function EditBlogPage({ params }: PageProps) {
     fetchBlog();
   }, [id]);
 
+  // Autosave: saves silently without navigating away
+  const autoSaveHandler = async (data: any) => {
+    const token = localStorage.getItem('admin_token');
+    if (!token) return;
+    try {
+      await api.put(`/posts/${id}`, data, token);
+    } catch (err) {
+      console.error('Autosave failed:', err);
+    }
+  };
+
+  // Manual save: saves then navigates back to blog list
   const submitHandler = async (data: any) => {
     const token = localStorage.getItem('admin_token');
     if (!token) return;
@@ -92,6 +104,7 @@ function EditBlogPage({ params }: PageProps) {
       <NotionBlogEditor
         defaultValues={blog}
         submitHandler={submitHandler}
+        autoSaveHandler={autoSaveHandler}
         onDelete={deleteHandler}
       />
     </div>

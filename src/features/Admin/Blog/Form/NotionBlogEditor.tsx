@@ -28,12 +28,14 @@ import { Button } from "@/components/ui/button";
 
 interface NotionBlogEditorProps {
   submitHandler: (data: any) => void;
+  autoSaveHandler?: (data: any) => Promise<void>;
   defaultValues?: any;
   onDelete?: () => void;
 }
 
 const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
   submitHandler,
+  autoSaveHandler,
   defaultValues,
   onDelete,
 }) => {
@@ -123,7 +125,9 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
       form.handleSubmit(async (data) => {
         try {
           const submitData = await handleSubmit(data);
-          await submitHandler(submitData);
+          // Use autoSaveHandler (silent, no redirect) if available; otherwise use submitHandler
+          const saver = autoSaveHandler ?? submitHandler;
+          await saver(submitData);
           form.reset(data, { keepValues: true });
           setSavingStatus("saved");
           setTimeout(() => setSavingStatus("idle"), 2500);
@@ -135,7 +139,7 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
     }, 5000);
 
     return () => clearTimeout(saveTimer);
-  }, [formValues, form, submitHandler, handleSubmit]);
+  }, [formValues, form, submitHandler, autoSaveHandler, handleSubmit]);
 
   const [isUploadingCover, setIsUploadingCover] = useState(false);
 
