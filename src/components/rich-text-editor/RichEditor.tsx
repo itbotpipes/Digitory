@@ -830,12 +830,13 @@ const RichEditor: React.FC<RichEditorProps> = ({
     ],
     content: (() => {
       if (!defaultValue) {
-        return { type: "doc", content: [] };
+        return "";
       }
       try {
+        // If it's stored as a JSON string, parse it. Otherwise, return the HTML string directly.
         return JSON.parse(defaultValue);
       } catch {
-        return { type: "doc", content: [] };
+        return defaultValue;
       }
     })(),
     immediatelyRender: false,
@@ -1033,6 +1034,23 @@ const RichEditor: React.FC<RichEditorProps> = ({
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [slashMenuOpen, bubbleMenuOpen]);
+
+  useEffect(() => {
+    if (!editor || !defaultValue) return;
+    
+    // Check if the current editor content matches the defaultValue.
+    // If not, update it dynamically (supports both JSON and raw HTML strings)
+    const currentHtml = editor.getHTML();
+    const currentJson = JSON.stringify(editor.getJSON());
+    if (defaultValue !== currentHtml && defaultValue !== currentJson) {
+      try {
+        const parsed = JSON.parse(defaultValue);
+        editor.commands.setContent(parsed, false);
+      } catch {
+        editor.commands.setContent(defaultValue, false);
+      }
+    }
+  }, [defaultValue, editor]);
 
   useEffect(() => {
     setSelectedCommandIndex(0);
