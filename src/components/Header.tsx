@@ -65,7 +65,7 @@ export default function Header() {
   const navLinks = [
     { label: 'About', href: '/about' },
     { label: 'Solutions', href: '/solutions' },
-    { label: 'Restaurant Types', href: '/solutions#restaurant-types' },
+    { label: 'Restaurant Types', href: '/industries' },
     { label: 'Resources', href: '/blog' },
     { label: 'Contact', href: '/contact' },
   ];
@@ -75,14 +75,22 @@ export default function Header() {
       <header className="mx-auto max-w-7xl rounded-full bg-[#EAEAEA]/80 backdrop-blur-md pl-8 pr-4 py-3 flex items-center justify-between shadow-sm">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image
-            src="/Digitory-01.png"
-            alt="Digitory Logo"
-            width={112}
-            height={28}
-            className="h-7 w-auto object-contain"
-            priority
-          />
+          {/* Clip container to crop the large whitespace padding in the PNG */}
+          <div className="overflow-hidden h-[38px]" style={{ width: '130px' }}>
+            <Image
+              src="/Digitory-01.png"
+              alt="Digitory Logo"
+              width={160}
+              height={160}
+              style={{
+                height: '160px',
+                width: 'auto',
+                marginTop: '-61px',
+                marginLeft: '-14px',
+              }}
+              priority
+            />
+          </div>
         </Link>
 
         {/* Desktop Navigation */}

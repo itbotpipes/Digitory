@@ -36,9 +36,9 @@ export default function FooterPage() {
               <Image
                 src="/Digitory-01 copy.png"
                 alt="Digitory Logo"
-                width={112}
-                height={28}
-                className="h-7 w-auto object-contain"
+                width={128}
+                height={128}
+                className="h-32 w-auto object-contain"
                 priority
               />
             </div>

@@ -121,16 +121,17 @@ export default function RadialCommandCenter() {
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
       {/* Header Block */}
-      <div className="text-left mb-12 md:mb-16 animate-fade-in">
-        <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Features Overview
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
-          Everything your restaurant needs, <span className="text-[#FF4F18]">in one place</span>
-        </h2>
-        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
-          Digitory connects every part of your restaurant, from the front counter to the kitchen and from inventory to business reports. With everything working together, your daily operations become simpler and easier to manage.
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start animate-fade-in">
+        <div className="lg:col-span-7">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+            Everything your restaurant needs, <br className="hidden lg:block" /> <span className="text-[#FF4F18]">in one place</span>
+          </h2>
+        </div>
+        <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 text-sm md:text-base leading-relaxed lg:pt-2">
+          <p>
+            Digitory connects every part of your restaurant, from the front counter to the kitchen and from inventory to business reports. With everything working together, your daily operations become simpler and easier to manage.
+          </p>
+        </div>
       </div>
 
       {/* 2-Column Responsive Layout */}

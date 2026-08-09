@@ -67,18 +67,17 @@ export default function RoiCalculator() {
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
 
       {/* Header Block */}
-      <div className="text-left mb-10 md:mb-12">
-        <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Savings Calculator
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
-          See how much <span className="text-[#FF4F18]">you can save</span>
-        </h2>
-        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-3xl">
-          Small improvements every day can make a big difference. Use our savings calculator to see how Digitory can help reduce food waste, save staff time, and improve your restaurant's daily operations. Run your restaurant smarter, save more, and focus on what matters most—serving great food and creating happy customers.
-          <br />
-
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start">
+        <div className="lg:col-span-7">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+            See how much  <span className="text-[#FF4F18]">you can save</span>
+          </h2>
+        </div>
+        <div className="lg:col-span-5 text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed lg:pt-2">
+          <p>
+            Use our interactive calculator to see exactly how much Digitory can help you save by reducing food waste, optimizing staff hours, and increasing your daily margins.
+          </p>
+        </div>
       </div>
 
       {/* Main Calculator Panel */}
@@ -147,7 +146,7 @@ export default function RoiCalculator() {
       </div>
 
       {/* Bottom Outcomes Cards */}
-      <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center max-w-5xl mx-auto">
+      <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center w-full mt-16 md:mt-24">
         {[
           { value: `${turnover}%`, label: "Faster Table Turnover" },
           { value: `${wastage}%`, label: "Less Raw Wastage" },

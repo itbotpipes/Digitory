@@ -84,15 +84,15 @@ export default function ProblemsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
           {/* Left Column - Problems */}
-          <div className="lg:col-span-6 flex flex-col justify-between gap-6">
-            <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
+          <div className="lg:col-span-6 flex flex-col gap-6 h-full">
+            <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2 shrink-0">
               The everyday challenges restaurants face
             </h3>
-            <div className="space-y-6 flex-1">
+            <div className="flex flex-col bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-3xl shadow-[0_2px_8px_rgba(0,0,0,0.01)] overflow-hidden flex-1">
               {problems.map((prob, idx) => (
                 <div
                   key={idx}
-                  className="flex gap-4 p-6 rounded-2xl bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 shadow-[0_2px_8px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50"
+                  className={`flex-1 flex items-center gap-4 px-6 py-4 sm:py-5 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 ${idx !== problems.length - 1 ? 'border-b border-zinc-200/60 dark:border-[#2a2a2e]/60' : ''}`}
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 shrink-0">
                     {prob.icon}
@@ -111,14 +111,14 @@ export default function ProblemsSection() {
           </div>
 
           {/* Right Column - Friday Night Scenarios */}
-          <div className="lg:col-span-6 flex flex-col gap-6">
-            <div className="w-full max-w-[500px] mx-auto lg:mr-0 lg:ml-auto flex flex-col gap-6 h-full justify-between">
-              <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2">
+          <div className="lg:col-span-6 flex flex-col gap-6 h-full">
+            <div className="w-full max-w-[500px] mx-auto lg:mr-0 lg:ml-auto flex flex-col gap-6 h-full">
+              <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2 shrink-0">
                 A busy Friday night — The problems restaurants face every day
               </h3>
               
-              <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-5 md:p-6 space-y-4 w-full flex flex-col justify-between">
-                <div>
+              <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-5 md:p-6 space-y-4 w-full flex flex-col justify-between flex-1">
+                <div className="flex flex-col h-full justify-between gap-4">
                   {/* Card Header */}
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-bold text-zinc-900 dark:text-white text-[16px]">

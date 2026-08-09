@@ -157,33 +157,30 @@ export default function Capabilities() {
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
       
       {/* 1. Header Area */}
-      <div className="mb-12 text-left">
-        <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Features Matrix
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15] mb-4">
-          Twelve powerful features to <span className="text-[#FF4F18]">help your restaurant run better</span>
-        </h2>
-        <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400">
-          Click on any feature card below to open its full specifications and details on a new page.
-        </p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start">
+        <div className="lg:col-span-7">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+            Twelve powerful features to <br className="hidden lg:block"/> <span className="text-[#FF4F18]">help your restaurant run better</span>
+          </h2>
+        </div>
+        <div className="lg:col-span-5 text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed lg:pt-2">
+          <p>
+            Click on any feature card below to open its full specifications and details on a new page.
+          </p>
+        </div>
       </div>
 
       {/* 2. Grid Container with Linings/Separation */}
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-[28px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+      <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
         {featureItems.map((item, idx) => {
-          const isLastInRow = (idx % 3) === 2;
-          const isLastRow = idx >= 9;
-          const isVeryLast = idx === 11;
-
           return (
             <div
               key={idx}
               onClick={() => handleCardClick(item.id)}
-              className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left
-                ${!isLastInRow ? "md:border-r border-zinc-200 dark:border-zinc-800" : ""}
-                ${!isLastRow ? "md:border-b border-zinc-200 dark:border-zinc-800" : ""}
-                ${!isVeryLast ? "border-b border-zinc-200 dark:border-zinc-800 md:border-b-0" : "border-b-0"}
+              className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left border-zinc-200/60 dark:border-zinc-800/60
+                ${idx !== featureItems.length - 1 ? "border-b" : ""}
+                ${idx >= 9 ? "md:border-b-0" : ""}
+                ${idx % 3 !== 2 ? "md:border-r" : ""}
               `}
             >
               {/* Header: Number and raw Icon (No background color) */}

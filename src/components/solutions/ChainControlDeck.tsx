@@ -61,13 +61,6 @@ export default function ChainControlDeck() {
         
         {/* Left Column: Title, Description, and Tab Switcher */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8">
-          {/* Tagline */}
-          <div className="inline-flex">
-            <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
-              Chain Control Deck
-            </span>
-          </div>
-
           {/* Heading */}
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
             One Dashboard.
@@ -76,7 +69,7 @@ export default function ChainControlDeck() {
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
+          <p className="text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed max-w-xl">
             Monitor revenue, stock transfers, and store health across cities directly from your smartphone.
           </p>
 

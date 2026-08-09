@@ -67,15 +67,21 @@ export default function StorySection() {
         </div>
 
         {/* Timeline Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-stretch border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[32px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.01)] bg-white dark:bg-zinc-950/20">
           
           {milestones.map((item, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-start text-left relative p-6 bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[24px] shadow-[0_2px_8px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50"
+              className={`flex flex-col h-full items-start text-left relative p-8 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60
+                ${idx !== milestones.length - 1 ? "border-b" : ""}
+                ${idx >= 2 ? "md:border-b-0" : ""}
+                lg:border-b-0
+                ${idx % 2 === 0 ? "md:border-r" : "md:border-r-0"}
+                ${idx !== 3 ? "lg:border-r" : "lg:border-r-0"}
+              `}
             >
               {/* Year & Circle Node */}
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4 mb-6 shrink-0">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 text-[#FF4F18]">
                   {item.icon}
                 </div>
@@ -85,7 +91,7 @@ export default function StorySection() {
               </div>
 
               {/* Text Info */}
-              <div className="space-y-2">
+              <div className="space-y-2 flex-1">
                 <h3 className="text-[17px] font-bold text-zinc-900 dark:text-white leading-snug">
                   {item.title}
                 </h3>

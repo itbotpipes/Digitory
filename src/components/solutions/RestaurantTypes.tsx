@@ -91,14 +91,20 @@ export default function RestaurantTypes() {
       </div>
 
       {/* Grid Display */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.01)] bg-white dark:bg-zinc-950/20">
         {types.map((type, idx) => (
           <div 
             key={idx}
-            className="bg-white dark:bg-zinc-950/20 border border-zinc-200/60 dark:border-zinc-800 rounded-3xl p-8 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 transition-all duration-300 text-left"
+            className={`flex flex-col h-full p-8 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-default text-left border-zinc-200/60 dark:border-zinc-800/60
+              ${idx !== 5 ? 'border-b' : ''}
+              ${idx < 4 ? 'md:border-b' : 'md:border-b-0'}
+              ${idx < 3 ? 'lg:border-b' : 'lg:border-b-0'}
+              ${idx % 2 === 0 ? 'md:border-r' : 'md:border-r-0'}
+              ${idx % 3 !== 2 ? 'lg:border-r' : 'lg:border-r-0'}
+            `}
           >
             {/* Icon & Badge Row (No background wrapper on icon) */}
-            <div className="flex flex-col mb-6">
+            <div className="flex flex-col mb-6 shrink-0">
               <div className="text-[#FF4F18] mb-4">
                 {type.icon}
               </div>
@@ -108,12 +114,14 @@ export default function RestaurantTypes() {
             </div>
 
             {/* Title & Description */}
-            <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white mb-3 tracking-tight">
-              {type.title}
-            </h3>
-            <p className="text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed">
-              {type.description}
-            </p>
+            <div className="flex-1 flex flex-col">
+              <h3 className="text-[19px] md:text-[20px] font-extrabold text-zinc-900 dark:text-white mb-2 tracking-tight leading-snug">
+                {type.title}
+              </h3>
+              <p className="text-[13px] sm:text-[14px] text-zinc-550 dark:text-zinc-400 leading-relaxed">
+                {type.description}
+              </p>
+            </div>
           </div>
         ))}
       </div>

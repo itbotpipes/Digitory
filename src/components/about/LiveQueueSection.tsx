@@ -47,6 +47,32 @@ export default function LiveQueueSection() {
     return () => clearInterval(interval);
   }, []);
 
+  // Toggle order status to showcase high-fidelity interactivity
+  const handleToggleStatus = (id: string) => {
+    setTickets((prev) =>
+      prev.map((t) => {
+        if (t.id === id) {
+          if (t.status === 'served') {
+            return {
+              ...t,
+              status: 'active',
+              time: '6 min',
+              timeInSecs: 360,
+            };
+          } else {
+            return {
+              ...t,
+              status: 'served',
+              time: 'Served',
+              timeInSecs: 0,
+            };
+          }
+        }
+        return t;
+      })
+    );
+  };
+
   const bullets = [
     'Restaurant outlets using Digitory',
     'Orders handled every month',
@@ -69,7 +95,7 @@ export default function LiveQueueSection() {
             <p className="text-[17px] text-zinc-650 dark:text-zinc-400 leading-relaxed">
               We don't build software and expect restaurants to adjust. Instead, we work closely with restaurant owners, managers, chefs, and staff to understand how restaurants actually operate. Their feedback helps us improve Digitory every day, making it useful even during the busiest shifts. Whether it's a café, brewery, cloud kitchen, or multi-outlet restaurant, we build features that solve real problems.
             </p>
-
+ 
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800/60">
               {bullets.map((bullet, idx) => (
                 <li key={idx} className="flex items-center gap-3">
@@ -83,7 +109,7 @@ export default function LiveQueueSection() {
               ))}
             </ul>
           </div>
-
+ 
           {/* Right Column - Live Queue Mockup */}
           <div className="lg:col-span-6 flex justify-center w-full h-full">
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col justify-between h-full">
@@ -102,16 +128,17 @@ export default function LiveQueueSection() {
                     <span>14 active</span>
                   </span>
                 </div>
-
+ 
                 {/* Tickets list */}
                 <div className="space-y-3">
                   {tickets.map((t) => {
                     const isWarning = t.status === 'warning';
                     const isServed = t.status === 'served';
-
+ 
                     return (
                       <div
                         key={t.id}
+                        onClick={() => handleToggleStatus(t.id)}
                         className="flex items-center justify-between p-4 rounded-xl transition-all duration-200 cursor-pointer select-none bg-[#F8F9FA] dark:bg-zinc-800/50 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800/80 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 transform hover:-translate-y-0.5"
                       >
                         <div className="flex items-center min-w-0 pr-4">

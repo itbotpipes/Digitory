@@ -53,7 +53,7 @@ export default function Hero() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 pt-4 pb-10 md:pt-8 md:pb-16 lg:pt-10 lg:pb-20">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 items-center">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
 
         {/* Left Copy Column */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8">
@@ -124,15 +124,15 @@ export default function Hero() {
         */}
 
         {/* Right Column - Hero Image */}
-        <div className="lg:col-span-6 flex justify-center w-full relative perspective-[1000px]">
+        <div className="lg:col-span-6 flex justify-center lg:justify-end w-full relative perspective-[1000px]">
           <div 
-            className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2"
+            className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1"
           >
             <Image
               src="/home-hero.png"
               alt="Digitory Restaurant OS"
               fill
-              className="object-cover transition-transform duration-700 hover:scale-[1.05]"
+              className="object-cover transition-transform duration-500"
               priority
             />
             {/* Subtle inner overlay for premium finish */}

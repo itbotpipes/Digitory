@@ -493,7 +493,7 @@ function SolutionsDetailsContent() {
           </section>
 
           {/* Extra Sections (Growth, Owners Choice, Integrations, Support, Security) */}
-          {(solution.extraGrowth || solution.integrations || solution.supportItems) && (
+          {(solution.extraGrowth || solution.integrations || solution.supportItems || solution.securityItems || solution.extraOwnersChoice) && (
             <section className="mx-auto max-w-7xl px-6 md:px-8 py-16 text-left">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 
@@ -503,7 +503,7 @@ function SolutionsDetailsContent() {
                       <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         {solution.extraGrowth.title}
                       </h3>
-                      <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed">
                         {solution.extraGrowth.desc}
                       </p>
                     </div>
@@ -514,7 +514,7 @@ function SolutionsDetailsContent() {
                       <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                         {solution.extraOwnersChoice.title}
                       </h3>
-                      <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                      <p className="text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed">
                         {solution.extraOwnersChoice.desc}
                       </p>
                     </div>
@@ -549,7 +549,7 @@ function SolutionsDetailsContent() {
                       </h3>
                       <ul className="space-y-3.5">
                         {solution.supportItems.map((item, idx) => (
-                          <li key={idx} className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-450 font-semibold">
+                          <li key={idx} className="flex items-center gap-3 text-sm text-zinc-650 dark:text-zinc-450 font-semibold">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18]" />
                             {item}
                           </li>
@@ -579,7 +579,25 @@ function SolutionsDetailsContent() {
             </section>
           )}
 
-          <SolutionsCta />
+          {/* Dynamic Solution CTA Section */}
+          <section className="mx-auto max-w-7xl px-6 md:px-8 py-10">
+            <div className="bg-white dark:bg-zinc-950 rounded-[32px] p-8 md:p-16 text-zinc-900 dark:text-white shadow-xl border border-zinc-200 dark:border-zinc-800/80 flex flex-col items-center text-center gap-8 relative overflow-hidden select-none">
+              <div className="flex flex-col items-center space-y-4 max-w-3xl">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
+                  {solution.ctaBlock.title}
+                </h2>
+                <p className="text-sm sm:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed max-w-2xl">
+                  {solution.ctaBlock.desc}
+                </p>
+              </div>
+
+              <div className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+                  Request a Demo
+                </button>
+              </div>
+            </div>
+          </section>
 
         </div>
 
