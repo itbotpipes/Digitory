@@ -145,7 +145,7 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
   const renderedContent = useMemo(() => {
     if (!article.content) return '';
 
-    return article.content.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, contentText) => {
+    return article.content.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (_match: string, attrs: string, contentText: string) => {
       const text = contentText.replace(/<[^>]*>/g, '');
       const id = text.replace(/\s+/g, '-').toLowerCase().replace(/[^\w-]/g, '');
       
