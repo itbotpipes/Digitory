@@ -89,11 +89,11 @@ export default function TeamSection() {
           {team.map((member, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-3xl p-8 shadow-[0_4px_15px_rgba(0,0,0,0.015)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300 group"
+              className="flex flex-col items-center bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-3xl p-8 shadow-[0_4px_15px_rgba(0,0,0,0.015)] transition-all duration-300 hover:bg-zinc-50/50 group"
             >
               {/* Profile Avatar with Photo */}
               <div className="relative mb-6 select-none shrink-0">
-                <div className="w-24 h-24 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.1)] group-hover:scale-105 transition-transform duration-300 overflow-hidden relative z-10">
+                <div className="w-24 h-24 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shadow-[0_8px_20px_rgba(0,0,0,0.1)] overflow-hidden relative z-10">
                   <Image 
                     src={member.image} 
                     alt={member.name} 

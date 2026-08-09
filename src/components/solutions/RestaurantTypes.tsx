@@ -76,17 +76,18 @@ export default function RestaurantTypes() {
   return (
     <section id="restaurant-types" className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
       
-      {/* Header Block */}
-      <div className="text-center mb-16">
-        <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Tailored to your needs
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15] mb-4">
-          Built for <span className="text-[#FF4F18]">every type of restaurant</span>
-        </h2>
-        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-          Whether you own a single café or a growing restaurant chain, Digitory is designed to fit the way you work.
-        </p>
+      {/* Header Block: Left Heading, Right Subtitle */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start mb-16">
+        <div className="lg:col-span-7">
+          <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15]">
+            Built for <span className="text-[#FF4F18]">every type of restaurant.</span>
+          </h2>
+        </div>
+        <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 text-sm md:text-base leading-relaxed lg:pt-1">
+          <p>
+            Whether you own a single café or a growing restaurant chain, Digitory is designed to fit the way you work.
+          </p>
+        </div>
       </div>
 
       {/* Grid Display */}
@@ -94,11 +95,11 @@ export default function RestaurantTypes() {
         {types.map((type, idx) => (
           <div 
             key={idx}
-            className="group bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 rounded-3xl p-8 hover:border-[#FF4F18]/40 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300"
+            className="bg-white dark:bg-zinc-950/20 border border-zinc-200/60 dark:border-zinc-800 rounded-3xl p-8 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 transition-all duration-300 text-left"
           >
-            {/* Icon & Badge Row */}
+            {/* Icon & Badge Row (No background wrapper on icon) */}
             <div className="flex flex-col mb-6">
-              <div className="w-12 h-12 bg-[#FFF3EF] dark:bg-[#FF4F18]/10 text-[#FF4F18] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-[#FF4F18] mb-4">
                 {type.icon}
               </div>
               <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
@@ -110,7 +111,7 @@ export default function RestaurantTypes() {
             <h3 className="text-xl font-extrabold text-zinc-900 dark:text-white mb-3 tracking-tight">
               {type.title}
             </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed">
               {type.description}
             </p>
           </div>

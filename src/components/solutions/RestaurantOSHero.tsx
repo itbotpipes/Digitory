@@ -1,29 +1,63 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+
+const TABLES = [
+  { id: 1, label: "Table 01", status: "Ready" },
+  { id: 4, label: "Table 04", status: "Busy (3 items)" },
+  { id: 9, label: "Table 09", status: "Billing" },
+];
+
+const MENU_ITEMS = [
+  { id: 1, name: "Paneer Masala", price: 280 },
+  { id: 2, name: "Butter Naan", price: 70 },
+  { id: 3, name: "Chicken Biryani", price: 320 },
+  { id: 4, name: "Mango Lassi", price: 110 },
+];
 
 export default function RestaurantOSHero() {
+  const [activeTable, setActiveTable] = useState(4);
+  const [orderItems, setOrderItems] = useState<
+    { id: number; name: string; price: number; qty: number }[]
+  >([
+    { id: 1, name: "Paneer Butter Masala", price: 280, qty: 1 },
+    { id: 2, name: "Butter Naan", price: 70, qty: 2 },
+  ]);
+
+  const total = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+  const handleAddItem = (item: { id: number; name: string; price: number }) => {
+    setOrderItems((prev) => {
+      const existing = prev.find((o) => o.id === item.id);
+      if (existing) {
+        return prev.map((o) =>
+          o.id === item.id ? { ...o, qty: o.qty + 1 } : o
+        );
+      }
+      return [...prev, { ...item, qty: 1 }];
+    });
+  };
+
+  const handleRemoveItem = (id: number) => {
+    setOrderItems((prev) =>
+      prev
+        .map((o) => (o.id === id ? { ...o, qty: o.qty - 1 } : o))
+        .filter((o) => o.qty > 0)
+    );
+  };
+
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-6 md:py-10">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
-        
+
         {/* Left Column: Product Information */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8">
-          {/* Badge */}
-          <div className="inline-flex">
-            <div className="flex items-center gap-2 bg-[#FFF3EF] px-3.5 py-1.5 rounded-full select-none">
-              <span className="h-2 w-2 rounded-full bg-[#FF4F18]"></span>
-              <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
-                Solutions
-              </span>
-            </div>
-          </div>
-
           {/* Heading */}
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-            Spend less time managing problems.
-            <br />
-            <span className="text-[#FF4F18]">Spend more time serving customers.</span>
+            Spend more time{" "}
+            <span className="text-[#FF4F18]">
+              serving customers.
+            </span>
           </h2>
 
           {/* Subtitle */}
@@ -31,18 +65,18 @@ export default function RestaurantOSHero() {
             Running a restaurant is busy enough. Digitory brings billing, orders, inventory, kitchen management, and reports into one simple system, so your team can work faster and with fewer mistakes.
           </p>
 
-          {/* Action CTAs */}
+          {/* Action CTAs — no glow shadow */}
           <div className="flex flex-wrap gap-4 items-center">
-            <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+            <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer">
               Book a Live Demo
             </button>
-            <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+            <button className="inline-flex justify-center items-center text-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-3 text-[15px] font-semibold text-zinc-800 dark:text-white transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 active:scale-[0.98] cursor-pointer">
               Explore Features
             </button>
           </div>
 
           {/* Trust and Social Proof */}
-          <div className="flex items-center gap-4 pt-6 border-t border-zinc-100">
+          <div className="flex items-center gap-4 pt-6 border-t border-zinc-100 dark:border-zinc-800">
             <div className="flex -space-x-3 select-none">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECECEC] text-zinc-600 font-extrabold text-[11px] border-2 border-white shadow-2xs">
                 R
@@ -60,133 +94,118 @@ export default function RestaurantOSHero() {
           </div>
         </div>
 
-        {/* Right Column: POS Terminal Static Mockup (Matches Uploaded Image) */}
+        {/* Right Column: Interactive POS Terminal */}
         <div className="lg:col-span-6 flex justify-center w-full">
           <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col gap-4 md:gap-5 relative select-none text-zinc-900 dark:text-white">
-            
+
             {/* 1. Terminal Topbar */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
                 <span className="text-[11px] font-extrabold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">
                   POS Terminal #01 • Main Floor
                 </span>
               </div>
-              <div className="px-2.5 py-1 rounded-full border border-orange-200 dark:border-[#FF4F18]/40 bg-orange-50 dark:bg-[#FF4F18]/5 text-[#FF4F18] text-[10px] font-extrabold tracking-wider uppercase">
-                Live Session
-              </div>
             </div>
 
-            {/* 2. Active Table Selection (Static) */}
+            {/* 2. Active Table Selection — clickable */}
             <div>
               <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 tracking-widest block mb-2 uppercase">
                 Select Active Table:
               </span>
               <div className="grid grid-cols-3 gap-3">
-                {/* Table 01 */}
-                <div className="flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">
-                  <span className="text-sm font-extrabold">Table 01</span>
-                  <span className="text-[10px] font-bold mt-1 text-zinc-900 dark:text-white">Ready</span>
-                </div>
-
-                {/* Table 04 - Selected */}
-                <div className="flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.4)]">
-                  <span className="text-sm font-extrabold">Table 04</span>
-                  <span className="text-[10px] font-bold mt-1 text-white/90">Busy (3 items)</span>
-                </div>
-
-                {/* Table 09 */}
-                <div className="flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300">
-                  <span className="text-sm font-extrabold">Table 09</span>
-                  <span className="text-[10px] font-bold mt-1 text-zinc-900 dark:text-white">Billing</span>
-                </div>
+                {TABLES.map((table) => {
+                  const isActive = activeTable === table.id;
+                  return (
+                    <button
+                      key={table.id}
+                      onClick={() => setActiveTable(table.id)}
+                      className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                        isActive
+                          ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.3)]"
+                          : "bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      }`}
+                    >
+                      <span className="text-sm font-extrabold">{table.label}</span>
+                      <span className={`text-[10px] font-bold mt-1 ${isActive ? "text-white/90" : "text-zinc-500 dark:text-zinc-400"}`}>
+                        {table.status}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* 3. Fast Billing Shortcuts (Static) */}
+            {/* 3. Fast Billing Shortcuts — clickable, adds to order */}
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 tracking-widest uppercase">
                   Fast Billing Shortcuts:
                 </span>
                 <span className="text-xs font-black text-[#FF4F18] uppercase tracking-wide">
-                  Total: ₹ 670
+                  Total: ₹ {total}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
-                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Paneer Masala</span>
-                  <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹280</span>
-                </div>
-                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
-                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Butter Naan</span>
-                  <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹70</span>
-                </div>
-                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
-                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Chicken Biryani</span>
-                  <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹320</span>
-                </div>
-                <div className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 rounded-xl transition-all duration-200 cursor-pointer">
-                  <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ Mango Lassi</span>
-                  <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹110</span>
-                </div>
+                {MENU_ITEMS.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleAddItem(item)}
+                    className="flex justify-between items-center py-2.5 px-3 bg-[#F8F9FA] dark:bg-zinc-800/50 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800 rounded-xl transition-all duration-200 cursor-pointer text-left active:scale-[0.97]"
+                  >
+                    <span className="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">+ {item.name}</span>
+                    <span className="text-[11px] font-black text-zinc-500 dark:text-zinc-400">₹{item.price}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* 4. Order List Receipt (Static matching reference image) */}
-            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-4 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 transition-all duration-200 flex-grow min-h-[90px] flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center text-[13px] font-semibold text-zinc-900 dark:text-zinc-100">
-                  <span>1x Paneer Butter Masala</span>
-                  <span className="font-extrabold text-zinc-500 dark:text-zinc-400">₹280</span>
-                </div>
-                <div className="flex justify-between items-center text-[13px] font-semibold text-zinc-900 dark:text-zinc-100">
-                  <span>2x Butter Naan</span>
-                  <span className="font-extrabold text-zinc-500 dark:text-zinc-400">₹140</span>
-                </div>
-              </div>
+            {/* 4. Order List — live, with qty controls */}
+            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-4 border border-transparent flex flex-col gap-2 min-h-[80px]">
+              {orderItems.length === 0 ? (
+                <p className="text-[12px] text-zinc-400 text-center py-2">No items added yet. Tap a shortcut above.</p>
+              ) : (
+                orderItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center text-[13px]">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <button
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="w-5 h-5 rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center text-[11px] font-bold hover:bg-red-100 hover:text-red-500 transition-colors flex-shrink-0 cursor-pointer"
+                      >
+                        −
+                      </button>
+                      <span className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                        {item.qty}x {item.name}
+                      </span>
+                    </div>
+                    <span className="font-extrabold text-zinc-500 dark:text-zinc-400 flex-shrink-0 ml-2">
+                      ₹{item.price * item.qty}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
 
-            {/* 5. KDS Status Bar (Static) */}
-            <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
+            {/* 5. KDS Status Bar */}
+            <div className="flex items-center bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-2">
-                <svg
-                  className="w-4 h-4 text-orange-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
+                <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span className="text-[11px] font-bold text-zinc-600 dark:text-zinc-400">
                   KDS Station #2 (Tandoor)
                 </span>
               </div>
-              <span className="bg-orange-50 dark:bg-[#FF4F18]/15 text-[#FF4F18] text-[10px] font-extrabold px-2.5 py-1 rounded-lg">
-                Prep: 03:42 mins
-              </span>
             </div>
 
-            {/* 6. Dispatch Button (Static) */}
-            <button className="w-full inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-              <svg
-                className="w-4 h-4 fill-current"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-                  clipRule="evenodd"
-                />
+            {/* 6. Dispatch Button — no glow */}
+            <button className="w-full inline-flex justify-center items-center gap-2 text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
               </svg>
               Dispatch Order to KDS & Print Ticket
             </button>
+
           </div>
         </div>
 

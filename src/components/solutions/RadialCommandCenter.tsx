@@ -178,8 +178,8 @@ export default function RadialCommandCenter() {
                 <span className="text-[10px] font-extrabold tracking-widest text-[#FF4F18] uppercase">
                   Module Inspector
                 </span>
-                <div className="flex items-center gap-1.5 bg-[#FFF3EF] dark:bg-[#FF4F18]/15 border border-[#FF4F18]/20 px-2.5 py-1 rounded-full text-[10px] font-extrabold text-[#FF4F18] uppercase tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18] animate-pulse" />
+                <div className="flex items-center gap-1.5 border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 rounded-full text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 dark:bg-zinc-500 animate-pulse" />
                   Connected
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function RadialCommandCenter() {
             </div>
 
             {/* Bottom Inspector Metric Highlight */}
-            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-xl p-6 md:p-8 border border-transparent hover:border-zinc-200/20 dark:hover:border-zinc-700/50 flex flex-col items-center justify-center text-center transition-all duration-200">
+            <div className="rounded-xl p-6 md:p-8 border border-zinc-200/60 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center">
               <span className="text-4xl md:text-5xl font-extrabold text-[#FF4F18] leading-none mb-2">
                 {activeModule.metricValue}
               </span>

@@ -100,18 +100,16 @@ export default function InsightsPage() {
     return (
       <Link 
         href={`/blog/${item.slug}`}
-        className={`flex flex-col h-full bg-white rounded-[28px] border border-zinc-200/60 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50 ${
-          isSlider ? "" : "hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.025)]"
-        } group block cursor-pointer`}
+        className="flex flex-col h-full bg-white rounded-[28px] border border-zinc-200/60 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50 group block cursor-pointer"
       >
         {/* Top Banner Graphic area - Full bleed image */}
         <div className="h-[200px] w-full relative overflow-hidden">
           <img 
             src={item.imageSrc} 
             alt={item.title} 
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/10 transition-opacity duration-300 group-hover:opacity-20" />
+          <div className="absolute inset-0 bg-black/10" />
           
           {/* Badge */}
           <div className="absolute top-5 left-5 bg-[#FF4F18] text-white text-[11px] font-extrabold px-3 py-1.5 rounded-full tracking-wider z-10">

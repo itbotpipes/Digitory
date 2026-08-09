@@ -272,6 +272,103 @@ function SolutionsDetailsContent() {
                     </div>
                   )}
 
+                  {solution.id === 'qr-ordering' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 flex flex-col gap-2">
+                        <div className="flex justify-between items-center text-xs font-extrabold border-b border-zinc-150 dark:border-zinc-805 pb-2">
+                          <span>Table 12 • QR Session</span>
+                          <span className="text-[#FF4F18]">Active</span>
+                        </div>
+                        <div className="text-xs space-y-1 text-zinc-650 dark:text-zinc-300 font-bold">
+                          <p>1x Loaded Nachos</p>
+                          <p>1x Virgin Mojito</p>
+                        </div>
+                      </div>
+                      <div className="bg-[#FFF3EF] dark:bg-orange-950/20 p-4 rounded-2xl border border-orange-100 dark:border-orange-950/50 text-[#FF4F18] text-xs font-extrabold text-center">
+                        <span>Direct-to-kitchen self ordering</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {solution.id === 'loyalty' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 space-y-2">
+                        <div className="flex justify-between items-center text-xs font-extrabold text-zinc-500">
+                          <span>Diner Profile</span>
+                          <span className="text-green-505">VIP Tier</span>
+                        </div>
+                        <div className="text-sm font-black text-zinc-900 dark:text-white">
+                          Amit Sharma (+91 98765*****)
+                        </div>
+                        <div className="text-xs font-bold text-zinc-500">
+                          Favorite: Paneer Butter Masala
+                        </div>
+                      </div>
+                      <div className="bg-[#FFF3EF] dark:bg-orange-950/20 p-4 rounded-2xl border border-orange-100 dark:border-orange-950/50 text-[#FF4F18] text-xs font-extrabold text-center">
+                        <span>Cashback Balance: ₹450</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {solution.id === 'booking' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 flex flex-col gap-2">
+                        <div className="flex justify-between items-center text-xs font-extrabold border-b border-zinc-150 dark:border-zinc-805 pb-2">
+                          <span>Upcoming Bookings</span>
+                          <span className="text-[#FF4F18]">4 Reservation(s)</span>
+                        </div>
+                        <div className="text-xs space-y-1 text-zinc-650 dark:text-zinc-300 font-bold">
+                          <p>Table 02 — Rohan Verma (8:00 PM)</p>
+                          <p>Table 08 — Neha Gupta (8:30 PM)</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {solution.id === 'purchasing' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 space-y-3">
+                        <div className="flex justify-between items-center text-xs font-extrabold text-zinc-500">
+                          <span>Supplier: Fresh Farms</span>
+                          <span className="text-[#FF4F18]">Pending GRN</span>
+                        </div>
+                        <div className="text-xs space-y-1 text-zinc-650 dark:text-zinc-300 font-bold">
+                          <p>PO #5042 • Dairy Products (₹12,450)</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {solution.id === 'payroll' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 space-y-3">
+                        <div className="flex justify-between items-center text-xs font-extrabold text-zinc-500">
+                          <span>Shift Log</span>
+                          <span className="text-green-500">All Checked In</span>
+                        </div>
+                        <div className="text-xs space-y-1 text-zinc-650 dark:text-zinc-300 font-bold">
+                          <p>Service Team: 8 active shifts</p>
+                          <p>Kitchen Team: 6 active shifts</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {solution.id === 'central-kitchen' && (
+                    <div className="space-y-4">
+                      <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805 space-y-2">
+                        <div className="flex justify-between items-center text-xs font-extrabold text-zinc-500">
+                          <span>Central Prep Batch</span>
+                          <span className="text-green-550">Dispatched</span>
+                        </div>
+                        <div className="text-xs space-y-1 text-zinc-650 dark:text-zinc-300 font-bold">
+                          <p>Batch #1042 — Tomato Base Sauce (50L)</p>
+                          <p>Destination: CP Outlet, Noida Outlet</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Footer Tagline inside widget */}
                   <div className="text-[11px] text-zinc-400 dark:text-zinc-500 font-bold border-t border-zinc-150 dark:border-zinc-805 pt-4 flex justify-between">
                     <span>System: DIGI-OS v4.2</span>

@@ -798,5 +798,288 @@ export const solutionsDb: Record<string, SolutionData> = {
       title: "Make your business work as one",
       desc: "Experience the convenience of a fully connected system. From neighbourhood cafés to multi-brand food groups, Digitory unifies billing, kitchen, stock, and events into a single, robust platform."
     }
+  },
+  "qr-ordering": {
+    id: "qr-ordering",
+    shortLabel: "QR Dine-in Ordering",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5zM13.5 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5z" />
+      </svg>
+    ),
+    badge: "07 • QR Ordering",
+    title: "Contactless QR Dine-in Ordering",
+    subtitle: "Dine-in ordering made fast, simple, and self-serve",
+    description: "Let your guests view the menu, customize their dishes, and order directly from their tables. Digitory's QR Dine-in Ordering connects directly to your POS terminal and kitchen display. It reduces order preparation delays, increases average table check sizes, and lets your waitstaff focus on providing premium hospitality instead of writing down orders.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by cafés, fine-dine restaurants, and food courts across India.",
+    whyChoose: [
+      {
+        title: "Increase average order value",
+        desc: "Smart menu recommendations suggest add-ons, extra toppings, and drinks automatically, increasing check sizes by up to 22%."
+      },
+      {
+        title: "Faster table turnaround",
+        desc: "Guests don't have to wait for a waiter to take their order or bring the bill, speeding up operations during busy hours."
+      },
+      {
+        title: "Reduce staff workload",
+        desc: "Waitstaff spend less time taking orders and more time serving food, allowing you to manage busy hours with fewer workers."
+      }
+    ],
+    featuresTitle: "Self-serve dine-in ordering that actually works",
+    features: [
+      {
+        title: "Instant KOT routing",
+        desc: "Orders sent by guests flow directly to the KDS and billing counter instantly. No manual approval required.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        )
+      },
+      {
+        title: "Easy menu updates",
+        desc: "Mark items out-of-stock or change prices in real time, preventing guests from ordering unavailable dishes.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89H18v3" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Cafés", desc: "Speed up counter service and let guests order as they sit.", icon: icons.cafe },
+      { name: "QSRs", desc: "Handle long queues easily with table QR codes.", icon: icons.qsr }
+    ],
+    ctaBlock: {
+      title: "Launch contactless QR ordering today",
+      desc: "Provide your guests with a faster dining experience and boost your sales. Get started with Digitory QR Ordering."
+    }
+  },
+  "loyalty": {
+    id: "loyalty",
+    shortLabel: "CRM & Loyalty",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+    ),
+    badge: "08 • Customer Loyalty & CRM",
+    title: "CRM & Custom Customer Loyalty Program",
+    subtitle: "Turn first-time diners into regular customers",
+    description: "Build lasting relationships with your guests using Digitory's integrated CRM. Collect customer information during checkout, create personalized loyalty campaigns, and send automated WhatsApp offers. Track guest preferences, visit history, and average spends to create targeted rewards that keep customers coming back.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by restaurants, bars, and dessert shops across India.",
+    whyChoose: [
+      {
+        title: "Automated WhatsApp alerts",
+        desc: "Send personalized greetings, cashback details, and weekend offers to your guests directly on WhatsApp."
+      },
+      {
+        title: "Point-based loyalty system",
+        desc: "Configure points rewards, cashback percentages, or tier-based membership benefits that work instantly during checkout."
+      }
+    ],
+    featuresTitle: "Tools to increase customer retention",
+    features: [
+      {
+        title: "Smart customer profiles",
+        desc: "Save phone numbers, visit history, favorite dishes, and preferences automatically to build a detailed guest profile.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.5-1.619z" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Fine Dine", desc: "Recognize regular VIP guests and offer custom menu previews.", icon: icons.restaurant },
+      { name: "Bakery", desc: "Bring customers back with birthday discount coupons.", icon: icons.bakery }
+    ],
+    ctaBlock: {
+      title: "Build your loyal customer base",
+      desc: "Stop relying on third-party aggregators. Build direct relationships with your diners using Digitory's CRM."
+    }
+  },
+  "booking": {
+    id: "booking",
+    shortLabel: "Waitlist & Booking",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+      </svg>
+    ),
+    badge: "09 • Waitlist & Table Booking",
+    title: "Digital Waitlist & Table Booking System",
+    subtitle: "Manage walk-ins and reservations efficiently",
+    description: "Manage table bookings, restaurant walk-ins, and guest waiting lists with a single digital system. Digitory coordinates reservations with your live table layout to prevent double-booking. Keep guests updated on their waiting status with automated SMS alerts, and optimize seating layouts to maximize your restaurant's capacity.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by fine-dine restaurants, pubs, and microbreweries.",
+    whyChoose: [
+      {
+        title: "Live waitlist updates",
+        desc: "Send automated alerts to waiting guests when their table is ready, reducing crowd sizes at your entry gate."
+      },
+      {
+        title: "Smart seating layout",
+        desc: "Coordinate upcoming bookings with live dining room sessions to improve table turnaround speeds."
+      }
+    ],
+    featuresTitle: "Features to manage dining reservations",
+    features: [
+      {
+        title: "Visual table layout manager",
+        desc: "View reservation details, guest notes, occupancy status, and table blocks on one screen.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6z" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Fine Dine Restaurants", desc: "Manage premium table reservation settings.", icon: icons.restaurant },
+      { name: "Microbreweries", desc: "Organize large group bookings and VIP tables easily.", icon: icons.brewery }
+    ],
+    ctaBlock: {
+      title: "Streamline your reservations",
+      desc: "Improve guest satisfaction and maximize dining room efficiency with Digitory Booking."
+    }
+  },
+  "purchasing": {
+    id: "purchasing",
+    shortLabel: "Purchase & Supplier",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+      </svg>
+    ),
+    badge: "10 • Supplier Management",
+    title: "Purchase & Supplier Management System",
+    subtitle: "Simplify purchasing, invoice logs, and supplier tracking",
+    description: "Manage purchase orders, supplier invoices, payments, and delivery logs in one dashboard. Digitory helps you track ingredient price variations, manage supplier accounts, and log goods received notes (GRN) to keep your kitchen stock costs completely accurate.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by microbreweries, central kitchens, and cafés.",
+    whyChoose: [
+      {
+        title: "Track ingredient price trends",
+        desc: "Monitor raw material price changes over time to optimize purchasing budgets."
+      },
+      {
+        title: "Manage supplier payments",
+        desc: "Log invoices, credit terms, pending bills, and payments for all your food suppliers."
+      }
+    ],
+    featuresTitle: "Procurement tools for food businesses",
+    features: [
+      {
+        title: "Easy Goods Received (GRN)",
+        desc: "Match delivered items with purchase orders to spot quantity issues instantly.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Central Kitchens", desc: "Manage bulk purchases and outlet supplies.", icon: icons.cloudKitchen },
+      { name: "Café Chains", desc: "Keep raw ingredient supplies consistent across all locations.", icon: icons.cafe }
+    ],
+    ctaBlock: {
+      title: "Streamline your restaurant supply chain",
+      desc: "Reduce raw material costs and coordinate inventory purchases with Digitory Supplier Hub."
+    }
+  },
+  "payroll": {
+    id: "payroll",
+    shortLabel: "Shift & Payroll",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A12.018 12.018 0 0112 21c-3.11 0-5.92-.1-8.349-2.883m14.733-5.144A4.5 4.5 0 1119.5 9h-1.688a4.5 4.5 0 01-1.688-3.072M12 9a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zm0 0v-8.25m-9.75 16.5c0-2.209 1.79-4 4-4h11.5c2.21 0 4 1.791 4 4v.75H2.25v-.75z" />
+      </svg>
+    ),
+    badge: "11 • Staff & Payroll Control",
+    title: "Employee Shift, Attendance & Payroll",
+    subtitle: "Manage staff shifts, track attendance, and simplify payroll",
+    description: "Manage shift schedules, attendance logs, performance metrics, and payroll configurations for all your kitchen and service staff. Digitory coordinates biometric or mobile check-ins with sales records to track employee performance and calculate monthly payouts automatically.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by fine-dine groups, microbreweries, and bars.",
+    whyChoose: [
+      {
+        title: "Track staff performance",
+        desc: "Monitor tables served, average order values, and checkout speeds for each waitstaff member."
+      },
+      {
+        title: "Easy shift scheduling",
+        desc: "Schedule daily shifts, track leaves, and manage shift change requests from one dashboard."
+      }
+    ],
+    featuresTitle: "Employee management tools",
+    features: [
+      {
+        title: "Biometric attendance sync",
+        desc: "Sync check-in logs with shift schedules to calculate overtime or unpaid leaves automatically.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a6 6 0 100-12 6 6 0 000 12z" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Fine Dine Restaurants", desc: "Set table zones for service staff.", icon: icons.restaurant },
+      { name: "Microbreweries", desc: "Manage large service team shifts.", icon: icons.brewery }
+    ],
+    ctaBlock: {
+      title: "Organize your restaurant workforce",
+      desc: "Simplify attendance tracking and calculate staff salaries accurately with Digitory Staff Hub."
+    }
+  },
+  "central-kitchen": {
+    id: "central-kitchen",
+    shortLabel: "Central Kitchen",
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+      </svg>
+    ),
+    badge: "12 • Central Kitchen Controls",
+    title: "Central Kitchen & Recipe Management",
+    subtitle: "Unify batch recipes, outlet logs, and distribution",
+    description: "Manage large-scale batch recipes, coordinate food preparation, track outlet stock requests, and monitor raw material deliveries. Digitory helps you maintain consistent dish flavors and control ingredient usage across all your outlets from one central dashboard.",
+    ctaText: "Request a Demo",
+    trustText: "Trusted by cloud kitchen networks, bakeries, and food chains.",
+    whyChoose: [
+      {
+        title: "Maintain recipe consistency",
+        desc: "Log exact batch recipe ingredients and preparation steps centrally to ensure consistent taste across all locations."
+      },
+      {
+        title: "Outlet request management",
+        desc: "Accept and fulfill raw material or prepared food requests from individual outlets through automated workflows."
+      }
+    ],
+    featuresTitle: "Recipe and kitchen production tools",
+    features: [
+      {
+        title: "Batch recipe logging",
+        desc: "Determine exact batch production costs, raw ingredient requirements, and wastage percentages.",
+        icon: (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2h-2M5 11V9a2 2 0 012-2h2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v2M5 7h14" />
+          </svg>
+        )
+      }
+    ],
+    businessTypes: [
+      { name: "Cloud Kitchen Networks", desc: "Oversee raw material supplies for virtual brands.", icon: icons.cloudKitchen },
+      { name: "Bakery Chains", desc: "Coordinate base kitchen preparation and outlet deliveries.", icon: icons.bakery }
+    ],
+    ctaBlock: {
+      title: "Organize your central kitchen",
+      desc: "Improve recipe consistency and control distribution operations with Digitory Central Kitchen."
+    }
   }
 };

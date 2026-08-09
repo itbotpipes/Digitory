@@ -47,19 +47,19 @@ export default function StorySection() {
   ];
 
   return (
-    <section className="bg-white dark:bg-[#0d0d0e] py-16 md:py-24 transition-colors duration-300 relative overflow-hidden">
+    <section className="bg-white dark:bg-[#0d0d0e] pt-4 pb-16 md:pt-6 md:pb-24 transition-colors duration-300 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10">
         
         {/* Title Block */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
           <div className="lg:col-span-7">
             <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15]">
-              <span className="text-[#FF4F18]">Our journey</span>
+              <span className="text-[#FF4F18]">Built with restaurants,</span>
               <br />
-              <span className="text-[#111111] dark:text-white">Built with restaurants, from day one.</span>
+              <span className="text-[#111111] dark:text-white">from day one.</span>
             </h2>
           </div>
-          <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 space-y-4 text-sm md:text-base leading-relaxed lg:pt-[3.25rem]">
+          <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 space-y-4 text-sm md:text-base leading-relaxed lg:pt-2">
             <p>
               How we went from spent nights in busy restaurant kitchens to simplifying operations across India.
             </p>
@@ -72,11 +72,11 @@ export default function StorySection() {
           {milestones.map((item, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-start text-left group relative p-6 bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[24px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
+              className="flex flex-col items-start text-left relative p-6 bg-white dark:bg-[#17171a] border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[24px] shadow-[0_2px_8px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50"
             >
               {/* Year & Circle Node */}
               <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 text-[#FF4F18] group-hover:bg-[#FF4F18] group-hover:border-[#FF4F18] group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-850 text-[#FF4F18]">
                   {item.icon}
                 </div>
                 <span className="text-[15px] font-extrabold tracking-widest text-[#FF4F18] uppercase">

@@ -65,17 +65,18 @@ export default function ToolIntegrations() {
   return (
     <section className="mx-auto max-w-6xl px-6 md:px-8 py-16 md:py-24 overflow-hidden">
       
-      {/* Header Block */}
-      <div className="text-center mb-16 md:mb-24">
-        <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] block mb-3">
-          Tool Integrations
-        </span>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15] mb-4">
-          Connects with <span className="text-[#FF4F18]">your favorite apps</span>
-        </h2>
-        <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-          1-click setup with Swiggy, Zomato, Razorpay, Paytm, Tally, WhatsApp, and POS hardware.
-        </p>
+      {/* Header Block: Left Heading, Right Subtitle */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start mb-16 md:mb-24">
+        <div className="lg:col-span-7">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-[850] tracking-tight leading-[1.15]">
+            Connects with <span className="text-[#FF4F18]">your favorite apps.</span>
+          </h2>
+        </div>
+        <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 text-sm md:text-base leading-relaxed lg:pt-2">
+          <p>
+            1-click setup with Swiggy, Zomato, Razorpay, Paytm, Tally, WhatsApp, and POS hardware.
+          </p>
+        </div>
       </div>
 
       {/* Professional Circuit-Board Architecture */}
@@ -116,7 +117,7 @@ export default function ToolIntegrations() {
                 </div>
                 <div className="text-left">
                   <h4 className="text-[15px] font-extrabold text-zinc-900 dark:text-white mb-0.5 tracking-tight">{item.name}</h4>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">{item.subtext}</p>
+                  <p className="text-xs text-zinc-550 dark:text-zinc-400 font-medium leading-relaxed">{item.subtext}</p>
                 </div>
               </div>
             ))}
@@ -124,10 +125,9 @@ export default function ToolIntegrations() {
 
           {/* Central Digitory Node */}
           <div className="mx-24 relative z-20 flex flex-col items-center justify-center">
-            {/* Sleek Professional Node */}
-            <div className="relative w-20 h-20 bg-white dark:bg-zinc-900 rounded-[1.25rem] shadow-[0_8px_40px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_40px_rgba(255,79,24,0.15)] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center z-10 overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#FF4F18]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0" />
-              <div className="relative w-12 h-12 z-10 transition-transform duration-300 group-hover:scale-105">
+            {/* Sleek Professional Node — Made Bigger with dynamic hover scaling and neutral shadow depth */}
+            <div className="relative w-28 h-28 bg-white dark:bg-zinc-900 rounded-[1.75rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center z-10 overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] cursor-pointer">
+              <div className="relative w-16 h-16 z-10">
                 <Image
                   src="/demologo.png"
                   alt="Digitory Logo"
@@ -136,9 +136,6 @@ export default function ToolIntegrations() {
                 />
               </div>
             </div>
-            
-            {/* Pulsing ring */}
-            <div className="absolute inset-0 rounded-[1.25rem] border border-[#FF4F18]/40 animate-ping opacity-20" style={{ animationDuration: '3s' }} />
           </div>
 
           {/* Right Column (Integrations 3 & 4) */}
