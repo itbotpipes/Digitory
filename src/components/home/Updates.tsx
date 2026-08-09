@@ -22,6 +22,7 @@ export default function Updates() {
   const [updatesList, setUpdatesList] = useState<UpdateItem[]>([]);
   
   const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [isFeaturedOpen, setIsFeaturedOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -35,6 +36,9 @@ export default function Updates() {
 
   const handleItemClick = (item: UpdateItem) => {
     setSelectedUpdate(item);
+    if (window.innerWidth < 1024) {
+      setShowDetailModal(true);
+    }
   };
 
   useEffect(() => {
@@ -42,18 +46,18 @@ export default function Updates() {
     
     async function loadUpdates() {
       try {
-        const response = await api.get('/posts?limit=4');
-        const posts = response.data?.docs || response.data?.results || response.data || [];
+        const response = await api.get('/updates');
+        const updates = response.data || response || [];
         
-        if (posts.length > 0) {
-          const mapped = posts.map((p: any) => {
-            const d = new Date(p.createdAt || p.publishedAt);
+        if (updates.length > 0) {
+          const mapped = updates.map((p: any) => {
+            const d = new Date(p.publishedAt || p.createdAt);
             return {
               id: p._id,
-              slug: p.slug,
+              slug: p._id, // use id as slug for modal lookups
               date: d.getDate().toString().padStart(2, '0'),
               month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
-              category: (p.category?.name || "UPDATE").toUpperCase(),
+              category: (typeof p.category === 'object' && p.category ? p.category.name : (p.category || "UPDATE")).toUpperCase(),
               title: p.title,
               desc: p.excerpt || p.title,
               content: p.content,
@@ -121,7 +125,7 @@ export default function Updates() {
   }, []);
 
   useEffect(() => {
-    if ((selectedUpdate || isFeaturedOpen) && isMobile) {
+    if ((selectedUpdate && (isMobile || showDetailModal)) || isFeaturedOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -129,7 +133,7 @@ export default function Updates() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedUpdate, isFeaturedOpen, isMobile]);
+  }, [selectedUpdate, isFeaturedOpen, isMobile, showDetailModal]);
 
   const displayUpdate = selectedUpdate || updatesList[0];
 
@@ -250,12 +254,15 @@ export default function Updates() {
 
                 {/* Read Full Story Button */}
                 {displayUpdate && (
-                  <Link
-                    href={`/blog/${displayUpdate.slug}`}
+                  <button
+                    onClick={() => {
+                      setSelectedUpdate(displayUpdate);
+                      setShowDetailModal(true);
+                    }}
                     className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer w-max"
                   >
                     READ FULL STORY →
-                  </Link>
+                  </button>
                 )}
               </div>
             </div>
@@ -285,13 +292,16 @@ export default function Updates() {
 
       {/* Bottom Sheet Drawer / Modal */}
       {mounted &&
-        selectedUpdate && isMobile &&
+        selectedUpdate && (isMobile || showDetailModal) &&
         createPortal(
           <div className="fixed inset-0 z-[999] flex flex-col justify-end lg:justify-center lg:items-center p-0 lg:p-4">
             {/* Backdrop */}
             <div
               className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 animate-[fadeIn_0.2s_ease-out]"
-              onClick={() => setSelectedUpdate(null)}
+              onClick={() => {
+                setSelectedUpdate(null);
+                setShowDetailModal(false);
+              }}
             />
 
             {/* Drawer Sheet / Modal Content */}
@@ -324,7 +334,10 @@ export default function Updates() {
 
                 {/* Close Button (Matching square 'X' box in screenshot) */}
                 <button
-                  onClick={() => setSelectedUpdate(null)}
+                  onClick={() => {
+                    setSelectedUpdate(null);
+                    setShowDetailModal(false);
+                  }}
                   className="absolute top-0 right-0 p-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-200 cursor-pointer"
                   aria-label="Close details"
                 >

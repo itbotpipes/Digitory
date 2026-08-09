@@ -56,9 +56,8 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
         const token = localStorage.getItem('admin_token');
         if (!token) return;
         const res = await api.get('/categories', token);
-        if (res.data?.docs) {
-          setCategories(res.data.docs);
-        }
+        const cats = res.data?.docs || res.data?.results || (Array.isArray(res.data) ? res.data : []);
+        setCategories(cats);
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
@@ -362,14 +361,28 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
                     />
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs"><FolderOpen size={14} className="opacity-60" /><span>Category ID</span></div>
+                  <div className="flex items-center gap-2 text-xs"><FolderOpen size={14} className="opacity-60" /><span>Category</span></div>
                   <div>
-                    <input
-                      type="text"
-                      placeholder="Optional"
-                      {...form.register("category")}
-                      className="w-full bg-transparent text-white border-none outline-none focus:ring-0 placeholder-[#3f3f3f] p-0 text-sm focus:outline-none"
-                    />
+                    {categories && categories.length > 0 ? (
+                      <select
+                        {...form.register("category")}
+                        className="w-full bg-transparent text-white border-none outline-none focus:ring-0 p-0 text-sm focus:outline-none dark:bg-zinc-950"
+                      >
+                        <option value="" className="bg-[#121214] text-zinc-400">Select Category (Optional)</option>
+                        {categories.map((cat) => (
+                          <option key={cat._id} value={cat._id} className="bg-[#121214] text-white">
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        placeholder="Optional"
+                        {...form.register("category")}
+                        className="w-full bg-transparent text-white border-none outline-none focus:ring-0 placeholder-[#3f3f3f] p-0 text-sm focus:outline-none"
+                      />
+                    )}
                   </div>
 
                   <div className="flex items-center gap-2 text-xs"><Clock size={14} className="opacity-60" /><span>Read Time</span></div>

@@ -8,8 +8,8 @@ import { useSearchParams } from 'next/navigation';
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get('tab') || 'leads';
-  const activeTab = ['leads', 'contacts', 'blogs', 'solutions', 'comments', 'users'].includes(tabParam)
-    ? (tabParam as 'leads' | 'contacts' | 'blogs' | 'solutions' | 'comments' | 'users')
+  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'comments', 'users'].includes(tabParam)
+    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'comments' | 'users')
     : 'leads';
 
   const [data, setData] = useState<any[]>([]);
@@ -19,6 +19,39 @@ export default function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', roleId: '' });
   const [creatingUser, setCreatingUser] = useState(false);
+
+  // Updates management states
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [editingUpdate, setEditingUpdate] = useState<any | null>(null);
+  const [updateForm, setUpdateForm] = useState({
+    title: '',
+    category: 'PRODUCT UPDATE',
+    excerpt: '',
+    content: '',
+    featuredImage: '',
+    publishedAt: ''
+  });
+  const [savingUpdate, setSavingUpdate] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      const res = await api.upload('/media', file, token);
+      const url = res.data?.url || res.url;
+      setUpdateForm(prev => ({ ...prev, featuredImage: url }));
+      alert('Image uploaded successfully');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   useEffect(() => {
     if (activeTab === 'users') {
@@ -35,6 +68,7 @@ export default function AdminDashboard() {
   }, [activeTab]);
 
   useEffect(() => {
+    setData([]); // Clear old tab data to prevent rendering mismatch crashes
     const token = localStorage.getItem('admin_token');
     if (!token) {
       window.location.href = '/admin/login';
@@ -49,6 +83,7 @@ export default function AdminDashboard() {
       let endpoint = '';
       if (activeTab === 'leads') endpoint = '/demo-requests';
       if (activeTab === 'contacts') endpoint = '/contact-messages';
+      if (activeTab === 'updates') endpoint = '/updates';
       if (activeTab === 'blogs') endpoint = '/posts';
       if (activeTab === 'solutions') endpoint = '/solutions';
       if (activeTab === 'comments') endpoint = '/comments';
@@ -110,6 +145,71 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteUpdate = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this announcement?')) return;
+    try {
+      const token = localStorage.getItem('admin_token');
+      await api.delete(`/updates/${id}`, token || '');
+      setData((prev) => prev.filter((item: any) => item._id !== id));
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to delete announcement');
+    }
+  };
+
+  const handleOpenCreateUpdate = () => {
+    setEditingUpdate(null);
+    setUpdateForm({
+      title: '',
+      category: 'PRODUCT UPDATE',
+      excerpt: '',
+      content: '',
+      featuredImage: '',
+      publishedAt: new Date().toISOString().split('T')[0]
+    });
+    setShowUpdateModal(true);
+  };
+
+  const handleOpenEditUpdate = (item: any) => {
+    setEditingUpdate(item);
+    setUpdateForm({
+      title: item.title || '',
+      category: item.category || 'PRODUCT UPDATE',
+      excerpt: item.excerpt || '',
+      content: item.content || '',
+      featuredImage: item.featuredImage || '',
+      publishedAt: item.publishedAt ? new Date(item.publishedAt).toISOString().split('T')[0] : ''
+    });
+    setShowUpdateModal(true);
+  };
+
+  const handleSaveUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingUpdate(true);
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      
+      let res;
+      if (editingUpdate) {
+        res = await api.put(`/updates/${editingUpdate._id}`, updateForm, token);
+        const updated = res.data?.doc || res.data || res;
+        setData((prev) => prev.map((item: any) => item._id === editingUpdate._id ? updated : item));
+        alert('Announcement updated successfully');
+      } else {
+        res = await api.post('/updates', updateForm, token);
+        const created = res.data?.doc || res.data || res;
+        setData((prev) => [created, ...prev]);
+        alert('Announcement created successfully');
+      }
+      setShowUpdateModal(false);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to save announcement');
+    } finally {
+      setSavingUpdate(false);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-end justify-between">
@@ -126,6 +226,16 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <div className="bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl shadow-sm overflow-hidden">
+          {activeTab === 'updates' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
+              <button 
+                onClick={handleOpenCreateUpdate}
+                className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200"
+              >
+                + Create Announcement
+              </button>
+            </div>
+          )}
           {activeTab === 'blogs' && (
             <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
               <Link href="/admin/blogs/add" className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200">
@@ -172,6 +282,14 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Phone</th>
                       <th className="px-6 py-4 font-semibold">Interested In</th>
                       <th className="px-6 py-4 font-semibold">Message</th>
+                    </>
+                  )}
+                  {activeTab === 'updates' && (
+                    <>
+                      <th className="px-6 py-4 font-semibold">Title</th>
+                      <th className="px-6 py-4 font-semibold">Category</th>
+                      <th className="px-6 py-4 font-semibold">Date Published</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
                   {activeTab === 'blogs' && (
@@ -235,13 +353,38 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 max-w-[300px] truncate">{item.message}</td>
                       </>
                     )}
+                    {activeTab === 'updates' && (
+                      <>
+                        <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
+                        <td className="px-6 py-4">
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300">
+                            {typeof item.category === 'object' && item.category ? item.category.name : (item.category || 'PRODUCT UPDATE')}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : 'N/A'}</td>
+                        <td className="px-6 py-4 space-x-2">
+                          <button 
+                            onClick={() => handleOpenEditUpdate(item)} 
+                            className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteUpdate(item._id)} 
+                            className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </>
+                    )}
                     {activeTab === 'blogs' && (
                       <>
                         <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
                         <td className="px-6 py-4">{item.slug}</td>
                         <td className="px-6 py-4">
                           <span className={`px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wide uppercase ${item.status === 'Published' ? 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400' : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'}`}>
-                            {item.status}
+                             {item.status}
                           </span>
                         </td>
                         <td className="px-6 py-4">
@@ -376,6 +519,129 @@ export default function AdminDashboard() {
                   className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
                 >
                   {creatingUser ? 'Creating...' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showUpdateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setShowUpdateModal(false)} />
+          <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl z-10">
+            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-6">
+              {editingUpdate ? 'Edit Announcement' : 'Create Announcement'}
+            </h2>
+            <form onSubmit={handleSaveUpdate} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Title</label>
+                <input 
+                  type="text" 
+                  required
+                  value={updateForm.title}
+                  onChange={(e) => setUpdateForm(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Announcement title"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Category</label>
+                  <select 
+                    required
+                    value={updateForm.category}
+                    onChange={(e) => setUpdateForm(prev => ({ ...prev, category: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white cursor-pointer"
+                  >
+                    <option value="PRODUCT UPDATE">Product Update</option>
+                    <option value="INTEGRATION">Integration</option>
+                    <option value="NEW FEATURE">New Feature</option>
+                    <option value="GUIDE">Guide</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Publish Date</label>
+                  <input 
+                    type="date" 
+                    required
+                    value={updateForm.publishedAt}
+                    onChange={(e) => setUpdateForm(prev => ({ ...prev, publishedAt: e.target.value }))}
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Excerpt / Brief Description</label>
+                <textarea 
+                  required
+                  rows={2}
+                  value={updateForm.excerpt}
+                  onChange={(e) => setUpdateForm(prev => ({ ...prev, excerpt: e.target.value }))}
+                  placeholder="Short summary displayed on list card..."
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white resize-none"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Detail Content (Optional)</label>
+                <textarea 
+                  rows={4}
+                  value={updateForm.content}
+                  onChange={(e) => setUpdateForm(prev => ({ ...prev, content: e.target.value }))}
+                  placeholder="Full announcement content..."
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white resize-none"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Featured Image</label>
+                <div className="flex gap-4 items-center">
+                  {updateForm.featuredImage && (
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 flex-shrink-0">
+                      <img 
+                        src={updateForm.featuredImage} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 space-y-2">
+                    <div className="relative flex items-center justify-center border-2 border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-3 bg-zinc-50/50 dark:bg-zinc-950/20 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer group">
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploadingImage}
+                        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                      />
+                      <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 group-hover:text-[#FF4F18] transition-colors">
+                        {uploadingImage ? 'Uploading Image...' : 'Click to Upload Image'}
+                      </span>
+                    </div>
+                    <input 
+                      type="text" 
+                      value={updateForm.featuredImage}
+                      onChange={(e) => setUpdateForm(prev => ({ ...prev, featuredImage: e.target.value }))}
+                      placeholder="Or enter image URL manually..."
+                      className="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-[#FF4F18] text-xs text-zinc-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowUpdateModal(false)}
+                  className="flex-1 px-4 py-2.5 font-bold text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={savingUpdate}
+                  className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+                >
+                  {savingUpdate ? 'Saving...' : (editingUpdate ? 'Save Changes' : 'Create')}
                 </button>
               </div>
             </form>

@@ -125,11 +125,8 @@ export default function Hero() {
 
         {/* Right Column - Hero Image */}
         <div className="lg:col-span-6 flex justify-center w-full relative perspective-[1000px]">
-          {/* Subtle Glow Behind the Image */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#FF4F18]/20 blur-[100px] rounded-full z-0" />
-          
           <div 
-            className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] border-8 border-white dark:border-zinc-900 bg-zinc-100 dark:bg-zinc-800 z-10 transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2"
+            className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-2"
           >
             <Image
               src="/home-hero.png"

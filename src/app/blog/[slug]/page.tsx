@@ -1,4 +1,4 @@
-import BlogDetails from "@/features/Blog/BlogDetails";
+import ClientPage from "./ClientPage";
 import { api } from "@/lib/api";
 import { notFound } from "next/navigation";
 import { generateSeoMetadata } from "@/lib/seo";
@@ -12,7 +12,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   try {
-    const res = await api.get(`/posts/slug/${slug}`);
+    const res = await api.get(`/posts/${slug}`);
     if (res.data) {
       return await generateSeoMetadata('Post', res.data._id, {
         title: `${res.data.title} | Digitory`,
@@ -31,7 +31,7 @@ async function BlogDetailsPage({ params }: PageProps) {
   
   let blog = null;
   try {
-    const res = await api.get(`/posts/slug/${slug}`);
+    const res = await api.get(`/posts/${slug}`);
     if (res.data) {
       blog = res.data;
     }
@@ -44,9 +44,7 @@ async function BlogDetailsPage({ params }: PageProps) {
   }
 
   return (
-    <div className="pt-24 min-h-screen">
-      <BlogDetails blog={blog} />
-    </div>
+    <ClientPage article={blog} />
   );
 }
 

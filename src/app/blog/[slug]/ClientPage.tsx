@@ -1,69 +1,97 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
+import { api } from '@/lib/api';
 
 interface ClientPageProps {
   article: any;
-  similarArticles: any[];
+  similarArticles?: any[];
 }
 
-import { useRouter } from 'next/navigation';
-
-export default function ClientPage({ article, similarArticles }: ClientPageProps) {
-  const router = useRouter();
-
+export default function ClientPage({ article, similarArticles: initialSimilar = [] }: ClientPageProps) {
   const [copied, setCopied] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMounted(true);
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Comments State
-  interface Comment {
-    id: string;
-    name: string;
-    text: string;
-    date: string;
-  }
-
-  const [comments, setComments] = useState<Comment[]>([]);
+  // Dynamic comments and similar posts from database
+  const [comments, setComments] = useState<any[]>([]);
+  const [similarPosts, setSimilarPosts] = useState<any[]>(initialSimilar);
   const [newCommentName, setNewCommentName] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load comments from localStorage on mount
+  // Login gate state
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
   useEffect(() => {
-    const saved = localStorage.getItem(`blog-comments-${article.slug}`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        const timer = setTimeout(() => {
-          setComments(parsed);
-        }, 0);
-        return () => clearTimeout(timer);
-      } catch (e) {
-        console.error('Failed to parse comments from localStorage', e);
+    setMounted(true);
+    // Check if user is logged in via localStorage
+    const savedName = localStorage.getItem('user_name');
+    if (savedName) {
+      setLoggedInUser(savedName);
+      setNewCommentName(savedName);
+    }
+  }, []);
+
+  // Fetch comments and similar posts on mount
+  useEffect(() => {
+    if (article._id) {
+      // 1. Comments
+      api.get(`/comments/post/${article._id}`)
+        .then((res) => {
+          if (res.data) setComments(res.data);
+        })
+        .catch(console.error);
+
+      // 2. Similar posts in same category
+      const categoryId = typeof article.category === 'object' ? article.category?._id : article.category;
+      if (categoryId) {
+        api.get(`/posts?limit=5&category=${categoryId}`)
+          .then((res) => {
+            const docs = res.data?.docs || (Array.isArray(res.data) ? res.data : []);
+            // Filter out current post
+            const filtered = docs.filter((p: any) => p._id !== article._id).slice(0, 4);
+            setSimilarPosts(filtered);
+          })
+          .catch(console.error);
       }
     }
-  }, [article.slug]);
+  }, [article._id, article.category]);
 
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCommentName.trim() || !newCommentText.trim()) return;
 
-    // Redirect to login page for authentication
-    router.push('/login?required=comment');
-  };
+    // If not logged in, redirect to login page
+    const savedUser = localStorage.getItem('user_name');
+    if (!savedUser) {
+      window.location.href = `/login?required=comment&redirect=/blog/${article.slug}`;
+      return;
+    }
 
+    setIsSubmitting(true);
+    try {
+      const res = await api.post('/comments', {
+        post: article._id,
+        name: newCommentName,
+        text: newCommentText,
+      });
+      if (res.data) {
+        setComments((prev) => [res.data, ...prev]);
+        setNewCommentName(savedUser); // keep name filled
+        setNewCommentText('');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to post comment');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -82,6 +110,51 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
     }
   };
 
+  // Format dynamic dates
+  const formattedDate = useMemo(() => {
+    if (article.date) return article.date;
+    if (article.createdAt) {
+      return new Date(article.createdAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+    return '';
+  }, [article.date, article.createdAt]);
+
+  // Dynamically parse Table of Contents from HTML h2 headings
+  const tableOfContents = useMemo(() => {
+    if (article.tableOfContents && article.tableOfContents.length > 0) {
+      return article.tableOfContents;
+    }
+    if (!article.content) return [];
+
+    const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+    const toc = [];
+    let match;
+    while ((match = h2Regex.exec(article.content)) !== null) {
+      const text = match[1].replace(/<[^>]*>/g, ''); // strip inline tags
+      const id = text.replace(/\s+/g, '-').toLowerCase().replace(/[^\w-]/g, '');
+      toc.push({ id, title: text });
+    }
+    return toc;
+  }, [article.content, article.tableOfContents]);
+
+  // Inject heading IDs into the content dynamically for TOC links
+  const renderedContent = useMemo(() => {
+    if (!article.content) return '';
+
+    return article.content.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, contentText) => {
+      const text = contentText.replace(/<[^>]*>/g, '');
+      const id = text.replace(/\s+/g, '-').toLowerCase().replace(/[^\w-]/g, '');
+      
+      if (attrs.includes('id=')) {
+        return `<h2${attrs}>${contentText}</h2>`;
+      }
+      return `<h2 id="${id}"${attrs}>${contentText}</h2>`;
+    });
+  }, [article.content]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">
@@ -92,56 +165,60 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
         <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pt-12 md:pb-24">
           {/* Top Date */}
           <div className="text-xs sm:text-sm font-medium text-zinc-400 dark:text-zinc-500 mb-4">
-            {article.date}
+            {formattedDate}
           </div>
 
           {/* Title & Introduction Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start pb-8">
             {/* Left 7 columns: Main Title */}
             <div className="lg:col-span-7">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl lg:text-[46px] font-[850] leading-[1.15] text-[#111111] dark:text-white tracking-tight">
                 {article.title}
               </h1>
             </div>
 
             {/* Right 5 columns: Intro Text */}
-            <div className="lg:col-span-5 text-base md:text-lg text-zinc-600 dark:text-zinc-300 space-y-4 leading-relaxed font-normal">
-              <p>{article.introText}</p>
-              <p>{article.secondaryIntro}</p>
+            <div className="lg:col-span-5 text-base md:text-lg text-zinc-650 dark:text-zinc-300 space-y-4 leading-relaxed font-normal">
+              <p>{article.introText || article.excerpt}</p>
+              {article.secondaryIntro && <p>{article.secondaryIntro}</p>}
             </div>
           </div>
 
           {/* Main Cover Image */}
-          <div className="relative w-full aspect-16/9 max-h-[520px] rounded-2xl md:rounded-3xl overflow-hidden my-6 md:my-10 border border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-zinc-100 dark:bg-zinc-900">
-            <Image
-              src={encodeURI(article.featuredImage || article.image)}
-              alt={article.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+          {(article.featuredImage || article.image) && (
+            <div className="relative w-full aspect-16/9 max-h-[520px] rounded-2xl md:rounded-3xl overflow-hidden my-6 md:my-10 border border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-zinc-100 dark:bg-zinc-900">
+              <Image
+                src={encodeURI(article.featuredImage || article.image)}
+                alt={article.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
 
           {/* Article Grid: Left TOC | Middle Content | Right CTA */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-6">
             {/* Left Sidebar: Table of Contents & Social Links */}
             <aside className="lg:col-span-3 hidden lg:block sticky top-28 self-start space-y-8">
-              <div>
-                <h3 className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-4">
-                  TABLE OF CONTENTS
-                </h3>
-                <nav className="space-y-3">
-                  {(article.tableOfContents || []).map((toc: any) => (
-                    <a
-                      key={toc.id || toc.title}
-                      href={`#${toc.id || toc.title.replace(/\s+/g, '-').toLowerCase()}`}
-                      className="block text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors leading-snug"
-                    >
-                      {toc.title}
-                    </a>
-                  ))}
-                </nav>
-              </div>
+              {tableOfContents.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-4">
+                    TABLE OF CONTENTS
+                  </h3>
+                  <nav className="space-y-3">
+                    {tableOfContents.map((toc: any) => (
+                      <a
+                        key={toc.id}
+                        href={`#${toc.id}`}
+                        className="block text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors leading-snug"
+                      >
+                        {toc.title}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              )}
 
               {/* Share Article */}
               <div className="pt-6 border-t border-zinc-200/60 dark:border-zinc-800/60">
@@ -219,7 +296,7 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                           className="relative w-full h-full cursor-pointer group flex items-center justify-center bg-zinc-900"
                         >
                           <Image
-                            src={encodeURI(article.image)}
+                            src={encodeURI(article.featuredImage || article.image)}
                             alt="Video Thumbnail"
                             fill
                             className="object-cover opacity-80 group-hover:opacity-90 transition-opacity"
@@ -252,25 +329,27 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                 </div>
               )}
 
-              {/* Sections rendered via HTML */}
-              {article.content ? (
+              {/* Dynamic Content Rendering */}
+              {renderedContent ? (
                 <div 
-                  className="prose dark:prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: article.content }} 
+                  className="prose prose-lg prose-orange dark:prose-invert max-w-none text-zinc-850 dark:text-zinc-200
+                    [&_h2]:scroll-mt-28 [&_h2]:text-xl sm:[&_h2]:text-2xl [&_h2]:font-[850] [&_h2]:text-[#111111] dark:[&_h2]:text-white [&_h2]:tracking-tight [&_h2]:mt-8 [&_h2]:mb-4
+                    [&_p]:text-zinc-650 dark:[&_p]:text-zinc-300 [&_p]:leading-relaxed [&_p]:mb-4"
+                  dangerouslySetInnerHTML={{ __html: renderedContent }} 
                 />
               ) : (
-                article.sections?.map((section: any) => (
+                (article.sections || []).map((section: any) => (
                   <section key={section.id} id={section.id} className="scroll-mt-28 space-y-4">
                     <h2 className="text-xl sm:text-2xl font-[850] text-[#111111] dark:text-white tracking-tight">
                       {section.heading}
                     </h2>
                     {section.paragraphs.map((para: string, idx: number) => (
-                      <p key={idx} className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                      <p key={idx} className="text-zinc-650 dark:text-zinc-300 leading-relaxed">
                         {para}
                       </p>
                     ))}
                     {section.bulletPoints && (
-                      <ul className="list-disc pl-5 space-y-2 text-zinc-600 dark:text-zinc-300 pt-2">
+                      <ul className="list-disc pl-5 space-y-2 text-zinc-650 dark:text-zinc-300 pt-2">
                         {section.bulletPoints.map((item: string, bIdx: number) => (
                           <li key={bIdx}>{item}</li>
                         ))}
@@ -290,17 +369,12 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                 <div className="space-y-4">
                   {comments.map((comment) => (
                     <div
-                      key={comment.id}
+                      key={comment._id}
                       className="bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 animate-[fadeIn_0.3s_ease-out]"
                     >
                       {/* Avatar */}
-                      <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 bg-white border border-zinc-300 dark:border-zinc-700">
-                        <Image
-                          src="/demologo.png"
-                          alt={comment.name}
-                          fill
-                          className="object-contain p-2 bg-white"
-                        />
+                      <div className="w-14 h-14 rounded-full shrink-0 bg-gradient-to-br from-[#FF4F18] to-[#ff7a4d] border border-[#FF4F18]/20 flex items-center justify-center font-extrabold text-white text-lg">
+                        {comment.name.charAt(0).toUpperCase()}
                       </div>
 
                       {/* Content */}
@@ -309,7 +383,7 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                           {comment.name}
                         </h4>
                         <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 mb-1">
-                          {comment.date}
+                          {new Date(comment.createdAt).toLocaleDateString()}
                         </p>
                         <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
                           {comment.text}
@@ -317,14 +391,17 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                       </div>
                     </div>
                   ))}
+                  {comments.length === 0 && (
+                    <p className="text-zinc-400 dark:text-zinc-500 italic text-sm">No comments yet. Be the first to share your thoughts!</p>
+                  )}
                 </div>
 
-                {/* Add Comment Form */}
+                {/* Add Comment Form — always visible, login check on submit */}
                 <form onSubmit={handleAddComment} className="flex flex-col gap-4 pt-4">
                   <h4 className="text-xs font-extrabold text-[#FF4F18] uppercase tracking-widest">
                     Add a comment
                   </h4>
-                  
+
                   <div className="grid grid-cols-1 gap-4">
                     <input
                       type="text"
@@ -334,7 +411,7 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
                       required
                       className="w-full max-w-sm px-4 py-3 text-xs font-medium rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 text-[#111111] dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] shadow-2xs"
                     />
-                    
+
                     <textarea
                       value={newCommentText}
                       onChange={(e) => setNewCommentText(e.target.value)}
@@ -347,9 +424,10 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
 
                   <button
                     type="submit"
-                    className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+                    disabled={isSubmitting}
+                    className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] hover:bg-[#E03F0D] text-white text-xs font-bold px-6 py-3 cursor-pointer self-start shadow-[0_8px_20px_rgba(255,79,24,0.35)] transition-all active:scale-[0.98] disabled:opacity-50"
                   >
-                    Post Comment
+                    {isSubmitting ? 'Posting...' : 'Post Comment'}
                   </button>
                 </form>
               </div>
@@ -357,13 +435,13 @@ export default function ClientPage({ article, similarArticles }: ClientPageProps
           </div>
 
           {/* Similar Articles Section */}
-          {similarArticles.length > 0 && (
+          {similarPosts.length > 0 && (
             <div className="mt-20 pt-12 border-t border-zinc-200/60 dark:border-zinc-800/60">
               <h2 className="text-3xl sm:text-4xl font-[850] tracking-tight text-[#111111] dark:text-white mb-8">
                 Similar <span className="text-[#FF4F18]">Articles</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {similarArticles.map((simArticle) => (
+                {similarPosts.map((simArticle) => (
                   <Link
                     key={simArticle.slug}
                     href={`/blog/${simArticle.slug}`}

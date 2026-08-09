@@ -108,4 +108,29 @@ export const api = {
 
     return res.json();
   },
+
+  upload: async (endpoint: string, file: File, token?: string) => {
+    const headers: HeadersInit = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      if (res.status === 401 && typeof window !== 'undefined') {
+        localStorage.removeItem('admin_token');
+        window.location.href = '/admin/login';
+      }
+      const error = await res.text();
+      throw new Error(error || 'API request failed');
+    }
+
+    return res.json();
+  },
 };

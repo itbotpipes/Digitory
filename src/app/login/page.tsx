@@ -3,14 +3,36 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '../../components/Header';
 import FooterPage from '../../components/Footer';
 
 function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const searchParams = useSearchParams();
+  const router = useRouter();
   const requiredReason = searchParams.get('required');
+  const redirectTo = searchParams.get('redirect') || '/blog';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Derive a display name — prefer full name field (signup), or part before @ (signin)
+    const displayName = (!isLogin && name.trim()) 
+      ? name.trim() 
+      : (email.split('@')[0] || 'User');
+    // Save user name to localStorage so comment gate knows they're signed in
+    localStorage.setItem('user_name', displayName);
+    // Redirect back to where they came from
+    router.push(redirectTo);
+  };
+
+  const handleGoogleLogin = () => {
+    localStorage.setItem('user_name', 'Google User');
+    router.push(redirectTo);
+  };
 
   return (
     <div className="relative z-10">
@@ -73,7 +95,7 @@ function LoginContent() {
       </div>
 
       {/* Form */}
-      <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+      <form className="space-y-5" onSubmit={handleSubmit}>
         
         {!isLogin && (
           <div className="space-y-1.5">
@@ -82,7 +104,10 @@ function LoginContent() {
             </label>
             <input
               type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
+              required
               className="w-full bg-zinc-50 dark:bg-[#1a1a1e] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-[15px] rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]/50 focus:border-[#FF4F18] transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
             />
           </div>
@@ -94,7 +119,10 @@ function LoginContent() {
           </label>
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="name@example.com"
+            required
             className="w-full bg-zinc-50 dark:bg-[#1a1a1e] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-[15px] rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]/50 focus:border-[#FF4F18] transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
           />
         </div>
@@ -112,7 +140,10 @@ function LoginContent() {
           </div>
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
+            required
             className="w-full bg-zinc-50 dark:bg-[#1a1a1e] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-[15px] rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]/50 focus:border-[#FF4F18] transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
           />
         </div>
@@ -138,7 +169,8 @@ function LoginContent() {
         
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#1a1a1e] border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-[14px] font-bold py-3.5 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors active:scale-[0.98]"
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#1a1a1e] border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 text-[14px] font-bold py-3.5 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors active:scale-[0.98] cursor-pointer"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

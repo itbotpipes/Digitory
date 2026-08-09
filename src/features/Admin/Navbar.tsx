@@ -4,7 +4,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Route } from "next";
-import { HomeIcon, SettingsIcon, SearchIcon, FileText, CheckCircle, MessageSquare, Inbox, Users } from "lucide-react";
+import { HomeIcon, SettingsIcon, SearchIcon, FileText, CheckCircle, MessageSquare, Inbox, Users, Megaphone } from "lucide-react";
 
 interface NavbarProps {
   className?: string;
@@ -26,6 +26,11 @@ const links: ILink[] = [
     label: "Contact Messages",
     href: "/admin/dashboard?tab=contacts",
     Icon: MessageSquare,
+  },
+  {
+    label: "Announcements",
+    href: "/admin/dashboard?tab=updates",
+    Icon: Megaphone,
   },
   {
     label: "Blog Posts",
