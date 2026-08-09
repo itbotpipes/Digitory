@@ -33,23 +33,41 @@ export default function AdminDashboard() {
   });
   const [savingUpdate, setSavingUpdate] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const imageInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Show instant local preview while uploading to Cloudinary
+    const localUrl = URL.createObjectURL(file);
+    setImagePreviewUrl(localUrl);
     setUploadingImage(true);
+
     try {
       const token = localStorage.getItem('admin_token') || '';
-      const res = await api.upload('/media', file, token);
-      const url = res.data?.url || res.url;
-      setUpdateForm(prev => ({ ...prev, featuredImage: url }));
-      alert('Image uploaded successfully');
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/media`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Upload failed');
+      const json = await res.json();
+      const cloudUrl: string = json.data?.url || json.url;
+      // Replace local blob URL with Cloudinary URL
+      setImagePreviewUrl(cloudUrl);
+      setUpdateForm(prev => ({ ...prev, featuredImage: cloudUrl }));
     } catch (err: any) {
       console.error(err);
+      setImagePreviewUrl(null);
+      setUpdateForm(prev => ({ ...prev, featuredImage: '' }));
       alert(err.message || 'Failed to upload image');
     } finally {
       setUploadingImage(false);
+      URL.revokeObjectURL(localUrl);
     }
   };
 
@@ -167,6 +185,7 @@ export default function AdminDashboard() {
       featuredImage: '',
       publishedAt: new Date().toISOString().split('T')[0]
     });
+    setImagePreviewUrl(null);
     setShowUpdateModal(true);
   };
 
@@ -180,6 +199,7 @@ export default function AdminDashboard() {
       featuredImage: item.featuredImage || '',
       publishedAt: item.publishedAt ? new Date(item.publishedAt).toISOString().split('T')[0] : ''
     });
+    setImagePreviewUrl(item.featuredImage || null);
     setShowUpdateModal(true);
   };
 
@@ -594,37 +614,65 @@ export default function AdminDashboard() {
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Featured Image</label>
-                <div className="flex gap-4 items-center">
-                  {updateForm.featuredImage && (
-                    <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 flex-shrink-0">
-                      <img 
-                        src={updateForm.featuredImage} 
-                        alt="Preview" 
+                <div className="flex flex-col gap-3">
+                  {/* Live preview (local blob → Cloudinary URL after upload) */}
+                  {imagePreviewUrl && (
+                    <div className="relative w-full h-36 rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
+                      <img
+                        src={imagePreviewUrl}
+                        alt="Preview"
                         className="w-full h-full object-cover"
                       />
+                      {uploadingImage && (
+                        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-2">
+                          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span className="text-white text-xs font-semibold">Uploading to Cloudinary...</span>
+                        </div>
+                      )}
+                      {!uploadingImage && (
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => imageInputRef.current?.click()}
+                            className="bg-white/90 text-zinc-800 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-white transition-colors"
+                          >
+                            Change Image
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setImagePreviewUrl(null); setUpdateForm(prev => ({ ...prev, featuredImage: '' })); }}
+                            className="bg-red-600/90 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
-                  <div className="flex-1 space-y-2">
-                    <div className="relative flex items-center justify-center border-2 border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-3 bg-zinc-50/50 dark:bg-zinc-950/20 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer group">
-                      <input 
-                        type="file" 
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        disabled={uploadingImage}
-                        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
-                      />
-                      <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 group-hover:text-[#FF4F18] transition-colors">
-                        {uploadingImage ? 'Uploading Image...' : 'Click to Upload Image'}
+
+                  {!imagePreviewUrl && (
+                    <div
+                      className="relative flex flex-col items-center justify-center border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl p-6 bg-zinc-50/50 dark:bg-zinc-950/20 hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer group"
+                      onClick={() => imageInputRef.current?.click()}
+                    >
+                      <svg className="w-8 h-8 text-zinc-400 mb-2 group-hover:text-[#FF4F18] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 group-hover:text-[#FF4F18] transition-colors">
+                        Click to upload image
                       </span>
+                      <span className="text-[10px] text-zinc-400 mt-1">PNG, JPG, WEBP up to 10MB</span>
                     </div>
-                    <input 
-                      type="text" 
-                      value={updateForm.featuredImage}
-                      onChange={(e) => setUpdateForm(prev => ({ ...prev, featuredImage: e.target.value }))}
-                      placeholder="Or enter image URL manually..."
-                      className="w-full px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-[#FF4F18] text-xs text-zinc-900 dark:text-white"
-                    />
-                  </div>
+                  )}
+
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploadingImage}
+                    className="hidden"
+                  />
                 </div>
               </div>
               
