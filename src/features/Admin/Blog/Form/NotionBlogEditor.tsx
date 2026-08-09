@@ -451,7 +451,7 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
                 </div>
 
                 <div className="editor-canvas focus:outline-none mb-10 [&_.rich-editorjs]:max-w-none [&_.rich-editorjs]:w-full [&_.ProseMirror]:bg-[#191919] [&_.ProseMirror]:border-none [&_.ProseMirror]:text-[#e3e3e3] [&_.ProseMirror]:px-0 [&_.ProseMirror]:py-4 [&_.ProseMirror]:min-h-[450px]">
-                  <DescriptionEditor label="" name="content" onValueChange={setDescription as any} control={form.control} notionMode={true} onRawValueChange={handleRawChange} />
+                  <DescriptionEditor label="" name="content" onValueChange={() => {}} control={form.control} notionMode={true} onRawValueChange={setDescription} />
                 </div>
               </div>
             )}
