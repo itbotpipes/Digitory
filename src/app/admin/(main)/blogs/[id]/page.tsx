@@ -42,7 +42,7 @@ function EditBlogPage({ params }: PageProps) {
     if (!token) return;
 
     try {
-      await api.patch(`/posts/${id}`, data, token);
+      await api.put(`/posts/${id}`, data, token);
       router.push("/admin/blogs");
     } catch (err) {
       console.error(err);
