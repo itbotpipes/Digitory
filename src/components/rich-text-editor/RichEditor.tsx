@@ -946,9 +946,9 @@ const RichEditor: React.FC<RichEditorProps> = ({
     },
     onUpdate: ({ editor }) => {
       if (onValueChange) onValueChange(editor.getJSON());
-      const text = editor.getText().trim();
-      onValidChange?.(text.length > 0);
-      if (onRawValueChange) onRawValueChange(text);
+      const html = editor.getHTML();
+      onValidChange?.(editor.getText().trim().length > 0);
+      if (onRawValueChange) onRawValueChange(html);
 
       // Detect slash trigger
       if (notionMode) {

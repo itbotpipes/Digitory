@@ -136,14 +136,46 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
     return () => clearTimeout(saveTimer);
   }, [formValues, form, submitHandler]);
 
-  const handleCoverUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+
+  const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Typically you'd upload this file first and get a URL. We'll just set it for now.
-      form.setValue("featuredImage", file, {
+    if (!file) return;
+
+    // Show local preview immediately
+    const localUrl = URL.createObjectURL(file);
+    setCoverPreview(localUrl);
+    setIsUploadingCover(true);
+
+    try {
+      const token = localStorage.getItem('admin_token');
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/media`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+      const json = await res.json();
+      const uploadedUrl: string = json.data?.url || json.url;
+
+      // Set the Cloudinary URL string (not the File object)
+      form.setValue('featuredImage', uploadedUrl, {
         shouldValidate: true,
         shouldDirty: true,
       });
+      setCoverPreview(uploadedUrl);
+    } catch (err) {
+      console.error('Cover upload error:', err);
+      alert('Failed to upload cover image. Please try again.');
+      setCoverPreview(null);
+      form.setValue('featuredImage', '', { shouldValidate: true });
+    } finally {
+      setIsUploadingCover(false);
+      URL.revokeObjectURL(localUrl);
     }
   };
 
@@ -297,7 +329,12 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
             {activeTab === "edit" && (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
                 <div className="relative group w-full mb-8 rounded-lg overflow-hidden border border-[#2d2d2d] bg-[#202020] min-h-[140px] flex flex-col items-center justify-center">
-                  {coverPreview ? (
+                  {isUploadingCover ? (
+                    <div className="flex flex-col items-center justify-center text-[#8c8c8c] py-8 w-full">
+                      <div className="w-6 h-6 border-2 border-[#FF4F18] border-t-transparent rounded-full animate-spin mb-2" />
+                      <span className="text-xs font-medium">Uploading to Cloudinary...</span>
+                    </div>
+                  ) : coverPreview ? (
                     <>
                       <img src={coverPreview} alt="Cover" className="w-full h-48 object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-opacity">
