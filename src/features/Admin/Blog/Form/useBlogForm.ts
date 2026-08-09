@@ -89,7 +89,7 @@ export function useBlogForm(
       }
     };
 
-    submitHandler(submitData);
+    return submitData;
   };
 
   return { description, setDescription, form, handleSubmit };

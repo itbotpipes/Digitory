@@ -122,7 +122,8 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
     const saveTimer = setTimeout(() => {
       form.handleSubmit(async (data) => {
         try {
-          await submitHandler(data);
+          const submitData = await handleSubmit(data);
+          await submitHandler(submitData);
           form.reset(data, { keepValues: true });
           setSavingStatus("saved");
           setTimeout(() => setSavingStatus("idle"), 2500);
@@ -134,7 +135,7 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
     }, 5000);
 
     return () => clearTimeout(saveTimer);
-  }, [formValues, form, submitHandler]);
+  }, [formValues, form, submitHandler, handleSubmit]);
 
   const [isUploadingCover, setIsUploadingCover] = useState(false);
 
@@ -218,7 +219,14 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
 
   const triggerSave = (status: 'Draft' | 'Published') => {
     form.setValue("status", status, { shouldDirty: true });
-    form.handleSubmit(handleSubmit, (err) => {
+    form.handleSubmit(async (data) => {
+      try {
+        const submitData = await handleSubmit(data);
+        await submitHandler(submitData);
+      } catch (err) {
+        console.error("Save error:", err);
+      }
+    }, (err) => {
       console.log("Validation errors:", err);
       alert(`Cannot save. Please complete required fields.`);
     })();
