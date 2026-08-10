@@ -124,7 +124,8 @@ export default function RadialCommandCenter() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start animate-fade-in">
         <div className="lg:col-span-7">
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            Everything your restaurant needs, <br className="hidden lg:block" /> <span className="text-[#FF4F18]">in one place</span>
+            Everything your restaurant needs,{' '}
+            <span className="text-[#FF4F18]">in one place</span>
           </h2>
         </div>
         <div className="lg:col-span-5 text-zinc-650 dark:text-zinc-400 text-sm md:text-base leading-relaxed lg:pt-2">

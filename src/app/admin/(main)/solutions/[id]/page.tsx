@@ -95,7 +95,7 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
         setMessage('Solution created successfully!');
         setTimeout(() => { window.location.href = '/admin/dashboard'; }, 1000);
       } else {
-        await api.patch(`/solutions/${resolvedParams.id}`, formData, token!);
+        await api.put(`/solutions/${resolvedParams.id}`, formData, token!);
         setMessage('Solution updated successfully!');
       }
     } catch (err: any) {

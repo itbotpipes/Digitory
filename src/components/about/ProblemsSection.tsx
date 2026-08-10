@@ -61,7 +61,7 @@ export default function ProblemsSection() {
   ];
 
   return (
-    <section className="bg-white dark:bg-[#121214] pt-8 pb-2 md:pt-12 md:pb-4 transition-colors duration-300">
+    <section className="bg-white dark:bg-[#121214] py-10 md:py-16 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
 
         {/* Header Block */}

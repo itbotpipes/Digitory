@@ -103,7 +103,7 @@ export default function AdminDashboard() {
       if (activeTab === 'contacts') endpoint = '/contact-messages';
       if (activeTab === 'updates') endpoint = '/updates';
       if (activeTab === 'blogs') endpoint = '/posts';
-      if (activeTab === 'solutions') endpoint = '/solutions';
+      if (activeTab === 'solutions') endpoint = '/solutions?limit=20';
       if (activeTab === 'comments') endpoint = '/comments';
       if (activeTab === 'users') endpoint = '/users';
 

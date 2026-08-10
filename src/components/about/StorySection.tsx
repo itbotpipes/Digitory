@@ -47,7 +47,7 @@ export default function StorySection() {
   ];
 
   return (
-    <section className="bg-white dark:bg-[#0d0d0e] pt-4 pb-16 md:pt-6 md:pb-24 transition-colors duration-300 relative overflow-hidden">
+    <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 transition-colors duration-300 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10">
         
         {/* Title Block */}
