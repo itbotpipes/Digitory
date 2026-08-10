@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import { industriesDb, IndustryData } from '../../data/industriesDb';
@@ -91,30 +92,35 @@ function IndustriesDetailsContent() {
           { label: 'Table Turnaround Speed', value: '+22%', desc: 'Faster order taking and digital billing KOTs' },
           { label: 'Liquor Variance Rate', value: '<1.5%', desc: 'Accurate peg-level inventory audits' },
           { label: 'Daily Admin Labor', value: '-2 Hrs', desc: 'Auto-reconciled cashless payments' },
+          { label: 'Happy Hour Sales', value: '+40%', desc: 'Dynamic pricing and automated menus' },
         ];
       case 'nightclubs':
         return [
           { label: 'Entry Queue Checkin', value: '4.8s', desc: 'Secure high-speed digital passes' },
           { label: 'Peak Hour Bar Billing', value: '12s', desc: 'Mobile POS taps and QR tabs' },
           { label: 'Leakage & Spillage Control', value: '-95%', desc: 'Real-time bottle weight verification' },
+          { label: 'Event ROI', value: '+55%', desc: 'Targeted promotions and table bookings' },
         ];
       case 'micro-breweries':
         return [
           { label: 'Brew Recipe Consistency', value: '100%', desc: 'Standardized batch ingredient tracking' },
           { label: 'Average Ticket Value', value: '+18%', desc: 'Upselling with smart combo notifications' },
           { label: 'Keg Inventory Variance', value: '<0.8%', desc: 'Automated taproom scale integration' },
+          { label: 'Direct Tap Sales', value: '+32%', desc: 'Self-serve QR ordering tables' },
         ];
       case 'qsr':
         return [
           { label: 'Average Order Processing', value: '15s', desc: 'Simplified queue busting cashier flow' },
           { label: 'Recipe Ingredient Waste', value: '-30%', desc: 'Automated POS to stock decrement' },
           { label: 'Menu Push to Zomato', value: 'Instant', desc: 'Update prices and status globally' },
+          { label: 'Order Accuracy', value: '99.9%', desc: 'Integrated kitchen display systems' },
         ];
       default:
         return [
           { label: 'Daily Service Speed', value: '+25%', desc: 'No paper slip delays or manual coordination' },
           { label: 'Inventory Cost Saved', value: '12%', desc: 'Smarter batching and real-time alerts' },
           { label: 'Customer Retention Rate', value: '+35%', desc: 'Automated loyalty campaigns' },
+          { label: 'Multi-Outlet Sync', value: '100%', desc: 'Real-time data aggregation globally' },
         ];
     }
   };
@@ -124,15 +130,15 @@ function IndustriesDetailsContent() {
       <Header />
 
       <main className="flex-grow bg-white dark:bg-[#0d0d0e]">
-        
+
         {/* HERO SECTION */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-12 md:py-20 bg-white dark:bg-[#0d0d0e]">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
-            
+
             {/* Left Column: Title & Intro */}
             <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8 text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-                Optimized operations for <br/>
+                Optimized operations for <br />
                 <span className="text-[#FF4F18]">{industry.title}</span>
               </h1>
 
@@ -142,7 +148,7 @@ function IndustriesDetailsContent() {
 
               <div className="flex flex-wrap gap-4 items-center">
                 <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-                  Request a Demo
+                  Book a Demo
                 </button>
               </div>
 
@@ -151,34 +157,20 @@ function IndustriesDetailsContent() {
               </p>
             </div>
 
-            {/* Right Column: Visual Mockup */}
-            <div className="lg:col-span-6 flex justify-center w-full">
-              <div className="w-full max-w-[460px] bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] p-6 shadow-xl relative overflow-hidden flex flex-col gap-6 select-none text-left">
-                <div className="flex items-center justify-between border-b border-zinc-200/60 dark:border-zinc-800/60 pb-4">
-                  <span className="text-xs font-bold text-zinc-500">
-                    Live Dashboard Status
-                  </span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-200/40 dark:border-zinc-800">
-                    <span className="text-xs font-bold text-zinc-500">Live Status</span>
-                    <span className="text-xs font-extrabold text-[#FF4F18] uppercase">Sync Active</span>
-                  </div>
-                  <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-200/40 dark:border-zinc-800">
-                    <span className="text-xs font-bold text-zinc-500">Response Speed</span>
-                    <span className="text-xs font-extrabold text-zinc-900 dark:text-white">Sub-second</span>
-                  </div>
-                  <div className="bg-[#FFF3EF] dark:bg-orange-950/20 p-4 rounded-2xl border border-orange-100 dark:border-orange-950/50 text-[#FF4F18] text-xs font-extrabold text-center">
-                    <span>Customized for {industry.shortLabel}</span>
-                  </div>
-                </div>
-
-                <div className="text-[11px] text-zinc-400 dark:text-zinc-500 font-bold border-t border-zinc-200/60 dark:border-zinc-800/60 pt-4 flex justify-between">
-                  <span>System: DIGI-OS v4.2</span>
-                  <span>Region: AP-SOUTH</span>
-                </div>
+            {/* Right Column: Hero Image */}
+            <div className="lg:col-span-6 flex justify-center lg:justify-end w-full relative">
+              <div 
+                className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1"
+              >
+                <Image
+                  src="/home-hero.png"
+                  alt={`Digitory for ${industry.title}`}
+                  fill
+                  className="object-cover transition-transform duration-500"
+                  priority
+                />
+                {/* Subtle inner overlay for premium finish */}
+                <div className="absolute inset-0 border border-black/5 dark:border-white/10 rounded-[32px] pointer-events-none" />
               </div>
             </div>
 
@@ -306,11 +298,11 @@ function IndustriesDetailsContent() {
             </h3>
           </div>
 
-          <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+          <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-zinc-200/60 dark:bg-zinc-800/60 grid grid-cols-1 md:grid-cols-3 gap-[1px] shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
             {industry.features.map((item, idx) => (
               <div
                 key={idx}
-                className="p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left border-zinc-200/60 dark:border-zinc-800/60 border-b md:border-b-0 md:border-r last:border-b-0 md:last:border-r-0 bg-white dark:bg-zinc-950"
+                className="p-8 sm:p-10 flex flex-col justify-start transition-colors duration-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 cursor-pointer text-left bg-white dark:bg-[#0d0d0e] h-full"
               >
                 <div className="space-y-4">
                   <h4 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-3">
@@ -340,13 +332,13 @@ function IndustriesDetailsContent() {
         {/* SECTION: OPERATIONAL OUTCOMES & IMPACT NUMBERS */}
         <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
           <div className="mx-auto max-w-7xl px-6 md:px-8">
-            <div className="mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+            <div className="mb-16 text-center">
+              <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
                 Quantifiable efficiency gains <span className="text-[#FF4F18]">recorded by our partners</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-3 md:gap-0 text-center">
+            <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
               {getIndustryStats(industry.id).map((stat, idx) => (
                 <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
                   <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
@@ -366,44 +358,57 @@ function IndustriesDetailsContent() {
 
         {/* SECTION: REAL-TIME VISIBILITY ACROSS OPERATIONS */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e] text-left">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            <div className="lg:col-span-6 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="lg:col-span-6 space-y-10">
               <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                Total control over your menu, <span className="text-[#FF4F18]">staff and sales numbers</span>
+                Total control over your  <span className="text-[#FF4F18]">menu,staff and sales numbers</span>
               </h2>
-              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed pt-2">
-                Check sales figures, watch inventory counts decrease in real time, and audit daily cashier shifts from one central screen. Digitory consolidates metrics from online integrations, dine-in counters, and bar tabs automatically.
-              </p>
-              <div className="pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 grid grid-cols-2 gap-4">
+
+              <div className="pt-8 border-t border-zinc-200/60 dark:border-zinc-800/60 grid grid-cols-1 sm:grid-cols-2 gap-8 gap-y-10">
                 <div>
                   <span className="text-lg font-bold text-[#FF4F18]">100% cloud</span>
-                  <p className="text-xs text-zinc-500 mt-1">Manage operations from your phone or browser.</p>
+                  <p className="text-sm text-zinc-500 mt-2 leading-relaxed">Manage operations from your phone or browser instantly.</p>
                 </div>
                 <div>
                   <span className="text-lg font-bold text-[#FF4F18]">Offline Mode</span>
-                  <p className="text-xs text-zinc-500 mt-1">Billing counters function even if connection drops.</p>
+                  <p className="text-sm text-zinc-500 mt-2 leading-relaxed">Billing counters function even if connection drops.</p>
+                </div>
+                <div>
+                  <span className="text-lg font-bold text-[#FF4F18]">Role-based Access</span>
+                  <p className="text-sm text-zinc-500 mt-2 leading-relaxed">Secure operations by restricting employee permissions.</p>
+                </div>
+                <div>
+                  <span className="text-lg font-bold text-[#FF4F18]">Central Menu Sync</span>
+                  <p className="text-sm text-zinc-500 mt-2 leading-relaxed">Update prices across all outlet locations globally.</p>
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-6 bg-white dark:bg-zinc-900/60 p-8 rounded-[32px] border border-zinc-200/60 dark:border-zinc-800/60 space-y-6">
-              <div className="flex justify-between items-center border-b border-zinc-200/60 dark:border-zinc-800/60 pb-4">
-                <span className="text-xs font-bold text-zinc-500">Global Outlet Switcher</span>
-                <span className="text-xs font-extrabold text-[#FF4F18] uppercase">9 Locations Connected</span>
-              </div>
-              <div className="space-y-4">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-zinc-500">Active KOTs (Kitchen)</span>
-                  <span className="text-zinc-900 dark:text-white">42 Orders</span>
+
+            <div className="lg:col-span-6 flex flex-col space-y-10">
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed pt-2">
+                Check sales figures, watch inventory counts decrease in real time, and audit daily cashier shifts from one central screen. Digitory consolidates metrics from online integrations, dine-in counters, and bar tabs automatically.
+              </p>
+
+              <div className="bg-white dark:bg-zinc-900/60 p-8 rounded-[32px] border border-zinc-200/60 dark:border-zinc-800/60 space-y-6">
+                <div className="flex justify-between items-center border-b border-zinc-200/60 dark:border-zinc-800/60 pb-4">
+                  <span className="text-xs font-bold text-zinc-500">Global Outlet Switcher</span>
+                  <span className="text-xs font-extrabold text-[#FF4F18] uppercase">9 Locations Connected</span>
                 </div>
-                <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
-                  <div className="bg-[#FF4F18] h-full w-3/4 rounded-full" />
-                </div>
-                <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-zinc-550">Average Prep Time</span>
-                  <span className="text-zinc-900 dark:text-white">11.4 Minutes</span>
-                </div>
-                <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
-                  <div className="bg-emerald-500 h-full w-[85%] rounded-full" />
+                <div className="space-y-4">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-zinc-500">Active KOTs (Kitchen)</span>
+                    <span className="text-zinc-900 dark:text-white">42 Orders</span>
+                  </div>
+                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+                    <div className="bg-[#FF4F18] h-full w-3/4 rounded-full" />
+                  </div>
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-zinc-550">Average Prep Time</span>
+                    <span className="text-zinc-900 dark:text-white">11.4 Minutes</span>
+                  </div>
+                  <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full w-[85%] rounded-full" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -449,32 +454,49 @@ function IndustriesDetailsContent() {
         )}
 
         {/* DYNAMIC INDUSTRY CTA SECTION */}
-        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e]">
-          <div className="bg-white dark:bg-zinc-950 rounded-[32px] p-8 md:p-16 text-zinc-900 dark:text-white shadow-xl border border-zinc-200 dark:border-zinc-800/80 flex flex-col items-center text-center gap-8 relative overflow-hidden select-none">
-            <div className="flex flex-col items-center space-y-4 max-w-3xl">
-              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
-                {(() => {
-                  const words = (industry.ctaBlock.title || '').split(' ');
-                  if (words.length <= 1) return industry.ctaBlock.title;
-                  const splitIndex = words.length - 2;
-                  return (
-                    <>
-                      {words.slice(0, splitIndex).join(' ')}{' '}
-                      <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
-                    </>
-                  );
-                })()}
-              </h2>
-              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl">
-                {industry.ctaBlock.desc}
-              </p>
-            </div>
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-16 md:py-24 bg-white dark:bg-[#0d0d0e]">
+          {/* Top accent line */}
+          <div className="w-16 h-1 bg-[#FF4F18] mx-auto mb-12" />
+          
+          <div className="text-center max-w-3xl mx-auto space-y-6">
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
+              {(() => {
+                const words = (industry.ctaBlock.title || '').split(' ');
+                if (words.length <= 1) return industry.ctaBlock.title;
+                const splitIndex = words.length - 2;
+                return (
+                  <>
+                    {words.slice(0, splitIndex).join(' ')}{' '}
+                    <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
+                  </>
+                );
+              })()}
+            </h2>
+            <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+              {industry.ctaBlock.desc}
+            </p>
+          </div>
 
-            <div className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-                Request a Demo
-              </button>
+          {/* Trust indicators row */}
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-10 mb-12">
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              No setup fee
             </div>
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              Free 15-min demo
+            </div>
+            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              Go live in 48 hours
+            </div>
+          </div>
+
+          <div className="text-center">
+            <button className="inline-flex justify-center items-center rounded-full bg-[#FF4F18] px-10 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+              Book a Demo
+            </button>
           </div>
         </section>
 
