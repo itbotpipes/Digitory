@@ -76,9 +76,6 @@ export default function TestSection() {
 
   return (
     <div className="w-full">
-      {/* Horizontal Divider Line */}
-      <hr className="border-t border-zinc-200 w-full" />
-
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Section Heading */}
         <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15] mb-10 md:mb-12">

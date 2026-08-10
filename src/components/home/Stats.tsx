@@ -28,9 +28,6 @@ export default function Stats() {
 
   return (
     <div className="w-full">
-      {/* Horizontal Divider Line */}
-      <hr className="border-t border-zinc-200 dark:border-zinc-800 w-full" />
-
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Section Heading */}
         <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15] mb-16 md:mb-20">

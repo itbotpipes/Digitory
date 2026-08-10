@@ -51,9 +51,6 @@ export default function Features() {
 
   return (
     <div className="w-full">
-      {/* Horizontal Divider Line */}
-      <hr className="border-t border-zinc-200 w-full" />
-
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Top Header Block */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10 md:mb-12">
