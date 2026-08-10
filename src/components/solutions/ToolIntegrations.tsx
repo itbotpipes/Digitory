@@ -52,6 +52,26 @@ export default function ToolIntegrations() {
         </svg>
       ),
     },
+    {
+      id: "paytm",
+      name: "Paytm",
+      subtext: "Instant QR payments.",
+      iconSvg: (
+        <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+    {
+      id: "whatsapp",
+      name: "WhatsApp",
+      subtext: "Automated billing alerts.",
+      iconSvg: (
+        <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
@@ -92,14 +112,14 @@ export default function ToolIntegrations() {
         {/* Desktop View: Network Diagram */}
         <div className="hidden md:flex items-center justify-center w-full">
           
-          {/* Left Column (Integrations 1 & 2) */}
+          {/* Left Column (Integrations 1, 2, 5) */}
           <div className="relative flex flex-col gap-10 w-[220px]">
             {/* Vertical Circuit Line */}
             <div className="absolute -right-10 top-[3rem] bottom-[3rem] w-[2px] bg-gradient-to-b from-zinc-200/20 via-zinc-200 dark:via-zinc-700 to-zinc-200/20" />
             {/* Horizontal Connection to Center Node */}
             <div className="absolute -right-20 top-1/2 w-10 h-[2px] bg-gradient-to-r from-zinc-200 dark:from-zinc-700 to-[#FF4F18]/40" />
             
-            {[integrations[0], integrations[1]].map((item) => (
+            {[integrations[0], integrations[1], integrations[4]].map((item) => (
               <div key={item.id} className="relative z-10 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[16px] p-3 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] hover:border-[#FF4F18]/40 transition-colors duration-300">
                 {/* Horizontal line to vertical track */}
                 <div className="absolute -right-10 top-1/2 w-10 h-[2px] bg-zinc-200 dark:bg-zinc-700" />
@@ -117,9 +137,9 @@ export default function ToolIntegrations() {
 
           {/* Central Digitory Node */}
           <div className="mx-20 relative z-20 flex flex-col items-center justify-center">
-            {/* Sleek Professional Node — Made Bigger with dynamic hover scaling and neutral shadow depth */}
-            <div className="relative w-36 h-36 bg-white dark:bg-zinc-900 rounded-[2.25rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center z-10 overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] cursor-default">
-              <div className="relative w-22 h-22 z-10">
+            {/* Sleek Professional Node — Reduced size by ~10% (w-32 h-32 instead of w-36 h-36) */}
+            <div className="relative w-32 h-32 bg-white dark:bg-zinc-900 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center z-10 overflow-hidden group transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] cursor-default">
+              <div className="relative w-20 h-20 z-10">
                 <Image
                   src="/demologo.png"
                   alt="Digitory Logo"
@@ -130,14 +150,14 @@ export default function ToolIntegrations() {
             </div>
           </div>
 
-          {/* Right Column (Integrations 3 & 4) */}
+          {/* Right Column (Integrations 3, 4, 6) */}
           <div className="relative flex flex-col gap-10 w-[220px]">
             {/* Vertical Circuit Line */}
             <div className="absolute -left-10 top-[3rem] bottom-[3rem] w-[2px] bg-gradient-to-b from-zinc-200/20 via-zinc-200 dark:via-zinc-700 to-zinc-200/20" />
             {/* Horizontal Connection to Center Node */}
             <div className="absolute -left-20 top-1/2 w-10 h-[2px] bg-gradient-to-l from-zinc-200 dark:from-zinc-700 to-[#FF4F18]/40" />
             
-            {[integrations[2], integrations[3]].map((item) => (
+            {[integrations[2], integrations[3], integrations[5]].map((item) => (
               <div key={item.id} className="relative z-10 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[16px] p-3 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] hover:border-[#FF4F18]/40 transition-colors duration-300">
                 {/* Horizontal line to vertical track */}
                 <div className="absolute -left-10 top-1/2 w-10 h-[2px] bg-zinc-200 dark:bg-zinc-700" />

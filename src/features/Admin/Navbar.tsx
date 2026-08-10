@@ -43,6 +43,11 @@ const links: ILink[] = [
     Icon: CheckCircle,
   },
   {
+    label: "Industries",
+    href: "/admin/dashboard?tab=industries",
+    Icon: HomeIcon,
+  },
+  {
     label: "Comments",
     href: "/admin/dashboard?tab=comments",
     Icon: MessageSquare,

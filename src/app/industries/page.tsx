@@ -24,7 +24,7 @@ export default function IndustriesPage() {
                 Built for <span className="text-[#FF4F18]">every food & beverage business.</span>
               </h1>
               
-              <p className="text-[15px] sm:text-[17px] text-zinc-600 dark:text-zinc-300 max-w-[500px] leading-[1.6]">
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-xl leading-relaxed">
                 From busy bars and craft breweries to fast QSR chains and mobile food trucks, Digitory provides the tools you need to streamline operations and grow with confidence.
               </p>
 
@@ -63,7 +63,7 @@ export default function IndustriesPage() {
 
             {/* Right Column - Hero Image */}
             <div className="lg:col-span-6 flex justify-center lg:justify-end w-full relative perspective-[1000px]">
-              <div className="relative w-full max-w-[440px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1">
+              <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1">
                 <img
                   src="/home-hero.png"
                   alt="Digitory Restaurant OS"
@@ -77,7 +77,7 @@ export default function IndustriesPage() {
         </section>
 
         {/* Industries Grid */}
-        <section className="mx-auto max-w-7xl px-6 md:px-8 pb-24">
+        <section className="mx-auto max-w-7xl px-6 md:px-8 pt-12 md:pt-16 lg:pt-20 pb-24">
           <div className="border border-zinc-200 dark:border-zinc-800 rounded-[28px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
             {industries.map((item, idx) => {
               const isLastInRow = (idx % 3) === 2;

@@ -9,6 +9,7 @@ export interface IndustryFeatureItem {
 
 export interface IndustryData {
   id: string;
+  slug?: string;
   shortLabel: string;
   icon: React.ReactNode;
   title: string;

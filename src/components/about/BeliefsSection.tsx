@@ -38,6 +38,11 @@ export default function BeliefsSection() {
       {/* Stats Section */}
       <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 transition-colors duration-300">
         <div className="mx-auto max-w-7xl px-6 md:px-8">
+          {/* Section Heading */}
+          <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15] mb-16 md:mb-20">
+            Trusted by the best <span className="text-[#FF4F18]">in the business</span>
+          </h2>
+
           <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
             {stats.map((stat, idx) => (
               <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">

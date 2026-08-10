@@ -4,273 +4,479 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
-import { industriesDb } from '../../data/industriesDb';
+import { industriesDb, IndustryData } from '../../data/industriesDb';
+import { api } from '@/lib/api';
 
 function IndustriesDetailsContent() {
   const searchParams = useSearchParams();
   const moduleParam = searchParams.get('module');
   const [activeKey, setActiveKey] = useState<string>("bars-restaurants");
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [industriesList, setIndustriesList] = useState<IndustryData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-    if (moduleParam && industriesDb[moduleParam]) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const loadIndustriesData = async () => {
+      try {
+        const res = await api.get('/industries?limit=20');
+        const loaded: any[] = res.data?.docs || res.data?.results || res.data || [];
+        if (loaded && loaded.length > 0) {
+          const normalized: IndustryData[] = loaded.map((s: any) => ({
+            id: s.slug || s._id,
+            slug: s.slug || '',
+            shortLabel: s.shortLabel || s.title || '',
+            icon: null,
+            title: s.title || '',
+            subtitle: s.subtitle || '',
+            description: s.description || '',
+            trustText: s.trustText || 'Trusted by restaurants across India.',
+            featuresTitle: s.featuresTitle || 'Key capabilities',
+            features: s.features || [],
+            whyChooseTitle: s.whyChooseTitle || 'Why choose Digitory?',
+            whyChoose: s.whyChoose || [],
+            ctaBlock: s.ctaBlock || { title: 'Ready to grow?', desc: 'Talk to us today.' },
+          }));
+
+          const merged = normalized.map(item => {
+            const staticEntry = industriesDb[item.id];
+            return staticEntry ? { ...item, icon: staticEntry.icon } : item;
+          });
+
+          setIndustriesList(merged);
+        } else {
+          setIndustriesList(Object.values(industriesDb));
+        }
+      } catch (err) {
+        console.warn('Backend offline or failed to fetch industries. Using local static fallback:', err);
+        setIndustriesList(Object.values(industriesDb));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadIndustriesData();
+  }, []);
+
+  useEffect(() => {
+    if (moduleParam) {
       setActiveKey(moduleParam);
+    } else if (industriesList.length > 0) {
+      setActiveKey(industriesList[0].id || 'bars-restaurants');
     }
-  }, [moduleParam]);
+  }, [moduleParam, industriesList]);
 
-  const industries = Object.values(industriesDb);
-  const industry = industriesDb[activeKey] || industries[0];
+  const industry = industriesList.find(s => s.id === activeKey || (s as any).slug === activeKey) || industriesList[0] || Object.values(industriesDb)[0];
 
-  const handleSelectIndustry = (id: string) => {
-    setActiveKey(id);
-    setIsDropdownOpen(false);
+  if (!mounted || loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#0d0d0e] flex flex-col items-center justify-center font-sans">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-[#FF4F18] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!industry) return null;
+
+  const getIndustryStats = (id: string) => {
+    switch (id) {
+      case 'bars-restaurants':
+        return [
+          { label: 'Table Turnaround Speed', value: '+22%', desc: 'Faster order taking and digital billing KOTs' },
+          { label: 'Liquor Variance Rate', value: '<1.5%', desc: 'Accurate peg-level inventory audits' },
+          { label: 'Daily Admin Labor', value: '-2 Hrs', desc: 'Auto-reconciled cashless payments' },
+        ];
+      case 'nightclubs':
+        return [
+          { label: 'Entry Queue Checkin', value: '4.8s', desc: 'Secure high-speed digital passes' },
+          { label: 'Peak Hour Bar Billing', value: '12s', desc: 'Mobile POS taps and QR tabs' },
+          { label: 'Leakage & Spillage Control', value: '-95%', desc: 'Real-time bottle weight verification' },
+        ];
+      case 'micro-breweries':
+        return [
+          { label: 'Brew Recipe Consistency', value: '100%', desc: 'Standardized batch ingredient tracking' },
+          { label: 'Average Ticket Value', value: '+18%', desc: 'Upselling with smart combo notifications' },
+          { label: 'Keg Inventory Variance', value: '<0.8%', desc: 'Automated taproom scale integration' },
+        ];
+      case 'qsr':
+        return [
+          { label: 'Average Order Processing', value: '15s', desc: 'Simplified queue busting cashier flow' },
+          { label: 'Recipe Ingredient Waste', value: '-30%', desc: 'Automated POS to stock decrement' },
+          { label: 'Menu Push to Zomato', value: 'Instant', desc: 'Update prices and status globally' },
+        ];
+      default:
+        return [
+          { label: 'Daily Service Speed', value: '+25%', desc: 'No paper slip delays or manual coordination' },
+          { label: 'Inventory Cost Saved', value: '12%', desc: 'Smarter batching and real-time alerts' },
+          { label: 'Customer Retention Rate', value: '+35%', desc: 'Automated loyalty campaigns' },
+        ];
+    }
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">
       <Header />
 
-      {/* Transparent overlay backdrop to close dropdown when clicking outside */}
-      {isDropdownOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-transparent cursor-default" 
-          onClick={() => setIsDropdownOpen(false)} 
-        />
-      )}
-
-      <main className="flex-grow">
+      <main className="flex-grow bg-white dark:bg-[#0d0d0e]">
         
-        {/* Banner Section with Dropdown Switcher */}
-        <section className="mx-auto max-w-7xl px-6 md:px-8 pt-16 pb-10 text-center relative z-50">
-          <div className="max-w-4xl mx-auto space-y-4">
-            <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-widest text-[#FF4F18] bg-[#FFF3EF] px-3.5 py-1.5 rounded-full select-none">
-              Industry Spec Sheet
-            </span>
+        {/* HERO SECTION */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-12 md:py-20 bg-white dark:bg-[#0d0d0e]">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] pt-3 relative">
-              Explore details for{' '}
-              <span className="relative inline-block text-left align-middle">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  type="button"
-                  className="inline-flex items-center gap-2 text-[#FF4F18] hover:text-[#E03F0D] border-b-4 border-dashed border-[#FF4F18]/30 hover:border-[#FF4F18] pb-1 cursor-pointer transition-all duration-250 select-none font-[900] tracking-tight"
-                >
-                  {industry.shortLabel}
-                  <svg 
-                    className={`w-6 h-6 transition-transform duration-300 shrink-0 ${isDropdownOpen ? 'rotate-180' : 'rotate-0'}`} 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor" 
-                    strokeWidth={4}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </button>
+            {/* Left Column: Title & Intro */}
+            <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8 text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+                Optimized operations for <br/>
+                <span className="text-[#FF4F18]">{industry.title}</span>
+              </h1>
 
-                {/* Dropdown */}
-                {isDropdownOpen && (
-                  <div className="absolute left-1/2 -translate-x-1/2 mt-3 w-80 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800/80 rounded-2xl shadow-2xl p-2 z-50 flex flex-col gap-1 origin-top">
-                    <div className="px-3 py-2 text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest border-b border-zinc-100 dark:border-zinc-900 mb-1">
-                      Choose an Industry
-                    </div>
-                    {industries.map((item) => {
-                      const isSelected = item.id === activeKey;
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => handleSelectIndustry(item.id)}
-                          className={`flex items-center gap-3.5 w-full text-left px-3.5 py-3 rounded-xl transition-all duration-150 cursor-pointer ${
-                            isSelected
-                              ? "bg-[#FF4F18] text-white"
-                              : "hover:bg-zinc-100 dark:hover:bg-zinc-900/60 text-zinc-800 dark:text-zinc-200"
-                          }`}
-                        >
-                          <span className={isSelected ? "text-white" : "text-[#FF4F18]"}>
-                            {item.icon}
-                          </span>
-                          <span className="text-xs font-black uppercase tracking-wider">
-                            {item.shortLabel}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </span>
-            </h1>
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-xl leading-relaxed">
+                {industry.description}
+              </p>
 
-            <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto pt-3">
-              Click on the dropdown above to toggle between different industries and view specifications.
-            </p>
-          </div>
-        </section>
-
-        {/* Dynamic Detail Content */}
-        <div className="animate-fade-in-slow transition-all duration-300">
-          
-          {/* Hero Section */}
-          <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
-              
-              {/* Left Column: Industry Info */}
-              <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8 text-left">
-                <div className="inline-flex">
-                  <div className="flex items-center gap-2 bg-[#FFF3EF] px-3.5 py-1.5 rounded-full select-none">
-                    <span className="h-2 w-2 rounded-full bg-[#FF4F18]"></span>
-                    <span className="text-[11px] md:text-[12px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
-                      {industry.title}
-                    </span>
-                  </div>
-                </div>
-
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-                  {industry.subtitle}
-                </h2>
-
-                <p className="text-base sm:text-lg text-zinc-650 dark:text-zinc-400 leading-relaxed max-w-2xl">
-                  {industry.description}
-                </p>
-
-                <div className="flex flex-wrap gap-4 items-center">
-                  <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-                    Request a Demo
-                  </button>
-                </div>
-
-                <p className="text-sm text-zinc-550 font-medium border-t border-zinc-150/60 dark:border-zinc-800/80 pt-6 max-w-sm">
-                  {industry.trustText}
-                </p>
-              </div>
-
-              {/* Right Column: Visual Mockup */}
-              <div className="lg:col-span-5 flex justify-center w-full">
-                <div className="w-full max-w-[460px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[32px] p-6 shadow-xl relative overflow-hidden flex flex-col gap-6 select-none text-left">
-                  <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-805 pb-4">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
-                      Industry Module View
-                    </span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805">
-                      <span className="text-xs font-bold text-zinc-500">Live Status</span>
-                      <span className="text-xs font-extrabold text-[#FF4F18] uppercase">Sync Active</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-150/40 dark:border-zinc-805">
-                      <span className="text-xs font-bold text-zinc-500">Response Speed</span>
-                      <span className="text-xs font-extrabold text-zinc-900 dark:text-white">Sub-second</span>
-                    </div>
-                    <div className="bg-[#FFF3EF] dark:bg-orange-950/20 p-4 rounded-2xl border border-orange-100 dark:border-orange-950/50 text-[#FF4F18] text-xs font-extrabold text-center">
-                      <span>✓ Customized for {industry.shortLabel}</span>
-                    </div>
-                  </div>
-
-                  <div className="text-[11px] text-zinc-400 dark:text-zinc-550 font-bold border-t border-zinc-150 dark:border-zinc-805 pt-4 flex justify-between">
-                    <span>System: DIGI-OS v4.2</span>
-                    <span>Region: AP-SOUTH</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          {/* Why Choose Section (Only if present) */}
-          {industry.whyChoose && (
-            <section className="bg-zinc-50 dark:bg-zinc-900/30 border-y border-zinc-150/30 dark:border-zinc-900 py-16 text-left">
-              <div className="mx-auto max-w-7xl px-6 md:px-8">
-                <div className="mb-12">
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
-                    Benefits Focus
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-zinc-900 dark:text-white mt-2">
-                    {industry.whyChooseTitle || "Why choose Digitory?"}
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {industry.whyChoose.map((text, idx) => (
-                    <div 
-                      key={idx} 
-                      className="bg-white dark:bg-zinc-900/80 p-6 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/80 text-left flex items-start gap-4 hover:border-[#FF4F18] transition-all duration-200"
-                    >
-                      <div className="w-6 h-6 rounded-full bg-[#FFF3EF] dark:bg-orange-950/20 text-[#FF4F18] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                        {idx + 1}
-                      </div>
-                      <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-300 leading-relaxed">
-                        {text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* Features list/grid */}
-          <section className="mx-auto max-w-7xl px-6 md:px-8 py-16">
-            <div className="text-left mb-12">
-              <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
-                Industry Capabilities
-              </span>
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-[850] text-[#111111] dark:text-white tracking-tight mt-2">
-                {industry.featuresTitle}
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {industry.features.map((item, idx) => (
-                <div 
-                  key={idx}
-                  className="bg-white dark:bg-zinc-900/40 p-6 md:p-8 rounded-3xl border border-zinc-200/60 dark:border-zinc-800/60 hover:border-[#FF4F18]/50 dark:hover:border-[#FF4F18]/50 hover:shadow-xs transition-all duration-200 text-left flex flex-col justify-between gap-5"
-                >
-                  <div className="space-y-3">
-                    <h4 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-3">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18]" />
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-zinc-650 dark:text-zinc-400 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-
-                  {item.linkText && item.linkHref && (
-                    <div className="pt-2">
-                      <a href={item.linkHref} className="inline-flex items-center text-xs font-bold text-[#FF4F18] hover:text-[#E03F0D]">
-                        {item.linkText}
-                        <svg className="w-3.5 h-3.5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </a>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Dynamic Industry CTA Section */}
-          <section className="mx-auto max-w-7xl px-6 md:px-8 py-10">
-            <div className="bg-white dark:bg-zinc-950 rounded-[32px] p-8 md:p-16 text-zinc-900 dark:text-white shadow-xl border border-zinc-200 dark:border-zinc-800/80 flex flex-col items-center text-center gap-8 relative overflow-hidden select-none">
-              <div className="flex flex-col items-center space-y-4 max-w-3xl">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
-                  {industry.ctaBlock.title}
-                </h2>
-                <p className="text-sm sm:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed max-w-2xl">
-                  {industry.ctaBlock.desc}
-                </p>
-              </div>
-
-              <div className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+              <div className="flex flex-wrap gap-4 items-center">
+                <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
                   Request a Demo
                 </button>
               </div>
+
+              <p className="text-sm text-zinc-500 font-medium border-t border-zinc-150/60 dark:border-zinc-800/80 pt-6 max-w-sm leading-normal">
+                {industry.trustText}
+              </p>
+            </div>
+
+            {/* Right Column: Visual Mockup */}
+            <div className="lg:col-span-6 flex justify-center w-full">
+              <div className="w-full max-w-[460px] bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] p-6 shadow-xl relative overflow-hidden flex flex-col gap-6 select-none text-left">
+                <div className="flex items-center justify-between border-b border-zinc-200/60 dark:border-zinc-800/60 pb-4">
+                  <span className="text-xs font-bold text-zinc-500">
+                    Live Dashboard Status
+                  </span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-200/40 dark:border-zinc-800">
+                    <span className="text-xs font-bold text-zinc-500">Live Status</span>
+                    <span className="text-xs font-extrabold text-[#FF4F18] uppercase">Sync Active</span>
+                  </div>
+                  <div className="flex justify-between items-center bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-200/40 dark:border-zinc-800">
+                    <span className="text-xs font-bold text-zinc-500">Response Speed</span>
+                    <span className="text-xs font-extrabold text-zinc-900 dark:text-white">Sub-second</span>
+                  </div>
+                  <div className="bg-[#FFF3EF] dark:bg-orange-950/20 p-4 rounded-2xl border border-orange-100 dark:border-orange-950/50 text-[#FF4F18] text-xs font-extrabold text-center">
+                    <span>Customized for {industry.shortLabel}</span>
+                  </div>
+                </div>
+
+                <div className="text-[11px] text-zinc-400 dark:text-zinc-500 font-bold border-t border-zinc-200/60 dark:border-zinc-800/60 pt-4 flex justify-between">
+                  <span>System: DIGI-OS v4.2</span>
+                  <span>Region: AP-SOUTH</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* SECTION: THE OPERATIONAL REALITY OF INDUSTRY */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            <div className="lg:col-span-5 text-left">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                Managing high volume hospitality requires <span className="text-[#FF4F18]">precision at scale</span>
+              </h2>
+            </div>
+            <div className="lg:col-span-7 text-left text-zinc-600 dark:text-zinc-300 text-base sm:text-lg space-y-4 leading-relaxed lg:pt-2">
+              <p>
+                Whether coordinating busy table rosters or keeping bar tabs updated instantly, {industry.title} operations require a synchronized platform to manage the continuous rush. Manual checks waste hours, while disjointed setups lead to critical slip-ups.
+              </p>
+              <p>
+                Digitory replaces multiple point systems with one unified interface. This enables staff to execute actions quickly and allows managers to track key parameters in real time.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: WHERE TRADITIONAL OPERATIONS BREAK DOWN */}
+        <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
+          <div className="mx-auto max-w-7xl px-6 md:px-8">
+            <div className="mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                Where legacy systems <span className="text-[#FF4F18]">fail {industry.shortLabel}</span>
+              </h2>
+            </div>
+
+            <div className="space-y-0">
+              {[
+                {
+                  n: '01',
+                  title: 'Lagging Inventory Reconciliation',
+                  body: 'Taking stock manually at the end of the day leads to high inventory variance and stock shrinkage that goes unnoticed for weeks.',
+                },
+                {
+                  n: '02',
+                  title: 'Kitchen and Floor Disconnection',
+                  body: 'Lost or delayed paper tickets result in extended customer wait times, cold food, and disappointed regulars.',
+                },
+                {
+                  n: '03',
+                  title: 'Siloed Multi-Outlet Reporting',
+                  body: 'Calculating regional performance across multiple outlets manually creates reporting lag and prevents quick operational adjustments.',
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="grid grid-cols-12 gap-6 md:gap-12 py-8 border-t border-zinc-200/60 dark:border-zinc-800/60 last:border-b items-start"
+                >
+                  <div className="col-span-2 md:col-span-1">
+                    <span className="text-3xl md:text-4xl font-[850] text-zinc-200 dark:text-zinc-800 leading-none select-none">
+                      {item.n}
+                    </span>
+                  </div>
+                  <div className="col-span-10 md:col-span-4">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="col-span-12 md:col-span-7 md:pt-0.5">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: HOW MODERN OPERATIONS NEED TO FUNCTION */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="lg:col-span-5 space-y-4">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                A modern system should connect <span className="text-[#FF4F18]">every workflow automatically</span>
+              </h2>
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed pt-2">
+                Operations should run like a clock. When an order is taken on the floor, it should instantly notify the kitchen, adjust raw material levels in the inventory, and log real-time numbers on the manager\'s screen.
+              </p>
+            </div>
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="p-6 bg-white dark:bg-zinc-900/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+                <span className="text-xs font-bold text-[#FF4F18] uppercase">01 / Instant Routing</span>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">Real-time KOT updates prevent delays between floor staff and kitchen preparation.</p>
+              </div>
+              <div className="p-6 bg-white dark:bg-zinc-900/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+                <span className="text-xs font-bold text-[#FF4F18] uppercase">02 / Automated Audits</span>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">Real-time recipe deductions provide immediate clarity on ingredient usage.</p>
+              </div>
+              <div className="p-6 bg-white dark:bg-zinc-900/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+                <span className="text-xs font-bold text-[#FF4F18] uppercase">03 / Unified Dashboard</span>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">Consolidated insights eliminate manual spreadsheet reconciliation.</p>
+              </div>
+              <div className="p-6 bg-white dark:bg-zinc-900/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60">
+                <span className="text-xs font-bold text-[#FF4F18] uppercase">04 / Central Control</span>
+                <p className="text-sm text-zinc-600 dark:text-zinc-300 mt-2 leading-relaxed">Push menu, pricing, and tax updates to all locations in seconds.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: SOLUTIONS BUILT FOR INDUSTRY */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e]">
+          <div className="text-left mb-12">
+            <h3 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+              {(() => {
+                const words = (industry.featuresTitle || '').split(' ');
+                if (words.length <= 1) return industry.featuresTitle;
+                const splitIndex = words.length - 2;
+                return (
+                  <>
+                    {words.slice(0, splitIndex).join(' ')}{' '}
+                    <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
+                  </>
+                );
+              })()}
+            </h3>
+          </div>
+
+          <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+            {industry.features.map((item, idx) => (
+              <div
+                key={idx}
+                className="p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left border-zinc-200/60 dark:border-zinc-800/60 border-b md:border-b-0 md:border-r last:border-b-0 md:last:border-r-0 bg-white dark:bg-zinc-950"
+              >
+                <div className="space-y-4">
+                  <h4 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-3">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18]" />
+                    {item.title}
+                  </h4>
+                  <p className="text-zinc-600 dark:text-zinc-300 text-xs sm:text-sm leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+
+                {item.linkText && item.linkHref && (
+                  <div className="pt-6 mt-auto">
+                    <a href={item.linkHref} className="inline-flex items-center text-xs font-bold text-[#FF4F18] hover:text-[#E03F0D]">
+                      {item.linkText}
+                      <svg className="w-3.5 h-3.5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION: OPERATIONAL OUTCOMES & IMPACT NUMBERS */}
+        <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
+          <div className="mx-auto max-w-7xl px-6 md:px-8">
+            <div className="mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                Quantifiable efficiency gains <span className="text-[#FF4F18]">recorded by our partners</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-3 md:gap-0 text-center">
+              {getIndustryStats(industry.id).map((stat, idx) => (
+                <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
+                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+                    <span className="text-[#FF4F18]">{stat.value}</span>
+                  </h3>
+                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
+                    <span className="text-zinc-900 dark:text-white">{stat.label}</span>
+                  </h3>
+                  <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-3 max-w-[260px] leading-relaxed">
+                    {stat.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: REAL-TIME VISIBILITY ACROSS OPERATIONS */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e] text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-6 space-y-6">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                Total control over your menu, <span className="text-[#FF4F18]">staff and sales numbers</span>
+              </h2>
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed pt-2">
+                Check sales figures, watch inventory counts decrease in real time, and audit daily cashier shifts from one central screen. Digitory consolidates metrics from online integrations, dine-in counters, and bar tabs automatically.
+              </p>
+              <div className="pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-lg font-bold text-[#FF4F18]">100% cloud</span>
+                  <p className="text-xs text-zinc-500 mt-1">Manage operations from your phone or browser.</p>
+                </div>
+                <div>
+                  <span className="text-lg font-bold text-[#FF4F18]">Offline Mode</span>
+                  <p className="text-xs text-zinc-500 mt-1">Billing counters function even if connection drops.</p>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-6 bg-white dark:bg-zinc-900/60 p-8 rounded-[32px] border border-zinc-200/60 dark:border-zinc-800/60 space-y-6">
+              <div className="flex justify-between items-center border-b border-zinc-200/60 dark:border-zinc-800/60 pb-4">
+                <span className="text-xs font-bold text-zinc-500">Global Outlet Switcher</span>
+                <span className="text-xs font-extrabold text-[#FF4F18] uppercase">9 Locations Connected</span>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-zinc-500">Active KOTs (Kitchen)</span>
+                  <span className="text-zinc-900 dark:text-white">42 Orders</span>
+                </div>
+                <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+                  <div className="bg-[#FF4F18] h-full w-3/4 rounded-full" />
+                </div>
+                <div className="flex justify-between text-xs font-semibold">
+                  <span className="text-zinc-550">Average Prep Time</span>
+                  <span className="text-zinc-900 dark:text-white">11.4 Minutes</span>
+                </div>
+                <div className="w-full bg-zinc-200 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+                  <div className="bg-emerald-500 h-full w-[85%] rounded-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: MULTI-OUTLET / SCALE READINESS */}
+        {industry.whyChoose && industry.whyChoose.length > 0 && (
+          <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
+            <div className="mx-auto max-w-7xl px-6 md:px-8">
+              <div className="mb-12">
+                <h3 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+                  {(() => {
+                    const words = (industry.whyChooseTitle || "Why choose Digitory?").split(' ');
+                    const splitIndex = words.length - 2;
+                    return (
+                      <>
+                        {words.slice(0, splitIndex).join(' ')}{' '}
+                        <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
+                      </>
+                    );
+                  })()}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+                {industry.whyChoose.map((text, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white dark:bg-zinc-900/60 p-6 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80 text-left flex items-start gap-4 h-full transition-all duration-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-300/80 dark:hover:border-zinc-700/80"
+                  >
+                    <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                      {idx + 1}
+                    </div>
+                    <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-300 leading-relaxed">
+                      {text}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
+        )}
 
-        </div>
+        {/* DYNAMIC INDUSTRY CTA SECTION */}
+        <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e]">
+          <div className="bg-white dark:bg-zinc-950 rounded-[32px] p-8 md:p-16 text-zinc-900 dark:text-white shadow-xl border border-zinc-200 dark:border-zinc-800/80 flex flex-col items-center text-center gap-8 relative overflow-hidden select-none">
+            <div className="flex flex-col items-center space-y-4 max-w-3xl">
+              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
+                {(() => {
+                  const words = (industry.ctaBlock.title || '').split(' ');
+                  if (words.length <= 1) return industry.ctaBlock.title;
+                  const splitIndex = words.length - 2;
+                  return (
+                    <>
+                      {words.slice(0, splitIndex).join(' ')}{' '}
+                      <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
+                    </>
+                  );
+                })()}
+              </h2>
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl">
+                {industry.ctaBlock.desc}
+              </p>
+            </div>
+
+            <div className="w-full sm:w-auto">
+              <button className="w-full sm:w-auto inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
+                Request a Demo
+              </button>
+            </div>
+          </div>
+        </section>
 
       </main>
 

@@ -75,22 +75,22 @@ export default function Header() {
       <header className="mx-auto max-w-7xl rounded-full bg-[#EAEAEA]/80 backdrop-blur-md pl-8 pr-4 py-3 flex items-center justify-between shadow-sm">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          {/* Clip container to crop the large whitespace padding in the PNG */}
-          <div className="overflow-hidden h-[38px]" style={{ width: '130px' }}>
-            <Image
-              src="/Digitory-01.png"
-              alt="Digitory Logo"
-              width={160}
-              height={160}
-              style={{
-                height: '160px',
-                width: 'auto',
-                marginTop: '-61px',
-                marginLeft: '-14px',
-              }}
-              priority
-            />
-          </div>
+          <Image
+            src="/digitory-black.png"
+            alt="Digitory Logo"
+            width={140}
+            height={36}
+            className="object-contain h-7 md:h-8 w-auto block dark:hidden"
+            priority
+          />
+          <Image
+            src="/digitory-white.png"
+            alt="Digitory Logo"
+            width={140}
+            height={36}
+            className="object-contain h-7 md:h-8 w-auto hidden dark:block"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}

@@ -8,8 +8,8 @@ import { useSearchParams } from 'next/navigation';
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get('tab') || 'leads';
-  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'comments', 'users'].includes(tabParam)
-    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'comments' | 'users')
+  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users'].includes(tabParam)
+    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users')
     : 'leads';
 
   const [data, setData] = useState<any[]>([]);
@@ -104,6 +104,7 @@ export default function AdminDashboard() {
       if (activeTab === 'updates') endpoint = '/updates';
       if (activeTab === 'blogs') endpoint = '/posts';
       if (activeTab === 'solutions') endpoint = '/solutions?limit=20';
+      if (activeTab === 'industries') endpoint = '/industries?limit=20';
       if (activeTab === 'comments') endpoint = '/comments';
       if (activeTab === 'users') endpoint = '/users';
 
@@ -270,6 +271,13 @@ export default function AdminDashboard() {
               </Link>
             </div>
           )}
+          {activeTab === 'industries' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
+              <Link href="/admin/industries/new" className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200">
+                + Create New Industry
+              </Link>
+            </div>
+          )}
           {activeTab === 'users' && (
             <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
               <button 
@@ -321,6 +329,13 @@ export default function AdminDashboard() {
                     </>
                   )}
                   {activeTab === 'solutions' && (
+                    <>
+                      <th className="px-6 py-4 font-semibold">Title</th>
+                      <th className="px-6 py-4 font-semibold">Slug</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
+                    </>
+                  )}
+                  {activeTab === 'industries' && (
                     <>
                       <th className="px-6 py-4 font-semibold">Title</th>
                       <th className="px-6 py-4 font-semibold">Slug</th>
@@ -421,6 +436,17 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4">
                           <Link href={`/admin/solutions/${item._id}`} className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
                             Edit Solution
+                          </Link>
+                        </td>
+                      </>
+                    )}
+                    {activeTab === 'industries' && (
+                      <>
+                        <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
+                        <td className="px-6 py-4">{item.slug}</td>
+                        <td className="px-6 py-4">
+                          <Link href={`/admin/industries/${item._id}`} className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+                            Edit Industry
                           </Link>
                         </td>
                       </>

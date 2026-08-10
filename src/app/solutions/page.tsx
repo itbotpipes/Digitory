@@ -19,6 +19,7 @@ import RestaurantTypes from '../../components/solutions/RestaurantTypes';
 import RoiCalculator from '../../components/solutions/RoiCalculator';
 import ToolIntegrations from '../../components/solutions/ToolIntegrations';
 import SolutionsCta from '../../components/solutions/SolutionsCta';
+import InsightsPage from '../../components/home/Insights';
 
 export default function SolutionsPage() {
   return (
@@ -54,6 +55,10 @@ export default function SolutionsPage() {
 
         <ScrollFocusWrapper>
           <ToolIntegrations />
+        </ScrollFocusWrapper>
+
+        <ScrollFocusWrapper>
+          <InsightsPage />
         </ScrollFocusWrapper>
 
         {/* <ScrollFocusWrapper>

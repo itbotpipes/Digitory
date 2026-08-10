@@ -491,18 +491,11 @@ function SolutionsDetailsContent() {
 
         {/* 6. Operational Outcomes / Metrics */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 text-left">
-          {/* Left-aligned Header Block */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
-            <div className="lg:col-span-7">
-              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                Real operational <span className="text-[#FF4F18]">outcomes & metrics</span>
-              </h2>
-            </div>
-            <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed lg:pt-2">
-              <p>
-                From neighbourhood cafés to multi-outlet restaurant chains, restaurants across India use Digitory to optimize tables, control waste, and save hours every single week.
-              </p>
-            </div>
+          {/* Centered Header Block */}
+          <div className="mb-16 md:mb-20 text-center">
+            <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+              Real operational <span className="text-[#FF4F18]">outcomes & metrics</span>
+            </h2>
           </div>
 
           <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
