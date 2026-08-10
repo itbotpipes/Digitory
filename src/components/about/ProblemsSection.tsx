@@ -114,7 +114,7 @@ export default function ProblemsSection() {
           <div className="lg:col-span-6 flex flex-col gap-6 h-full">
             <div className="w-full max-w-[500px] mx-auto lg:mr-0 lg:ml-auto flex flex-col gap-6 h-full">
               <h3 className="text-lg sm:text-xl font-extrabold uppercase tracking-wider text-zinc-450 dark:text-zinc-500 mb-2 shrink-0">
-                A busy Friday night — The problems restaurants face every day
+                A busy Friday night
               </h3>
               
               <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-5 md:p-6 space-y-4 w-full flex flex-col justify-between flex-1">

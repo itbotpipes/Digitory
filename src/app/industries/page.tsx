@@ -117,7 +117,7 @@ export default function IndustriesPage() {
 
                   {/* Read More Link */}
                   <div className="pt-6 flex items-center text-xs font-bold text-[#FF4F18]">
-                    <span>View Specifications</span>
+                    <span>View Details</span>
                     <svg className="w-4 h-4 ml-1 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>

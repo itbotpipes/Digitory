@@ -14,9 +14,9 @@ export default function MissionCta() {
       const rect = trackRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
-      // Animate as it scrolls through the middle of the viewport
-      const startTrigger = windowHeight * 0.85; 
-      const endTrigger = windowHeight * 0.15;
+      // Animate as it scrolls through a smaller window in the viewport (reveals faster)
+      const startTrigger = windowHeight * 0.70; 
+      const endTrigger = windowHeight * 0.40;
       const range = startTrigger - endTrigger;
       const scrolled = startTrigger - rect.top;
       
@@ -34,7 +34,7 @@ export default function MissionCta() {
     const tick = () => {
       const diff = targetProgress.current - currentProgress.current;
       if (Math.abs(diff) > 0.0001) {
-        currentProgress.current += diff * 0.085; // Easing LERP factor (8.5% travel per frame)
+        currentProgress.current += diff * 0.15; // Faster easing LERP factor (15% travel per frame instead of 8.5%)
         setScrollProgress(currentProgress.current);
       }
       rAF = requestAnimationFrame(tick);

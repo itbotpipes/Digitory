@@ -139,8 +139,6 @@ export default function Updates() {
 
   return (
     <div className="w-full pointer-events-auto">
-      {/* Horizontal Divider Line */}
-      <hr className="border-t border-zinc-200 w-full" />
 
       <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
         {/* Section Title */}

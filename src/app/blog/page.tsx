@@ -14,7 +14,7 @@ export default function BlogPage() {
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col justify-between">
       <div>
         <Header />
-        <div className="pt-20">
+        <div className="pt-0">
           <BlogHero 
             selectedCategory={selectedCategory} 
             onSelectCategory={setSelectedCategory}
