@@ -24,6 +24,7 @@ export interface IntegrationCategory {
 
 export interface SolutionData {
   id: string;
+  slug?: string;
   shortLabel: string;
   icon: React.ReactNode;
   title: string;
