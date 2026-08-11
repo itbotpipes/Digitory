@@ -102,7 +102,7 @@ export default function AdminDashboard() {
       if (activeTab === 'leads') endpoint = '/demo-requests';
       if (activeTab === 'contacts') endpoint = '/contact-messages';
       if (activeTab === 'updates') endpoint = '/updates';
-      if (activeTab === 'blogs') endpoint = '/posts';
+      if (activeTab === 'blogs') endpoint = '/posts?limit=50';
       if (activeTab === 'solutions') endpoint = '/solutions?limit=20';
       if (activeTab === 'industries') endpoint = '/industries?limit=20';
       if (activeTab === 'comments') endpoint = '/comments';

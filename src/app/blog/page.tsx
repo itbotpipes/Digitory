@@ -7,7 +7,7 @@ import BlogHero from "@/components/blog/BlogHero";
 import LatestStories from "@/components/blog/LatestStories";
 
 export default function BlogPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All Articles");
+  const [selectedCategory, setSelectedCategory] = useState("All Blogs");
   const [searchQuery, setSearchQuery] = useState("");
 
   return (

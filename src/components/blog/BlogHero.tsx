@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { api } from '../../lib/api';
 
 interface BlogHeroProps {
   selectedCategory?: string;
@@ -11,15 +12,40 @@ interface BlogHeroProps {
   onSearchChange?: (query: string) => void;
 }
 
+// Formatting helper
+const formatDate = (dateString: string) => {
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 export default function BlogHero({
-  selectedCategory = 'All Articles',
+  selectedCategory = 'All Blogs',
   onSelectCategory,
   searchQuery = '',
   onSearchChange,
 }: BlogHeroProps) {
-  const [internalCategory, setInternalCategory] = useState('All Articles');
+  const [internalCategory, setInternalCategory] = useState('All Blogs');
+  const [featuredPost, setFeaturedPost] = useState<any>(null);
 
   const activeCategory = onSelectCategory ? selectedCategory : internalCategory;
+
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const res = await api.get('/posts/why-restaurants-in-india-trust-digitory-for-smart-operations-growth');
+        if (res.data) {
+          setFeaturedPost(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to load featured post", err);
+      }
+    }
+    loadFeatured();
+  }, []);
 
   const handleCategoryClick = (category: string) => {
     if (onSelectCategory) {
@@ -30,22 +56,29 @@ export default function BlogHero({
   };
 
   const categories = [
-    'All Articles',
+    'All Blogs',
     'Restaurant Operations',
     'Kitchen',
     'Inventory',
     'Analytics',
   ];
 
+  // Static Fallback values
+  const defaultTitle = "Why Restaurants in India Trust Digitory for Smart Operations & Growth";
+  const defaultSlug = "why-restaurants-in-india-trust-digitory-for-smart-operations-growth";
+  const defaultDate = "July 8, 2026";
+  const defaultImage = "/blogpage.jpg";
+
+  // Use dynamic backend post if available, else static default
+  const title = featuredPost?.title || defaultTitle;
+  const slug = featuredPost?.slug || defaultSlug;
+  const date = featuredPost ? formatDate(featuredPost.createdAt || featuredPost.publishedAt) : defaultDate;
+  const image = featuredPost?.featuredImage || defaultImage;
+
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-6 md:pt-0 md:pb-10">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-6 md:pt-10 md:pb-10">
       {/* Top Header Bar: Explore Topics & Categories + Right-aligned Search Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 md:pb-12 border-b border-zinc-200/60 dark:border-zinc-800/60">
-        {/*
-        <span className="text-xs md:text-sm font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase shrink-0">
-          EXPLORE TOPICS
-        </span>
-        */}
 
         {/* Left aligned Search Bar */}
         <div className="relative w-full sm:w-72 shrink-0">
@@ -101,21 +134,21 @@ export default function BlogHero({
             FEATURED ARTICLE
           </span>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] mb-4">
-            Why Restaurants in India Trust Digitory for Smart Operations &amp; Growth
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] mb-4 text-left">
+            {title}
           </h1>
 
           <p className="text-xs font-bold text-zinc-400 mb-6 uppercase tracking-wide">
-            July 8, 2026
+            {date}
           </p>
 
           <Link
-            href="/blog/why-restaurants-in-india-trust-digitory-for-smart-operations-growth"
-            className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer"
+            href={`/blog/${slug}`}
+            className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer group"
           >
             <span>Read article</span>
             <svg
-              className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform"
+              className="w-4 h-4 text-white ml-2 group-hover:translate-x-0.5 transition-transform"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -131,14 +164,13 @@ export default function BlogHero({
         </div>
 
         {/* Right Image Column */}
-        <div className="lg:col-span-6 flex justify-center lg:justify-end">
-          <div className="relative w-full max-w-[620px] rounded-[28px] overflow-hidden shadow-2xs border border-zinc-200/60 dark:border-zinc-800/60 bg-amber-400">
+        <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
+          <div className="relative w-full max-w-[620px] rounded-[28px] overflow-hidden shadow-2xs border border-zinc-200/60 dark:border-zinc-800/60 bg-amber-400 aspect-[16/9]">
             <Image
-              src="/blogpage.jpg"
-              alt="Why Restaurants in India Trust Digitory for Smart Operations & Growth"
-              width={1220}
-              height={675}
-              className="w-full h-auto object-cover block"
+              src={image}
+              alt={title}
+              fill
+              className="w-full h-full object-cover block"
               priority
             />
           </div>

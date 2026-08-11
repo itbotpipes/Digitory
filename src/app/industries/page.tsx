@@ -1,13 +1,50 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import FooterPage from "../../components/Footer";
-import { industriesDb } from "../data/industriesDb";
+import { industriesDb, IndustryData } from "../data/industriesDb";
+import { api } from "@/lib/api";
 
 export default function IndustriesPage() {
-  const industries = Object.values(industriesDb);
+  const [industries, setIndustries] = useState<IndustryData[]>(Object.values(industriesDb));
+
+  useEffect(() => {
+    async function loadIndustries() {
+      try {
+        const res = await api.get('/industries?limit=20');
+        const loaded: any[] = res.data?.docs || res.data?.results || res.data || [];
+        if (loaded && loaded.length > 0) {
+          const normalized: IndustryData[] = loaded.map((s: any) => ({
+            id: s.slug || s._id,
+            slug: s.slug || '',
+            shortLabel: s.shortLabel || s.title || '',
+            icon: null,
+            title: s.title || '',
+            subtitle: s.subtitle || '',
+            description: s.description || '',
+            trustText: s.trustText || 'Trusted by restaurants across India.',
+            featuresTitle: s.featuresTitle || 'Key capabilities',
+            features: s.features || [],
+            whyChooseTitle: s.whyChooseTitle || 'Why choose Digitory?',
+            whyChoose: s.whyChoose || [],
+            ctaBlock: s.ctaBlock || { title: 'Ready to grow?', desc: 'Talk to us today.' },
+          }));
+
+          const merged = normalized.map(item => {
+            const staticEntry = industriesDb[item.id];
+            return staticEntry ? { ...item, icon: staticEntry.icon } : item;
+          });
+
+          setIndustries(merged);
+        }
+      } catch (err) {
+        console.warn('Failed to load industries from backend:', err);
+      }
+    }
+    loadIndustries();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">

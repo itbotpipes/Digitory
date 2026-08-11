@@ -19,6 +19,7 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
     subtitle: '',
     description: '',
     trustText: '',
+    heroImage: '',
     icon: '',
     featuresTitle: '',
     features: [] as any[],
@@ -29,7 +30,43 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [message, setMessage] = useState('');
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setMessage('');
+
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      const data = new FormData();
+      data.append('file', file);
+      
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/media`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: data,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+      const json = await res.json();
+      const cloudUrl = json.data?.url || json.url;
+      
+      setFormData(prev => ({ ...prev, heroImage: cloudUrl }));
+      setMessage('Hero image uploaded successfully!');
+    } catch (err: any) {
+      console.error(err);
+      setMessage(err.message || 'Failed to upload hero image');
+      alert(err.message || 'Failed to upload hero image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -53,6 +90,7 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
         subtitle: s.subtitle || '',
         description: s.description || '',
         trustText: s.trustText || '',
+        heroImage: s.heroImage || '',
         icon: s.icon || '',
         featuresTitle: s.featuresTitle || '',
         features: s.features || [],
@@ -162,6 +200,65 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
             <div>
               <label className="block text-sm font-medium mb-1">Trust Text</label>
               <input type="text" value={formData.trustText} onChange={e => setFormData({...formData, trustText: e.target.value})} className={inputCls} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-2">Hero Image</label>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                {formData.heroImage ? (
+                  <div className="relative w-48 aspect-[4/5] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
+                    <img src={formData.heroImage} alt="Hero Preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, heroImage: '' })}
+                        className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors"
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-48 aspect-[4/5] rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center p-4 text-center text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-900/20">
+                    <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-[11px] font-medium leading-tight">No Hero Image Uploaded</span>
+                  </div>
+                )}
+                
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    disabled={uploadingImage}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] disabled:opacity-50 transition-colors cursor-pointer"
+                  >
+                    {uploadingImage ? 'Uploading to Cloudinary...' : 'Upload New Image'}
+                  </button>
+                  <p className="text-[11px] text-zinc-500 max-w-[200px] leading-normal">
+                    JPG, PNG or WEBP. This image will automatically be optimized and hosted on Cloudinary.
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  
+                  {formData.heroImage && (
+                    <div className="mt-2">
+                      <label className="block text-[10px] uppercase tracking-wider text-zinc-500 mb-1">Or edit URL directly</label>
+                      <input 
+                        type="text" 
+                        value={formData.heroImage} 
+                        onChange={e => setFormData({...formData, heroImage: e.target.value})} 
+                        className={`${inputCls} text-xs py-1.5 font-mono max-w-xs`} 
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 

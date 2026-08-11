@@ -40,6 +40,7 @@ function IndustriesDetailsContent() {
             whyChooseTitle: s.whyChooseTitle || 'Why choose Digitory?',
             whyChoose: s.whyChoose || [],
             ctaBlock: s.ctaBlock || { title: 'Ready to grow?', desc: 'Talk to us today.' },
+            heroImage: s.heroImage || '',
           }));
 
           const merged = normalized.map(item => {
@@ -163,7 +164,7 @@ function IndustriesDetailsContent() {
                 className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1"
               >
                 <Image
-                  src="/home-hero.png"
+                  src={industry.heroImage || "/home-hero.png"}
                   alt={`Digitory for ${industry.title}`}
                   fill
                   className="object-cover transition-transform duration-500"
@@ -225,20 +226,18 @@ function IndustriesDetailsContent() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="grid grid-cols-12 gap-6 md:gap-12 py-8 border-t border-zinc-200/60 dark:border-zinc-800/60 last:border-b items-start"
+                  className="grid grid-cols-12 gap-4 md:gap-8 py-6 items-start"
                 >
-                  <div className="col-span-2 md:col-span-1">
-                    <span className="text-3xl md:text-4xl font-[850] text-zinc-200 dark:text-zinc-800 leading-none select-none">
+                  <div className="col-span-2 md:col-span-1 pt-1.5">
+                    <span className="text-xs md:text-sm font-bold text-zinc-400 dark:text-zinc-500 select-none">
                       {item.n}
                     </span>
                   </div>
-                  <div className="col-span-10 md:col-span-4">
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white leading-snug">
+                  <div className="col-span-10 md:col-span-11 space-y-2 text-left">
+                    <h3 className="text-xl md:text-2xl font-[850] tracking-tight text-zinc-900 dark:text-white leading-snug">
                       {item.title}
                     </h3>
-                  </div>
-                  <div className="col-span-12 md:col-span-7 md:pt-0.5">
-                    <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                    <p className="text-sm md:text-base text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-3xl">
                       {item.body}
                     </p>
                   </div>

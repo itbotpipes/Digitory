@@ -24,6 +24,7 @@ export interface IndustryData {
     title: string;
     desc: string;
   };
+  heroImage?: string;
 }
 
 const icons = {

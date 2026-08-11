@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
+import OperationsReveal from '../../../components/solutions/OperationsReveal';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
 import { api } from '@/lib/api';
 
@@ -135,7 +136,7 @@ function SolutionsDetailsContent() {
               {/* Action CTAs */}
               <div className="flex flex-wrap gap-4 items-center">
                 <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-                  {solution.ctaText}
+                  {solution.ctaText === 'Request a Demo' ? 'Book a demo' : solution.ctaText}
                 </button>
               </div>
 
@@ -371,22 +372,7 @@ function SolutionsDetailsContent() {
         </section>
 
         {/* 3. Operational Problem Statement */}
-        <section className="bg-white py-10 md:py-16">
-          <div className="mx-auto max-w-7xl px-6 md:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
-              <div className="lg:col-span-7">
-                <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                  What happens when operations <span className="text-[#FF4F18]">get fragmented?</span>
-                </h2>
-              </div>
-              <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed lg:pt-2">
-                <p>
-                  Most restaurants rely on five different tools that do not speak to one another. Orders get missed, inventory records fall behind, staff calculations waste hours, and management feels like chaos.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <OperationsReveal />
 
         {/* 4. How Digitory's Layer Works */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
@@ -564,49 +550,57 @@ function SolutionsDetailsContent() {
 
         {/* 8. Built for Modern F&B Workflows (Extra integrations/support details) */}
         {(solution.extraGrowth || solution.integrations || solution.supportItems || solution.securityItems || solution.extraOwnersChoice) && (
-          <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 text-left">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-6 space-y-10">
-                {solution.extraGrowth && (
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-                      {solution.extraGrowth.title}
-                    </h3>
-                    <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                      {solution.extraGrowth.desc}
-                    </p>
-                  </div>
-                )}
+          <section className="mx-auto max-w-7xl px-6 md:px-8 py-16 md:py-24 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-x-12 lg:gap-x-16 items-start">
+              
+              {/* Column 1: Growth */}
+              {solution.extraGrowth && (
+                <div className="space-y-4">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#FF4F18]">Scalability</span>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-tight">
+                    {solution.extraGrowth.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-350 leading-relaxed">
+                    {solution.extraGrowth.desc}
+                  </p>
+                </div>
+              )}
 
-                {solution.extraOwnersChoice && (
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-                      {solution.extraOwnersChoice.title}
-                    </h3>
-                    <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                      {solution.extraOwnersChoice.desc}
-                    </p>
-                  </div>
-                )}
-              </div>
+              {/* Column 2: Owner's Choice */}
+              {solution.extraOwnersChoice && (
+                <div className="space-y-4 md:border-l md:border-zinc-200/60 dark:md:border-zinc-800/60 md:pl-8 lg:pl-12">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#FF4F18]">Business Value</span>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-tight">
+                    {solution.extraOwnersChoice.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-350 leading-relaxed">
+                    {solution.extraOwnersChoice.desc}
+                  </p>
+                </div>
+              )}
 
-              <div className="lg:col-span-6 space-y-10 lg:pl-8">
-                {solution.supportItems && (
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+              {/* Column 3: Support */}
+              {solution.supportItems && (
+                <div className="space-y-5 md:border-l md:border-zinc-200/60 dark:md:border-zinc-800/60 md:pl-8 lg:pl-12">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#FF4F18]">Customer Success</span>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-tight mt-1">
                       Support you can count on
                     </h3>
-                    <ul className="space-y-3.5">
-                      {solution.supportItems.map((item, idx) => (
-                        <li key={idx} className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-300 font-semibold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18]" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                )}
-              </div>
+                  <ul className="space-y-3.5">
+                    {solution.supportItems.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <span className="text-[#FF4F18] font-bold text-sm shrink-0">✓</span>
+                        <span className="text-sm text-zinc-600 dark:text-zinc-300 font-semibold leading-relaxed">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
             </div>
           </section>
         )}

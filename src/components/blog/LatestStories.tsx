@@ -29,7 +29,7 @@ interface LatestStoriesProps {
 }
 
 export default function LatestStories({
-  selectedCategory = 'All Articles',
+  selectedCategory = 'All Blogs',
   searchQuery = '',
 }: LatestStoriesProps) {
   const [visibleCount, setVisibleCount] = React.useState(12);
@@ -117,7 +117,7 @@ export default function LatestStories({
 
   const matchesFilter = (article: Article) => {
     const matchesCategory =
-      selectedCategory === 'All Articles' ||
+      selectedCategory === 'All Blogs' ||
       article.category.toLowerCase() === selectedCategory.toLowerCase();
     const matchesSearch =
       searchQuery.trim() === '' ||
@@ -125,7 +125,7 @@ export default function LatestStories({
     return matchesCategory && matchesSearch;
   };
 
-  const isFiltering = searchQuery.trim() !== '' || selectedCategory !== 'All Articles';
+  const isFiltering = searchQuery.trim() !== '' || selectedCategory !== 'All Blogs';
   const filteredStories = allStories.filter(matchesFilter);
 
   return (

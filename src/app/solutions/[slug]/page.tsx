@@ -80,7 +80,7 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
               {/* Action CTAs */}
               <div className="flex flex-wrap gap-4 items-center">
                 <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-                  {solution.ctaText}
+                  {solution.ctaText === 'Request a Demo' ? 'Book a demo' : solution.ctaText}
                 </button>
               </div>
 
