@@ -86,10 +86,27 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
                 </button>
               </div>
 
-              {/* Trust Badge */}
-              <p className="text-sm text-zinc-550 font-medium border-t border-zinc-150/60 dark:border-zinc-800/80 pt-6 max-w-sm">
-                {solution.trustText}
-              </p>
+              {/* Trust indicators */}
+              <div className="flex items-center gap-4 pt-6 border-t border-zinc-150/60 dark:border-zinc-800/80 max-w-sm">
+                <div className="flex -space-x-3">
+                  {[
+                    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
+                    { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
+                    { text: 'B', bg: 'bg-[#FFE5D9]', textCol: 'text-orange-600' },
+                    { text: 'K', bg: 'bg-[#E8EAFF]', textCol: 'text-indigo-600' },
+                  ].map((circle, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${circle.bg} ${circle.textCol} font-extrabold text-xs border-2 border-white dark:border-[#0d0d0e]`}
+                    >
+                      {circle.text}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs md:text-sm text-zinc-500 max-w-xs leading-normal">
+                  {solution.trustText}
+                </p>
+              </div>
             </div>
 
             {/* Right Column: Visual Mockup */}
