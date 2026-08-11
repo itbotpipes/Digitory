@@ -42,75 +42,20 @@ export default function LatestStories({
         const response = await api.get('/posts?limit=50');
         const posts = response.data?.docs || response.data?.results || response.data || [];
         
-        if (posts.length > 0) {
-          const mapped: Article[] = posts.map((p: any) => ({
-            id: p._id,
-            slug: p.slug,
-            title: p.title,
-            date: formatDate(p.createdAt || p.publishedAt),
-            image: p.featuredImage || '/Kitchen Automation.jpg',
-            category: p.category?.name || 'Articles',
-          }));
-          setAllStories(mapped);
-          return;
-        }
+        const mapped: Article[] = posts.map((p: any) => ({
+          id: p._id,
+          slug: p.slug,
+          title: p.title,
+          date: formatDate(p.createdAt || p.publishedAt),
+          image: p.featuredImage || '/Kitchen Automation.jpg',
+          category: p.category?.name || 'Articles',
+        }));
+        setAllStories(mapped);
       } catch (err) {
-        // Silently catch fetch errors when backend is down
+        console.error('Failed to fetch posts from backend:', err);
       } finally {
         setIsLoading(false);
       }
-
-      // Fallback data when backend is not available
-      setAllStories([
-        {
-          id: '1',
-          slug: 'ai-demand-forecasting',
-          title: 'Introducing AI-driven demand forecasting',
-          date: 'August 15, 2026',
-          category: 'PRODUCT UPDATE',
-          image: '/Kitchen Automation.jpg'
-        },
-        {
-          id: '2',
-          slug: 'digital-kds-benefits',
-          title: 'Why switching to a Digital KDS speeds up your service by 30%',
-          date: 'August 5, 2026',
-          category: 'TECHNOLOGY',
-          image: '/featured.png'
-        },
-        {
-          id: '3',
-          slug: 'inventory-management-best-practices',
-          title: 'Best practices for managing inventory across multiple locations',
-          date: 'July 28, 2026',
-          category: 'OPERATIONS',
-          image: '/Kitchen Automation.jpg'
-        },
-        {
-          id: '4',
-          slug: 'how-to-reduce-food-wastage',
-          title: 'How to reduce food wastage in a multi-outlet restaurant',
-          date: 'August 10, 2026',
-          category: 'GUIDE',
-          image: '/featured.png'
-        },
-        {
-          id: '5',
-          slug: 'summer-menu-engineering',
-          title: 'Summer 2026: Menu engineering best practices',
-          date: 'July 10, 2026',
-          category: 'GUIDE',
-          image: '/Kitchen Automation.jpg'
-        },
-        {
-          id: '6',
-          slug: 'pos-integration-update',
-          title: 'Seamless integration with Square and Toast POS',
-          date: 'August 2, 2026',
-          category: 'INTEGRATION',
-          image: '/featured.png'
-        }
-      ]);
     }
     loadPosts();
   }, []);

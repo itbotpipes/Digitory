@@ -102,7 +102,7 @@ export default function IndustriesPage() {
             <div className="lg:col-span-6 flex justify-center lg:justify-end w-full relative perspective-[1000px]">
               <div className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1">
                 <img
-                  src="/home-hero.png"
+                  src="/DIGI.jpg"
                   alt="Digitory Restaurant OS"
                   className="w-full h-full object-cover transition-transform duration-500"
                 />

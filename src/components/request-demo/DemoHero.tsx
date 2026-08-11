@@ -74,7 +74,7 @@ export default function DemoHero() {
             className="w-full h-full object-cover cursor-pointer"
             onClick={togglePlay}
           >
-            <source src="/video.mp4" type="video/mp4" />
+            <source src="/digitor-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           {/* Play/Pause Overlay Button */}
@@ -110,7 +110,7 @@ export default function DemoHero() {
             preload="auto"
             className="w-full h-full object-cover scale-[1.01]"
           >
-            <source src="/DigitoryHow-QR-Code-Order-Pay-for-Restaurants-Works-1920x1080-2-1.mp4" type="video/mp4" />
+            <source src="/digitor-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           {/* Overlay Gradient for high contrast */}

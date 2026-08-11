@@ -12,7 +12,7 @@ export default function ContactPage() {
     email: '',
     restaurantName: '',
     category: '',
-    interested: 'Commercial Ads',
+    interested: 'Complaint',
     message: '',
   });
 
@@ -51,7 +51,7 @@ export default function ContactPage() {
         email: '',
         restaurantName: '',
         category: '',
-        interested: 'Commercial Ads',
+        interested: 'Complaint',
         message: '',
       });
     } catch (error) {
@@ -82,7 +82,7 @@ export default function ContactPage() {
               preload="auto"
               className="w-full h-full object-cover scale-[1.01]"
             >
-              <source src="/DigitoryHow-QR-Code-Order-Pay-for-Restaurants-Works-1920x1080-2-1.mp4" type="video/mp4" />
+              <source src="/digitor-video.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             {/* Overlay Gradient for high contrast */}
@@ -278,7 +278,7 @@ export default function ContactPage() {
                         onChange={handleChange}
                         className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
                       >
-                        <option value="Commercial Ads">Commercial Ads</option>
+                        <option value="Complaint">Complaint</option>
                         <option value="Restaurant OS">Restaurant OS</option>
                         <option value="Partnership">Partnership</option>
                         <option value="Other">Other</option>
