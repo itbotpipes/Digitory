@@ -48,6 +48,9 @@ export interface SolutionData {
   };
   supportItems?: string[];
   securityItems?: string[];
+  opsTitle?: string;
+  opsParagraph?: string;
+  opsHighlights?: string;
   ctaBlock: {
     title: string;
     desc: string;
