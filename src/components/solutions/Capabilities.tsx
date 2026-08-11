@@ -251,12 +251,14 @@ export default function Capabilities() {
               `}
             >
               {/* Header: Number and raw Icon (No background color) */}
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-sm font-bold text-zinc-400 dark:text-zinc-650">{item.num}</span>
-                <div className="text-[#FF4F18] shrink-0">
-                  {item.icon}
+              {!item.image && (
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-sm font-bold text-zinc-400 dark:text-zinc-650">{item.num}</span>
+                  <div className="text-[#FF4F18] shrink-0">
+                    {item.icon}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Dynamic Solution Image if uploaded */}
               {item.image && (
