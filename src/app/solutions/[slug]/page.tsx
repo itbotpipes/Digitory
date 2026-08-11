@@ -3,7 +3,7 @@ import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
 import SolutionsCta from '../../../components/solutions/SolutionsCta';
-import { useParams } from 'next/navigation';
+import { generateSeoMetadata } from '@/lib/seo';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug: rawSlug } = await params;
