@@ -183,7 +183,7 @@ export default function Capabilities() {
           });
 
           // Re-index card numbers dynamically based on sorted sequence (01, 02, etc.)
-          const reindexed = normalized.map((item, idx) => ({
+          const reindexed = normalized.map((item: any, idx: number) => ({
             ...item,
             num: String(idx + 1).padStart(2, '0')
           }));
