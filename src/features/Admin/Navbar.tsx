@@ -58,6 +58,11 @@ const links: ILink[] = [
     Icon: Users,
   },
   {
+    label: "Admins",
+    href: "/admin/dashboard?tab=admins",
+    Icon: Users,
+  },
+  {
     label: "SEO Management",
     href: "/admin/seo",
     Icon: SearchIcon,

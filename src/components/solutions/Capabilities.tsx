@@ -216,7 +216,8 @@ export default function Capabilities() {
   }, []);
 
   const handleCardClick = (featureId: string) => {
-    router.push(`/solutions/details-${featureId}`);
+    // Use the dynamic routing system for solution details
+    router.push(`/solutions/${featureId}`);
   };
 
   return (

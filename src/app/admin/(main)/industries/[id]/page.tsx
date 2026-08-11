@@ -295,7 +295,7 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
                 <input type="text" placeholder="Feature Title" value={item.title} onChange={e => updateArrayItem('features', idx, 'title', e.target.value)} className={innerInputCls} />
                 <textarea placeholder="Feature Description" rows={2} value={item.desc} onChange={e => updateArrayItem('features', idx, 'desc', e.target.value)} className={innerInputCls} />
                 <input type="text" placeholder="Link Text (optional)" value={item.linkText || ''} onChange={e => updateArrayItem('features', idx, 'linkText', e.target.value)} className={innerInputCls} />
-                <input type="text" placeholder="Link URL (optional, e.g. /solutions/details?module=pos)" value={item.linkHref || ''} onChange={e => updateArrayItem('features', idx, 'linkHref', e.target.value)} className={innerInputCls} />
+                <input type="text" placeholder="Link URL (optional, e.g. /solutions/pos)" value={item.linkHref || ''} onChange={e => updateArrayItem('features', idx, 'linkHref', e.target.value)} className={innerInputCls} />
               </div>
             </div>
           ))}

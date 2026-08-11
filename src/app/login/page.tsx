@@ -6,30 +6,50 @@ import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '../../components/Header';
 import FooterPage from '../../components/Footer';
+import { api } from '@/lib/api';
 
 function LoginContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const requiredReason = searchParams.get('required');
   const redirectTo = searchParams.get('redirect') || '/blog';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Derive a display name — prefer full name field (signup), or part before @ (signin)
-    const displayName = (!isLogin && name.trim()) 
-      ? name.trim() 
-      : (email.split('@')[0] || 'User');
-    // Save user name to localStorage so comment gate knows they're signed in
-    localStorage.setItem('user_name', displayName);
-    // Redirect back to where they came from
-    router.push(redirectTo);
+    setError('');
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        const res = await api.post('/auth/login', { email, password });
+        if (res.data?.token) {
+          localStorage.setItem('user_token', res.data.token);
+          localStorage.setItem('user_name', res.data.user.name);
+          router.push(redirectTo);
+        }
+      } else {
+        const res = await api.post('/auth/signup', { name, email, password });
+        if (res.data?.token) {
+          localStorage.setItem('user_token', res.data.token);
+          localStorage.setItem('user_name', res.data.user.name);
+          router.push(redirectTo);
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
+    // Optional: implement real google login here
     localStorage.setItem('user_name', 'Google User');
     router.push(redirectTo);
   };
@@ -97,6 +117,12 @@ function LoginContent() {
       {/* Form */}
       <form className="space-y-5" onSubmit={handleSubmit}>
         
+        {error && (
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-sm px-4 py-3 rounded-xl">
+            {error}
+          </div>
+        )}
+
         {!isLogin && (
           <div className="space-y-1.5">
             <label className="text-[13px] font-bold text-zinc-700 dark:text-zinc-300">
@@ -150,9 +176,10 @@ function LoginContent() {
 
         <button
           type="submit"
-          className="w-full bg-[#FF4F18] hover:bg-[#E03F0D] text-white text-[15px] font-bold py-4 rounded-xl shadow-[0_8px_20px_rgba(255,79,24,0.25)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.35)] transition-all active:scale-[0.98] mt-2"
+          disabled={loading}
+          className="w-full bg-[#FF4F18] hover:bg-[#E03F0D] text-white text-[15px] font-bold py-4 rounded-xl shadow-[0_8px_20px_rgba(255,79,24,0.25)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.35)] transition-all active:scale-[0.98] mt-2 disabled:opacity-70"
         >
-          {isLogin ? 'Sign In to Account' : 'Create Account'}
+          {loading ? 'Processing...' : (isLogin ? 'Sign In to Account' : 'Create Account')}
         </button>
       </form>
 

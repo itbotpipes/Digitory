@@ -8,8 +8,8 @@ import { useSearchParams } from 'next/navigation';
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get('tab') || 'leads';
-  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users'].includes(tabParam)
-    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users')
+  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users', 'admins'].includes(tabParam)
+    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users' | 'admins')
     : 'leads';
 
   const [data, setData] = useState<any[]>([]);
@@ -77,7 +77,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (activeTab === 'users') {
+    if (activeTab === 'users' || activeTab === 'admins') {
       const token = localStorage.getItem('admin_token');
       if (token) {
         api.get('/users/roles', token).then((res) => {
@@ -140,7 +140,8 @@ export default function AdminDashboard() {
       if (activeTab === 'solutions') endpoint = '/solutions?limit=20';
       if (activeTab === 'industries') endpoint = '/industries?limit=20';
       if (activeTab === 'comments') endpoint = '/comments';
-      if (activeTab === 'users') endpoint = '/users';
+      if (activeTab === 'users') endpoint = '/users?role=User';
+      if (activeTab === 'admins') endpoint = '/users?role=Admin,Editor';
 
       const res = await api.get(endpoint, token);
       setData(res.data?.docs || res.data?.results || res.data || []);
@@ -420,7 +421,7 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
-                  {activeTab === 'users' && (
+                  {(activeTab === 'users' || activeTab === 'admins') && (
                     <>
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Email</th>
@@ -533,7 +534,7 @@ export default function AdminDashboard() {
                         </td>
                       </>
                     )}
-                    {activeTab === 'users' && (
+                    {(activeTab === 'users' || activeTab === 'admins') && (
                       <>
                         <td className="px-6 py-4 font-medium">{item.name}</td>
                         <td className="px-6 py-4">{item.email}</td>
