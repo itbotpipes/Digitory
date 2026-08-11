@@ -12,7 +12,7 @@ export default function ContactPage() {
     email: '',
     restaurantName: '',
     category: '',
-    interested: 'Complaint',
+    interested: 'Restaurant OS',
     message: '',
   });
 
@@ -51,7 +51,7 @@ export default function ContactPage() {
         email: '',
         restaurantName: '',
         category: '',
-        interested: 'Complaint',
+        interested: 'Restaurant OS',
         message: '',
       });
     } catch (error) {
@@ -278,10 +278,10 @@ export default function ContactPage() {
                         onChange={handleChange}
                         className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
                       >
-                        <option value="Complaint">Complaint</option>
                         <option value="Restaurant OS">Restaurant OS</option>
                         <option value="Partnership">Partnership</option>
                         <option value="Other">Other</option>
+                        <option value="Complaint">Complaint</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
