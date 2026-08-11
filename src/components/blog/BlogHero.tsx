@@ -36,15 +36,30 @@ export default function BlogHero({
   useEffect(() => {
     async function loadFeatured() {
       try {
-        // Fetch the most recent post dynamically instead of hardcoding a slug
-        // that may not exist in the database
-        const res = await api.get('/posts?limit=1');
+        // Fetch the specific featured post by isFeatured flag instead of hardcoded slug
+        const res = await api.get('/posts?isFeatured=true&limit=1');
         const posts = res.data?.docs || res.data?.results || res.data || [];
         if (posts.length > 0) {
           setFeaturedPost(posts[0]);
+        } else {
+          // If no explicitly featured post is found, fallback to the latest post
+          const fallbackRes = await api.get('/posts?limit=1');
+          const fallbackPosts = fallbackRes.data?.docs || fallbackRes.data?.results || fallbackRes.data || [];
+          if (fallbackPosts.length > 0) {
+            setFeaturedPost(fallbackPosts[0]);
+          }
         }
       } catch (err) {
-        console.error("Failed to load featured post dynamically", err);
+        console.warn("Featured post query failed, falling back to latest post.", err);
+        try {
+          const fallbackRes = await api.get('/posts?limit=1');
+          const fallbackPosts = fallbackRes.data?.docs || fallbackRes.data?.results || fallbackRes.data || [];
+          if (fallbackPosts.length > 0) {
+            setFeaturedPost(fallbackPosts[0]);
+          }
+        } catch (fallbackErr) {
+          console.error("Failed to load fallback post", fallbackErr);
+        }
       }
     }
     loadFeatured();

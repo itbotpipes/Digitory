@@ -258,7 +258,7 @@ export default function Updates() {
                       setSelectedUpdate(displayUpdate);
                       setShowDetailModal(true);
                     }}
-                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer w-max"
+                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-5 py-2.5 text-[12.6px] font-bold text-[#FF4F18] rounded-full uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer w-max"
                   >
                     READ FULL STORY →
                   </button>
@@ -446,7 +446,7 @@ export default function Updates() {
                 <div className="mb-6">
                   <Link
                     href="#"
-                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-6 py-3 text-[14px] font-bold text-[#FF4F18] uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer"
+                    className="inline-flex justify-center items-center text-center border border-[#FF4F18] bg-transparent px-5 py-2.5 text-[12.6px] font-bold text-[#FF4F18] rounded-full uppercase tracking-wider transition-all duration-200 hover:bg-[#FF4F18]/5 active:scale-[0.98] cursor-pointer"
                   >
                     READ FULL STORY →
                   </Link>
