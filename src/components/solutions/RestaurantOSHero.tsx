@@ -17,33 +17,92 @@ const MENU_ITEMS = [
 
 export default function RestaurantOSHero() {
   const [activeTable, setActiveTable] = useState(4);
-  const [orderItems, setOrderItems] = useState<
-    { id: number; name: string; price: number; qty: number }[]
-  >([
-    { id: 1, name: "Paneer Butter Masala", price: 280, qty: 1 },
-    { id: 2, name: "Butter Naan", price: 70, qty: 2 },
-  ]);
+  
+  const [tablesData, setTablesData] = useState<Record<number, {
+    menu: { id: number; name: string; price: number }[];
+    orders: { id: number; name: string; price: number; qty: number }[];
+    kdsStation: string;
+  }>>({
+    1: {
+      menu: [
+        { id: 101, name: "Margherita Pizza", price: 290 },
+        { id: 102, name: "Garlic Breadsticks", price: 120 },
+        { id: 103, name: "Coke Zero", price: 60 },
+        { id: 104, name: "Tiramisu", price: 180 },
+      ],
+      orders: [],
+      kdsStation: "KDS Station #1 (Pizza Oven)",
+    },
+    4: {
+      menu: [
+        { id: 1, name: "Paneer Masala", price: 280 },
+        { id: 2, name: "Butter Naan", price: 70 },
+        { id: 3, name: "Chicken Biryani", price: 320 },
+        { id: 4, name: "Mango Lassi", price: 110 },
+      ],
+      orders: [
+        { id: 1, name: "Paneer Butter Masala", price: 280, qty: 1 },
+        { id: 2, name: "Butter Naan", price: 70, qty: 2 },
+      ],
+      kdsStation: "KDS Station #2 (Tandoor)",
+    },
+    9: {
+      menu: [
+        { id: 201, name: "Dahi Ke Kebab", price: 240 },
+        { id: 202, name: "Dal Makhani", price: 260 },
+        { id: 203, name: "Laccha Paratha", price: 80 },
+        { id: 204, name: "Gulab Jamun", price: 100 },
+      ],
+      orders: [
+        { id: 201, name: "Dahi Ke Kebab", price: 240, qty: 1 },
+        { id: 202, name: "Dal Makhani", price: 260, qty: 1 },
+        { id: 203, name: "Laccha Paratha", price: 80, qty: 2 },
+      ],
+      kdsStation: "KDS Station #2 (Tandoor)",
+    }
+  });
 
+  const currentData = tablesData[activeTable] || { menu: [], orders: [], kdsStation: "KDS Station" };
+  const menuItems = currentData.menu;
+  const orderItems = currentData.orders;
   const total = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   const handleAddItem = (item: { id: number; name: string; price: number }) => {
-    setOrderItems((prev) => {
-      const existing = prev.find((o) => o.id === item.id);
+    setTablesData((prev) => {
+      const table = prev[activeTable];
+      const existing = table.orders.find((o) => o.id === item.id);
+      let newOrders;
       if (existing) {
-        return prev.map((o) =>
+        newOrders = table.orders.map((o) =>
           o.id === item.id ? { ...o, qty: o.qty + 1 } : o
         );
+      } else {
+        newOrders = [...table.orders, { ...item, qty: 1 }];
       }
-      return [...prev, { ...item, qty: 1 }];
+      return {
+        ...prev,
+        [activeTable]: {
+          ...table,
+          orders: newOrders
+        }
+      };
     });
   };
 
   const handleRemoveItem = (id: number) => {
-    setOrderItems((prev) =>
-      prev
+    setTablesData((prev) => {
+      const table = prev[activeTable];
+      const newOrders = table.orders
         .map((o) => (o.id === id ? { ...o, qty: o.qty - 1 } : o))
-        .filter((o) => o.qty > 0)
-    );
+        .filter((o) => o.qty > 0);
+      return {
+        ...prev,
+        [activeTable]: {
+          ...table,
+          orders: newOrders
+        }
+      };
+    });
   };
 
   return (
@@ -147,7 +206,7 @@ export default function RestaurantOSHero() {
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {MENU_ITEMS.map((item) => (
+                {menuItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleAddItem(item)}
@@ -193,7 +252,7 @@ export default function RestaurantOSHero() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span className="text-[11px] font-bold text-zinc-600 dark:text-zinc-400">
-                  KDS Station #2 (Tandoor)
+                  {currentData.kdsStation}
                 </span>
               </div>
             </div>

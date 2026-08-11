@@ -65,7 +65,7 @@ export default function Header() {
   const navLinks = [
     { label: 'About', href: '/about' },
     { label: 'Solutions', href: '/solutions' },
-    { label: 'Restaurant Types', href: '/industries' },
+    { label: 'Restaurant Types', href: '/restaurant-types' },
     { label: 'Resources', href: '/blog' },
     { label: 'Contact', href: '/contact' },
   ];

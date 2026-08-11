@@ -3,10 +3,11 @@ import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
 import SolutionsCta from '../../../components/solutions/SolutionsCta';
-import { generateSeoMetadata } from '@/lib/seo';
+import { useParams } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = rawSlug.replace('details-', '');
   const solutionKey = Object.keys(solutionsDb).find(key => solutionsDb[key as keyof typeof solutionsDb].id === slug) || 'pos';
   const solution = solutionsDb[solutionKey as keyof typeof solutionsDb];
   
@@ -21,6 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function SolutionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug: rawSlug } = await params;
+  const slug = rawSlug.replace('details-', '');
   
   // Map short slugs to canonical keys
   const slugMap: Record<string, string> = {
@@ -38,8 +40,8 @@ export default async function SolutionDetailPage({ params }: { params: Promise<{
     "cashless-event-entry-management-system": "event-management"
   };
 
-  const currentKey = slugMap[rawSlug] || "pos";
-  const solution = solutionsDb[currentKey] || solutionsDb.pos;
+  const currentKey = slugMap[slug] || slug || "pos";
+  const solution = solutionsDb[currentKey as keyof typeof solutionsDb] || solutionsDb.pos;
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0d0d0e] transition-colors duration-300 flex flex-col font-sans">

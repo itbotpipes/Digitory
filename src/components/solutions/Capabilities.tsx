@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 interface FeatureItem {
   num: string;
@@ -9,10 +10,15 @@ interface FeatureItem {
   title: string;
   desc: string;
   icon: React.ReactNode;
+  image?: string;
 }
 
 export default function Capabilities() {
   const router = useRouter();
+
+  const [features, setFeatures] = useState<FeatureItem[]>([]);
+  const [gridTitle, setGridTitle] = useState('Twelve powerful features to help your restaurant run better');
+  const [gridDesc, setGridDesc] = useState('Click on any feature card below to open its full specifications and details on a new page.');
 
   const featureItems: FeatureItem[] = [
     {
@@ -149,8 +155,68 @@ export default function Capabilities() {
     },
   ];
 
+  useEffect(() => {
+    setFeatures(featureItems);
+
+    async function loadSolutions() {
+      try {
+        const res = await api.get('/solutions?limit=30');
+        const loaded = res.data?.docs || res.data?.results || res.data || [];
+        if (loaded && loaded.length > 0) {
+          const normalized = loaded.map((s: any) => {
+            const staticItem = featureItems.find(f => f.id === s.slug);
+            return {
+              num: staticItem?.num || "00",
+              id: s.slug || s._id,
+              title: s.gridTitle || staticItem?.title || s.title || '',
+              desc: s.gridDesc || staticItem?.desc || s.description || '',
+              icon: staticItem?.icon || null,
+              image: s.image || '',
+            };
+          });
+
+          // Sort normalized features list to exactly match static featureItems array order
+          normalized.sort((a: any, b: any) => {
+            const idxA = featureItems.findIndex(f => f.id === a.id);
+            const idxB = featureItems.findIndex(f => f.id === b.id);
+            return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+          });
+
+          // Re-index card numbers dynamically based on sorted sequence (01, 02, etc.)
+          const reindexed = normalized.map((item, idx) => ({
+            ...item,
+            num: String(idx + 1).padStart(2, '0')
+          }));
+
+          // Pad with static items if backend returns fewer than 12
+          if (reindexed.length < featureItems.length) {
+            const extra = featureItems.slice(reindexed.length);
+            setFeatures([...reindexed, ...extra]);
+          } else {
+            setFeatures(reindexed);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to load solutions from backend:', err);
+      }
+    }
+    async function loadSettings() {
+      try {
+        const res = await api.get('/settings');
+        if (res.data) {
+          if (res.data.solutionsGridTitle) setGridTitle(res.data.solutionsGridTitle);
+          if (res.data.solutionsGridDesc) setGridDesc(res.data.solutionsGridDesc);
+        }
+      } catch (err) {
+        console.warn('Failed to load settings:', err);
+      }
+    }
+    loadSolutions();
+    loadSettings();
+  }, []);
+
   const handleCardClick = (featureId: string) => {
-    router.push(`/solutions/details?module=${featureId}`);
+    router.push(`/solutions/details-${featureId}`);
   };
 
   return (
@@ -160,25 +226,25 @@ export default function Capabilities() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start">
         <div className="lg:col-span-7">
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            Twelve powerful features to <br className="hidden lg:block"/> <span className="text-[#FF4F18]">help your restaurant run better</span>
+            {gridTitle}
           </h2>
         </div>
         <div className="lg:col-span-5 text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed lg:pt-2">
           <p>
-            Click on any feature card below to open its full specifications and details on a new page.
+            {gridDesc}
           </p>
         </div>
       </div>
 
       {/* 2. Grid Container with Linings/Separation */}
       <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
-        {featureItems.map((item, idx) => {
+        {features.map((item, idx) => {
           return (
             <div
               key={idx}
               onClick={() => handleCardClick(item.id)}
               className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left border-zinc-200/60 dark:border-zinc-800/60
-                ${idx !== featureItems.length - 1 ? "border-b" : ""}
+                ${idx !== features.length - 1 ? "border-b" : ""}
                 ${idx >= 9 ? "md:border-b-0" : ""}
                 ${idx % 3 !== 2 ? "md:border-r" : ""}
               `}
@@ -190,6 +256,13 @@ export default function Capabilities() {
                   {item.icon}
                 </div>
               </div>
+
+              {/* Dynamic Solution Image if uploaded */}
+              {item.image && (
+                <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50 dark:bg-zinc-900">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                </div>
+              )}
 
               {/* Title & Description */}
               <h3 className="text-lg font-bold text-zinc-950 dark:text-white mb-2">{item.title}</h3>

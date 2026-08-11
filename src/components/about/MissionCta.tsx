@@ -23,17 +23,9 @@ export default function MissionCta() {
     // Watch when section reaches center of viewport → lock scroll
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Lock when section is >60% visible; unlock when animation done or leaving
         if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-          if (!doneRef.current) lockedRef.current = true;
-        } else {
-          // Allow re-lock only if scrolling back up (reset progress)
-          if (!entry.isIntersecting && entry.boundingClientRect.top > 0) {
-            // Section scrolled back above viewport — reset so user can replay
-            progressRef.current = 0;
-            doneRef.current = false;
-            setScrollProgress(0);
-          }
+          lockedRef.current = true;
+        } else if (!entry.isIntersecting) {
           lockedRef.current = false;
         }
       },
@@ -47,7 +39,12 @@ export default function MissionCta() {
       // Allow scrolling UP past section start (so user can go back)
       if (e.deltaY < 0 && progressRef.current <= 0) {
         lockedRef.current = false;
-        doneRef.current = false;
+        return;
+      }
+
+      // Allow scrolling DOWN past section end (so user can continue down)
+      if (e.deltaY > 0 && progressRef.current >= 1) {
+        lockedRef.current = false;
         return;
       }
 
@@ -57,11 +54,6 @@ export default function MissionCta() {
       const clamped = Math.max(0, Math.min(TOTAL_DELTA, accumulated));
       progressRef.current = clamped / TOTAL_DELTA;
       setScrollProgress(progressRef.current);
-
-      if (progressRef.current >= 1) {
-        doneRef.current = true;
-        lockedRef.current = false;
-      }
     };
 
     // Touch support
@@ -79,17 +71,17 @@ export default function MissionCta() {
         return;
       }
 
+      if (deltaY > 0 && progressRef.current >= 1) {
+        lockedRef.current = false;
+        return;
+      }
+
       e.preventDefault();
 
       const accumulated = progressRef.current * TOTAL_DELTA + deltaY * 2.5;
       const clamped = Math.max(0, Math.min(TOTAL_DELTA, accumulated));
       progressRef.current = clamped / TOTAL_DELTA;
       setScrollProgress(progressRef.current);
-
-      if (progressRef.current >= 1) {
-        doneRef.current = true;
-        lockedRef.current = false;
-      }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });

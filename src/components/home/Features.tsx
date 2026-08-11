@@ -43,7 +43,7 @@ export default function Features() {
     {
       num: '06',
       title: 'Multi-outlet management',
-      desc: 'Manage one outlet or many.View reports and performance from one dashboard.',
+      desc: 'Manage one outlet or many. View reports and performance from one dashboard.',
       borderClasses: 'border-b-0',
       imageSrc: '/image 10.png',
     },

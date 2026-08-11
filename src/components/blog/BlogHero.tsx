@@ -36,12 +36,15 @@ export default function BlogHero({
   useEffect(() => {
     async function loadFeatured() {
       try {
-        const res = await api.get('/posts/why-restaurants-in-india-trust-digitory-for-smart-operations-growth');
-        if (res.data) {
-          setFeaturedPost(res.data);
+        // Fetch the most recent post dynamically instead of hardcoding a slug
+        // that may not exist in the database
+        const res = await api.get('/posts?limit=1');
+        const posts = res.data?.docs || res.data?.results || res.data || [];
+        if (posts.length > 0) {
+          setFeaturedPost(posts[0]);
         }
       } catch (err) {
-        console.error("Failed to load featured post", err);
+        console.error("Failed to load featured post dynamically", err);
       }
     }
     loadFeatured();

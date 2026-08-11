@@ -20,7 +20,7 @@ type UpdateItem = {
 
 export default function Updates() {
   const [updatesList, setUpdatesList] = useState<UpdateItem[]>([]);
-  
+
   const [selectedUpdate, setSelectedUpdate] = useState<UpdateItem | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [isFeaturedOpen, setIsFeaturedOpen] = useState(false);
@@ -43,12 +43,12 @@ export default function Updates() {
 
   useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
-    
+
     async function loadUpdates() {
       try {
         const response = await api.get('/updates');
         const updates = response.data || response || [];
-        
+
         if (updates.length > 0) {
           const mapped = updates.map((p: any) => {
             const d = new Date(p.publishedAt || p.createdAt);
@@ -120,7 +120,7 @@ export default function Updates() {
       ]);
     }
     loadUpdates();
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -144,7 +144,6 @@ export default function Updates() {
         {/* Section Title */}
         <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] mb-10 leading-[1.15]">
           Latest <span className="text-[#FF4F18]">updates</span>
-          <br />& announcements
         </h2>
 
         {/* 2-Column Grid */}
@@ -187,37 +186,39 @@ export default function Updates() {
               </div>
             </div>
 
-            {/* List of regular updates */}
-            {updatesList.map((item, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleItemClick(item)}
-                className={`flex gap-6 py-6 lg:py-[32px] items-start border-b border-zinc-200/60 last:border-b-0 cursor-pointer hover:bg-zinc-50/40 dark:hover:bg-zinc-900/40 rounded-xl px-2 -mx-2 transition-all duration-250 pointer-events-auto`}
-              >
-                {/* Date Badge */}
-                <div className="flex flex-col items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shrink-0 shadow-2xs select-none">
-                  <span className="text-2xl md:text-3xl font-extrabold text-[#FF4F18] leading-none">
-                    {item.date}
-                  </span>
-                  <span className="text-[10px] md:text-xs font-bold text-[#FF4F18]/80 mt-1 uppercase tracking-wider">
-                    {item.month}
-                  </span>
-                </div>
+            {/* List of regular updates with scroll container */}
+            <div className="max-h-[480px] lg:max-h-[580px] overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-[#FF4F18]/40 pr-3">
+              {updatesList.map((item, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => handleItemClick(item)}
+                  className={`flex gap-6 py-6 lg:py-[32px] items-start border-b border-zinc-200/60 last:border-b-0 cursor-pointer hover:bg-zinc-50/40 dark:hover:bg-zinc-900/40 rounded-xl px-2 -mx-2 transition-all duration-250 pointer-events-auto`}
+                >
+                  {/* Date Badge */}
+                  <div className="flex flex-col items-center justify-center h-16 w-16 md:h-20 md:w-20 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shrink-0 shadow-2xs select-none">
+                    <span className="text-2xl md:text-3xl font-extrabold text-[#FF4F18] leading-none">
+                      {item.date}
+                    </span>
+                    <span className="text-[10px] md:text-xs font-bold text-[#FF4F18]/80 mt-1 uppercase tracking-wider">
+                      {item.month}
+                    </span>
+                  </div>
 
-                {/* Text Content */}
-                <div className="flex flex-col">
-                  <span className="text-[10px] md:text-xs font-bold tracking-wider text-[#FF4F18] uppercase mb-1">
-                    {item.category}
-                  </span>
-                  <h3 className="text-base md:text-lg font-bold text-zinc-950 leading-snug">
-                    {item.title}
-                  </h3>
-                  <p className="text-zinc-600 text-xs md:text-sm mt-1.5 leading-relaxed">
-                    {item.desc}
-                  </p>
+                  {/* Text Content */}
+                  <div className="flex flex-col">
+                    <span className="text-[10px] md:text-xs font-bold tracking-wider text-[#FF4F18] uppercase mb-1">
+                      {item.category}
+                    </span>
+                    <h3 className="text-base md:text-lg font-bold text-zinc-950 leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-zinc-600 text-xs md:text-sm mt-1.5 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Right Column: Featured Update Card (Desktop only) */}

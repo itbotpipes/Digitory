@@ -36,6 +36,11 @@ export default function AdminDashboard() {
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const imageInputRef = React.useRef<HTMLInputElement>(null);
 
+  // Solutions Grid settings state
+  const [gridTitle, setGridTitle] = useState('');
+  const [gridDesc, setGridDesc] = useState('');
+  const [savingGridSettings, setSavingGridSettings] = useState(false);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -83,7 +88,36 @@ export default function AdminDashboard() {
         }).catch(console.error);
       }
     }
+    
+    if (activeTab === 'solutions') {
+      const token = localStorage.getItem('admin_token');
+      api.get('/settings', token || '').then((res) => {
+        const s = res.data;
+        if (s) {
+          setGridTitle(s.solutionsGridTitle || 'Twelve powerful features to help your restaurant run better');
+          setGridDesc(s.solutionsGridDesc || 'Click on any feature card below to open its full specifications and details on a new page.');
+        }
+      }).catch(console.error);
+    }
   }, [activeTab]);
+
+  const handleSaveGridSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingGridSettings(true);
+    try {
+      const token = localStorage.getItem('admin_token');
+      await api.put('/settings', {
+        solutionsGridTitle: gridTitle,
+        solutionsGridDesc: gridDesc
+      }, token || '');
+      alert('Solutions grid headers saved successfully!');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to save grid headers');
+    } finally {
+      setSavingGridSettings(false);
+    }
+  };
 
   useEffect(() => {
     setData([]); // Clear old tab data to prevent rendering mismatch crashes
@@ -265,10 +299,45 @@ export default function AdminDashboard() {
             </div>
           )}
           {activeTab === 'solutions' && (
-            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
-              <Link href="/admin/solutions/new" className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200">
-                + Create New Solution
-              </Link>
+            <div className="p-6 bg-zinc-50/50 dark:bg-black/10 border-b border-zinc-200 dark:border-zinc-800/80">
+              <form onSubmit={handleSaveGridSettings} className="space-y-4 max-w-4xl">
+                <h3 className="text-sm font-extrabold uppercase tracking-wider text-zinc-500 mb-2">Solutions Grid Header Settings</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-zinc-650 dark:text-zinc-400">Section Title</label>
+                    <input 
+                      type="text" 
+                      value={gridTitle}
+                      onChange={e => setGridTitle(e.target.value)}
+                      placeholder="Twelve powerful features to help your restaurant run better"
+                      className="w-full px-3 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-[#FF4F18]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold mb-1 text-zinc-650 dark:text-zinc-400">Section Subtitle / Description</label>
+                    <input 
+                      type="text" 
+                      value={gridDesc}
+                      onChange={e => setGridDesc(e.target.value)}
+                      placeholder="Click on any feature card below to open its full specifications..."
+                      className="w-full px-3 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-1 focus:ring-[#FF4F18]"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <button 
+                    type="submit"
+                    disabled={savingGridSettings}
+                    className="bg-[#FF4F18] text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-[#E03F0D] transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {savingGridSettings ? 'Saving...' : 'Save Header Settings'}
+                  </button>
+                  
+                  <Link href="/admin/solutions/new" className="bg-[#FF4F18]/10 text-[#FF4F18] border border-[#FF4F18]/20 px-4 py-2 rounded-full text-xs font-bold hover:bg-[#FF4F18]/20 transition-all cursor-pointer">
+                    + Create New Solution Card
+                  </Link>
+                </div>
+              </form>
             </div>
           )}
           {activeTab === 'industries' && (

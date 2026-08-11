@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
@@ -12,8 +12,9 @@ import { industriesDb, IndustryData } from '../../data/industriesDb';
 import { api } from '@/lib/api';
 
 function IndustriesDetailsContent() {
-  const searchParams = useSearchParams();
-  const moduleParam = searchParams.get('module');
+  const params = useParams();
+  const slugParam = params.slug as string;
+  const moduleParam = slugParam ? slugParam.replace('details-', '') : null;
   const [activeKey, setActiveKey] = useState<string>("bars-restaurants");
   const [industriesList, setIndustriesList] = useState<IndustryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -306,22 +307,26 @@ function IndustriesDetailsContent() {
             </h3>
           </div>
 
-          <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-zinc-200/60 dark:bg-zinc-800/60 grid grid-cols-1 md:grid-cols-3 gap-[1px] shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+          <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-zinc-200/60 dark:bg-zinc-800/60 grid grid-cols-1 md:grid-cols-2 gap-[1px] shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
             {industry.features.map((item, idx) => (
-              <div
+              <div 
                 key={idx}
-                className="p-8 sm:p-10 flex flex-col justify-start transition-colors duration-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 cursor-pointer text-left bg-white dark:bg-[#0d0d0e] h-full"
+                className="p-8 sm:p-10 bg-white dark:bg-[#0d0d0e] hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-all duration-300 text-left flex gap-5"
               >
-                <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18]" />
+                <div className="text-[#FF4F18] shrink-0 mt-1">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+
+                <div className="space-y-2.5">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white">
                     {item.title}
-                  </h4>
-                  <p className="text-zinc-600 dark:text-zinc-300 text-xs sm:text-sm leading-relaxed">
+                  </h3>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
-
               </div>
             ))}
           </div>

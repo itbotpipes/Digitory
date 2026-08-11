@@ -13,6 +13,7 @@ export async function generateMetadata() {
 
 import RestaurantOSHero from '../../components/solutions/RestaurantOSHero';
 import RadialCommandCenter from '../../components/solutions/RadialCommandCenter';
+import SolutionsStats from '../../components/solutions/SolutionsStats';
 import Capabilities from '../../components/solutions/Capabilities';
 import ChainControlDeck from '../../components/solutions/ChainControlDeck';
 import RestaurantTypes from '../../components/solutions/RestaurantTypes';
@@ -29,38 +30,50 @@ export default function SolutionsPage() {
 
       {/* Main Content */}
       <main className="flex flex-col">
+        {/* 1. Hero */}
         <ScrollFocusWrapper>
           <RestaurantOSHero />
         </ScrollFocusWrapper>
 
+        {/* 2. Everything your restro needs in one place */}
         <ScrollFocusWrapper>
           <RadialCommandCenter />
         </ScrollFocusWrapper>
 
+        {/* 3. Counter */}
+        <ScrollFocusWrapper>
+          <SolutionsStats />
+        </ScrollFocusWrapper>
+
+        {/* 4. Service list (solution detail link section) */}
         <ScrollFocusWrapper>
           <Capabilities />
         </ScrollFocusWrapper>
 
+        {/* 5. One dashboard, every location in sync */}
         <ScrollFocusWrapper>
           <ChainControlDeck />
         </ScrollFocusWrapper>
 
-        <ScrollFocusWrapper>
-          <RestaurantTypes />
-        </ScrollFocusWrapper>
-
-        <ScrollFocusWrapper>
-          <RoiCalculator />
-        </ScrollFocusWrapper>
-
+        {/* 6. Connects with your fav app */}
         <ScrollFocusWrapper>
           <ToolIntegrations />
         </ScrollFocusWrapper>
 
+        {/* 7. See how much you can save */}
+        <ScrollFocusWrapper>
+          <RoiCalculator />
+        </ScrollFocusWrapper>
+
+        {/* 8. Latest insights */}
         <ScrollFocusWrapper>
           <InsightsPage />
         </ScrollFocusWrapper>
 
+        {/* Hidden / Commented Sections */}
+        {/* <ScrollFocusWrapper>
+          <RestaurantTypes />
+        </ScrollFocusWrapper> */}
         {/* <ScrollFocusWrapper>
           <SolutionsCta />
         </ScrollFocusWrapper> */}

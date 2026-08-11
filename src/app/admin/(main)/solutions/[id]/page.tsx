@@ -21,6 +21,12 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
     description: '',
     ctaText: '',
     trustText: '',
+    image: '',
+    gridTitle: '',
+    gridDesc: '',
+    opsTitle: '',
+    opsParagraph: '',
+    opsHighlights: '',
     icon: '',
     whyChoose: [] as any[],
     featuresTitle: '',
@@ -33,6 +39,49 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
     securityItems: [] as string[],
     ctaBlock: { title: '', desc: '' },
   });
+
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setMessage('');
+
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      const data = new FormData();
+      data.append('file', file);
+      
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/media`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: data,
+      });
+
+      if (res.status === 401) {
+        localStorage.removeItem('admin_token');
+        alert('Your session has expired. Please log in again.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      if (!res.ok) throw new Error('Upload failed');
+      const json = await res.json();
+      const cloudUrl = json.data?.url || json.url;
+      
+      setFormData(prev => ({ ...prev, image: cloudUrl }));
+      setMessage('Solution image uploaded successfully!');
+    } catch (err: any) {
+      console.error(err);
+      setMessage(err.message || 'Failed to upload image');
+      alert(err.message || 'Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
   
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
@@ -63,6 +112,12 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
         description: s.description || '',
         ctaText: s.ctaText || '',
         trustText: s.trustText || '',
+        image: s.image || '',
+        gridTitle: s.gridTitle || '',
+        gridDesc: s.gridDesc || '',
+        opsTitle: s.opsTitle || '',
+        opsParagraph: s.opsParagraph || '',
+        opsHighlights: s.opsHighlights || '',
         icon: s.icon || '',
         whyChoose: s.whyChoose || [],
         featuresTitle: s.featuresTitle || '',
@@ -216,13 +271,135 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1">Description (Landing page details)</label>
             <textarea
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
               rows={3}
               className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
             />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-zinc-50/20 dark:bg-zinc-900/10 p-4 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/50">
+            <div className="md:col-span-2">
+              <span className="text-xs font-bold text-[#FF4F18] uppercase tracking-wider block mb-2">Grid Box Settings (Landing Page Grid)</span>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Grid Box Title (Fallback: local feature title)</label>
+              <input
+                type="text"
+                value={formData.gridTitle}
+                onChange={e => setFormData({...formData, gridTitle: e.target.value})}
+                placeholder="e.g. Orders & billing"
+                className="w-full px-4 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Grid Box Short Summary (Fallback: local short summary)</label>
+              <input
+                type="text"
+                value={formData.gridDesc}
+                onChange={e => setFormData({...formData, gridDesc: e.target.value})}
+                placeholder="e.g. Take dine-in, takeaway, online..."
+                className="w-full px-4 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 bg-orange-50/10 dark:bg-orange-950/5 p-5 rounded-2xl border border-orange-200/30 dark:border-orange-950/20">
+            <div>
+              <span className="text-xs font-bold text-[#FF4F18] uppercase tracking-wider block mb-2">Operations Reveal Section Settings</span>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Section Title (Fallback: What happens when operations get fragmented?)</label>
+              <input
+                type="text"
+                value={formData.opsTitle}
+                onChange={e => setFormData({...formData, opsTitle: e.target.value})}
+                placeholder="e.g. What happens when operations get fragmented?"
+                className="w-full px-4 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Section Paragraph Content (Use space-separated words)</label>
+              <textarea
+                value={formData.opsParagraph}
+                onChange={e => setFormData({...formData, opsParagraph: e.target.value})}
+                placeholder="Most business operators rely on disconnected systems..."
+                rows={4}
+                className="w-full px-4 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1">Highlighted Words (Comma-separated list of words that turn orange & bold)</label>
+              <input
+                type="text"
+                value={formData.opsHighlights}
+                onChange={e => setFormData({...formData, opsHighlights: e.target.value})}
+                placeholder="e.g. five, disconnected, missed, behind, waste, chaos"
+                className="w-full px-4 py-2 rounded-xl text-sm border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium mb-2">Solution Grid Image (Cloudinary)</label>
+            <div className="flex flex-col sm:flex-row gap-4 items-start bg-zinc-50/50 dark:bg-zinc-900/10 p-4 rounded-2xl border border-zinc-250/20">
+              {formData.image ? (
+                <div className="relative w-48 h-32 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
+                  <img src={formData.image} alt="Solution Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, image: '' })}
+                      className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors"
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-48 h-32 rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center p-4 text-center text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-900/20">
+                  <svg className="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-[10px] font-medium leading-tight">No Image Uploaded</span>
+                </div>
+              )}
+              
+              <div className="flex flex-col gap-1.5">
+                <button
+                  type="button"
+                  disabled={uploadingImage}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] disabled:opacity-50 transition-colors cursor-pointer"
+                >
+                  {uploadingImage ? 'Uploading...' : 'Upload Image'}
+                </button>
+                <p className="text-[10px] text-zinc-500 max-w-[200px] leading-normal">
+                  JPG, PNG or WEBP. Upload custom card image for this solution.
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                
+                {formData.image && (
+                  <div className="mt-1">
+                    <label className="block text-[9px] uppercase tracking-wider text-zinc-500 mb-1">Direct URL</label>
+                    <input 
+                      type="text" 
+                      value={formData.image} 
+                      onChange={e => setFormData({...formData, image: e.target.value})} 
+                      className="w-full px-2 py-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-xs font-mono max-w-xs" 
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

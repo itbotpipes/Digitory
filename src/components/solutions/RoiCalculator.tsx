@@ -145,28 +145,6 @@ export default function RoiCalculator() {
 
       </div>
 
-      {/* Bottom Outcomes Cards */}
-      <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center w-full mt-16 md:mt-24">
-        {[
-          { value: `${turnover}%`, label: "Faster Table Turnover" },
-          { value: `${wastage}%`, label: "Less Raw Wastage" },
-          { value: `${accuracy}%`, label: "Order Kitchen Accuracy" },
-          { value: `${savedHrs} hrs`, label: "Saved Weekly per Manager" },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0"
-          >
-            <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-              <span className="text-[#FF4F18]">{item.value}</span>
-            </h3>
-            <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-              <span className="text-zinc-900 dark:text-white">{item.label}</span>
-            </h3>
-          </div>
-        ))}
-      </div>
-
     </section>
   );
 }
