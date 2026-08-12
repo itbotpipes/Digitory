@@ -6,11 +6,11 @@ import Image from 'next/image';
 
 export default function AboutHero() {
   return (
-    <section className="mx-auto max-w-7xl px-6 md:px-8 pt-8 pb-6 md:pt-12 md:pb-10 lg:pt-16 lg:pb-12">
+    <section className="mx-auto max-w-7xl px-6 md:px-8 pt-4 pb-10 md:pt-6 md:pb-14 lg:pt-8 lg:pb-16">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8 items-center">
 
         {/* Left Content Column */}
-        <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8">
+        <div className="lg:col-span-7 flex flex-col justify-start lg:-mt-6 space-y-6 md:space-y-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] transition-colors duration-300">
             Software for <span className="text-[#FF4F18]">real</span>
             <br />
@@ -45,17 +45,14 @@ export default function AboutHero() {
 
         {/* Right Image Column */}
         <div className="lg:col-span-5 flex justify-center w-full relative">
-          <div className="relative w-full max-w-[420px] aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[32px] overflow-hidden flex items-center justify-center">
-            {/* Subtle glow background */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#FF4F18]/5 to-[#FF4F18]/10 dark:from-[#FF4F18]/10 dark:to-transparent rounded-[32px] blur-2xl -z-10" />
-
+          <div className="relative w-full max-w-[500px] lg:max-w-[560px] aspect-[4/5] flex items-center justify-center">
             <Image
-              src="/Mascot  1.png"
+              src="/IMG_1458.PNG"
               alt="About Digitory Mascot"
-              width={420}
-              height={525}
+              width={540}
+              height={675}
               priority
-              className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500 ease-out"
+              className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal hover:scale-[1.03] transition-transform duration-500 ease-out"
             />
           </div>
         </div>

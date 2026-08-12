@@ -2,7 +2,11 @@
 
 import React from 'react';
 
-export default function BeliefsSection() {
+interface BeliefsSectionProps {
+  showBeliefs?: boolean;
+}
+
+export default function BeliefsSection({ showBeliefs = true }: BeliefsSectionProps) {
   const stats = [
     { value: '100+', label: 'restaurant outlets', sublabel: 'using Digitory' },
     { value: '2M+', label: 'orders', sublabel: 'handled every month' },
@@ -62,38 +66,40 @@ export default function BeliefsSection() {
       </section>
 
       {/* Beliefs Section */}
-      <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 transition-colors duration-300">
-        <div className="mx-auto max-w-7xl px-6 md:px-8">
-          <div className="space-y-12">
-            {/* Header */}
-            <div className="max-w-3xl">
-              <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-                What <span className="text-[#FF4F18]">we believe</span>
-              </h2>
-            </div>
+      {showBeliefs && (
+        <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 transition-colors duration-300">
+          <div className="mx-auto max-w-7xl px-6 md:px-8">
+            <div className="space-y-12">
+              {/* Header */}
+              <div className="max-w-3xl">
+                <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
+                  What <span className="text-[#FF4F18]">we believe</span>
+                </h2>
+              </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 items-stretch border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[32px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.01)] bg-white dark:bg-zinc-950/20">
-              {beliefs.map((belief, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col h-full p-6 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60 border-b md:border-b-0 md:border-r last:border-b-0 last:border-r-0"
-                >
-                  <span className="text-[11px] font-bold text-[#FF4F18] uppercase tracking-wider mb-3 block">
-                    {belief.num}
-                  </span>
-                  <h3 className="text-[16px] font-bold text-zinc-900 dark:text-white mb-2 leading-snug">
-                    {belief.title}
-                  </h3>
-                  <p className="text-[13px] sm:text-[14px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
-                    {belief.description}
-                  </p>
-                </div>
-              ))}
+              {/* Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 items-stretch border border-zinc-200/60 dark:border-[#2a2a2e]/60 rounded-[32px] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.01)] bg-white dark:bg-zinc-950/20">
+                {beliefs.map((belief, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col h-full p-6 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60 border-b md:border-b-0 md:border-r last:border-b-0 last:border-r-0"
+                  >
+                    <span className="text-[11px] font-bold text-[#FF4F18] uppercase tracking-wider mb-3 block">
+                      {belief.num}
+                    </span>
+                    <h3 className="text-[16px] font-bold text-zinc-900 dark:text-white mb-2 leading-snug">
+                      {belief.title}
+                    </h3>
+                    <p className="text-[13px] sm:text-[14px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                      {belief.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }

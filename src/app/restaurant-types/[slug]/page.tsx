@@ -6,6 +6,9 @@ import Image from 'next/image';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import OperationsReveal from '../../../components/solutions/OperationsReveal';
+import BeliefsSection from '../../../components/about/BeliefsSection';
+import ToolIntegrations from '../../../components/solutions/ToolIntegrations';
+import RestaurantOS from '../../../components/home/RestaurantOS';
 import FAQPage from '../../../components/home/FAQ';
 import InsightsPage from '../../../components/home/Insights';
 import { industriesDb, IndustryData } from '../../data/industriesDb';
@@ -525,6 +528,15 @@ function IndustriesDetailsContent() {
             </div>
           </section>
         )}
+
+        {/* COUNTER SECTION (from About page) */}
+        <BeliefsSection showBeliefs={false} />
+
+        {/* CONNECTS WITH YOUR FAV APP (from Solutions page) */}
+        <ToolIntegrations />
+
+        {/* TESTIMONIAL SECTION (from Home page) */}
+        <RestaurantOS />
 
         {/* FAQs SECTION */}
         {industry.faqs && industry.faqs.length > 0 ? (

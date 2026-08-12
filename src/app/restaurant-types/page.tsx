@@ -4,6 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Header from "../../components/Header";
 import FooterPage from "../../components/Footer";
+import BeliefsSection from "../../components/about/BeliefsSection";
+import ToolIntegrations from "../../components/solutions/ToolIntegrations";
+import RestaurantOS from "../../components/home/RestaurantOS";
+import FAQPage from "../../components/home/FAQ";
+import InsightsPage from "../../components/home/Insights";
 import { industriesDb, IndustryData } from "../data/industriesDb";
 import { api } from "@/lib/api";
 
@@ -467,6 +472,21 @@ export default function IndustriesPage() {
             })}
           </div>
         </section>
+
+        {/* Counter Section (from About Page) */}
+        <BeliefsSection showBeliefs={false} />
+
+        {/* Connects with your fav app section (from Solutions Page) */}
+        <ToolIntegrations />
+
+        {/* Testimonials section (from Home Page) */}
+        <RestaurantOS />
+
+        {/* FAQs section (from Home Page) */}
+        <FAQPage />
+
+        {/* Latest Insights / Blog section (from Home Page) */}
+        <InsightsPage />
       </main>
 
       <FooterPage />
