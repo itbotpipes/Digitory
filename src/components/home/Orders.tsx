@@ -59,6 +59,7 @@ const TAB_DATA = {
       "Online delivery, QR, and dine-in connected",
       "Faster billing and shorter queues.",
       "No switching between apps",
+      "Real-time kitchen ticket printing",
     ],
   },
   kitchen: {
@@ -70,6 +71,7 @@ const TAB_DATA = {
       "No missed or duplicate orders",
       "Faster table turnaround",
       "Less shouting. More serving.",
+      "Clear color-coded prep timers",
     ],
   },
   inventory: {
@@ -81,6 +83,7 @@ const TAB_DATA = {
       "Automatic ingredient deduction",
       "Reduce wastage and stock-outs",
       "Protect every margin",
+      "Automated low-stock alerts",
     ],
   },
   "owner-view": {
@@ -92,6 +95,7 @@ const TAB_DATA = {
       "Best-selling items",
       "Peak hour insights",
       "Real-time business health",
+      "Instant mobile revenue reports",
     ],
   },
   "multi-outlet": {
@@ -103,6 +107,7 @@ const TAB_DATA = {
       "Track sales in real time",
       "Spot operational issues early",
       "Scale with confidence",
+      "Centralized menu & pricing sync",
     ],
   },
 };

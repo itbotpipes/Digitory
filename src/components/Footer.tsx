@@ -50,24 +50,24 @@ export default function FooterPage() {
 
         const newMap = { ...slugsMap };
 
-        // Map solutions by matching ID
-        loadedSols.forEach((s: any) => {
-          const staticId = s.id || s._id;
-          if (staticId === 'pos') newMap["Order Engine"] = `/solutions/${s.slug}`;
-          if (staticId === 'kds') newMap["Kitchen Display"] = `/solutions/${s.slug}`;
-          if (staticId === 'inventory') newMap["Inventory Control"] = `/solutions/${s.slug}`;
-          if (staticId === 'control-system') newMap["Owner Dashboard"] = `/solutions/${s.slug}`;
-          if (staticId === 'event-management') newMap["Multi-Outlet"] = `/solutions/${s.slug}`;
+        // Map solutions by matching slug, id, or position
+        loadedSols.forEach((s: any, idx: number) => {
+          const slugKey = s.slug || s.id || s._id;
+          if (slugKey === 'pos' || idx === 0) newMap["Order Engine"] = `/solutions/${s.slug}`;
+          if (slugKey === 'kds' || idx === 1) newMap["Kitchen Display"] = `/solutions/${s.slug}`;
+          if (slugKey === 'inventory' || idx === 2) newMap["Inventory Control"] = `/solutions/${s.slug}`;
+          if (slugKey === 'control-system' || idx === 3) newMap["Owner Dashboard"] = `/solutions/${s.slug}`;
+          if (slugKey === 'event-management' || idx === 4) newMap["Multi-Outlet"] = `/solutions/${s.slug}`;
         });
 
-        // Map industries by matching ID
-        loadedInds.forEach((i: any) => {
-          const staticId = i.id || i._id;
-          if (staticId === 'micro-breweries') newMap["Breweries & Pubs"] = `/restaurant-types/${i.slug}`;
-          if (staticId === 'qsr') newMap["QSR Chains"] = `/restaurant-types/${i.slug}`;
-          if (staticId === 'casual-dining') newMap["Fine Dining"] = `/restaurant-types/${i.slug}`;
-          if (staticId === 'cloud-kitchens') newMap["Cloud Kitchens"] = `/restaurant-types/${i.slug}`;
-          if (staticId === 'bars-restaurants') newMap["Multi-Outlet Groups"] = `/restaurant-types/${i.slug}`;
+        // Map industries by matching slug, id, or position
+        loadedInds.forEach((i: any, idx: number) => {
+          const slugKey = i.slug || i.id || i._id;
+          if (slugKey === 'micro-breweries' || slugKey === 'breweries' || idx === 0) newMap["Breweries & Pubs"] = `/restaurant-types/${i.slug}`;
+          if (slugKey === 'qsr' || idx === 1) newMap["QSR Chains"] = `/restaurant-types/${i.slug}`;
+          if (slugKey === 'casual-dining' || slugKey === 'fine-dining' || idx === 2) newMap["Fine Dining"] = `/restaurant-types/${i.slug}`;
+          if (slugKey === 'cloud-kitchens' || idx === 3) newMap["Cloud Kitchens"] = `/restaurant-types/${i.slug}`;
+          if (slugKey === 'bars-restaurants' || idx === 4) newMap["Multi-Outlet Groups"] = `/restaurant-types/${i.slug}`;
         });
 
         setSlugsMap(newMap);

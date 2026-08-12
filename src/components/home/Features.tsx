@@ -1,53 +1,101 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
+
+interface FeatureItem {
+  num: string;
+  slug: string;
+  title: string;
+  desc: string;
+  imageSrc: string;
+}
 
 export default function Features() {
-  const featureItems = [
+  const router = useRouter();
+
+  const defaultFeatureItems: FeatureItem[] = [
     {
       num: '01',
+      slug: 'pos',
       title: 'Orders & billing',
       desc: 'Manage dine-in, takeaway, online, and QR orders in one place. Billing is quick, simple, and accurate.',
-      borderClasses: 'border-b border-zinc-200 md:border-r md:border-b',
       imageSrc: '/image4.png',
     },
     {
       num: '02',
+      slug: 'kds',
       title: 'Kitchen display system',
       desc: 'Orders go straight to the right kitchen station. No paper. No shouting. No confusion.',
-      borderClasses: 'border-b border-zinc-200 md:border-r md:border-b',
       imageSrc: '/image 6.png',
     },
     {
       num: '03',
+      slug: 'inventory',
       title: 'Smart Inventory',
       desc: "Every order automatically updates your stock. Know what's running low before it becomes a problem.",
-      borderClasses: 'border-b border-zinc-200 md:border-b',
       imageSrc: '/image 7.png',
     },
     {
       num: '04',
+      slug: 'reports',
       title: 'Live dashboard',
       desc: 'View sales, orders, inventory, and outlet performance anytime from one screen.',
-      borderClasses: 'border-b border-zinc-200 md:border-b-0 md:border-r',
       imageSrc: '/image 8.png',
     },
     {
       num: '05',
+      slug: 'control-system',
       title: 'One order flow',
       desc: 'Manage Swiggy, Zomato, QR, and dine-in orders together without switching between different apps.',
-      borderClasses: 'border-b border-zinc-200 md:border-b-0 md:border-r',
       imageSrc: '/image 9.png',
     },
     {
       num: '06',
+      slug: 'event-management',
       title: 'Multi-outlet management',
       desc: 'Manage one outlet or many. View reports and performance from one dashboard.',
-      borderClasses: 'border-b-0',
       imageSrc: '/image 10.png',
     },
   ];
+
+  const [features, setFeatures] = useState<FeatureItem[]>(defaultFeatureItems);
+
+  useEffect(() => {
+    async function loadSolutionsFromBackend() {
+      try {
+        const res = await api.get('/solutions?limit=30');
+        const loaded: any[] = res.data?.docs || res.data?.results || res.data || [];
+        if (loaded && loaded.length > 0) {
+          const mapped = defaultFeatureItems.map((defaultItem) => {
+            const foundBackend = loaded.find(
+              (s: any) =>
+                s.slug === defaultItem.slug ||
+                s.id === defaultItem.slug ||
+                s._id === defaultItem.slug
+            );
+
+            return {
+              ...defaultItem,
+              slug: foundBackend?.slug || defaultItem.slug,
+            };
+          });
+
+          setFeatures(mapped);
+        }
+      } catch (err) {
+        console.warn('Failed to load solutions from backend in Features component:', err);
+      }
+    }
+
+    loadSolutionsFromBackend();
+  }, []);
+
+  const handleCardClick = (slug: string) => {
+    router.push(`/solutions/${slug}`);
+  };
 
   return (
     <div className="w-full">
@@ -69,7 +117,7 @@ export default function Features() {
               Connect your orders, kitchen, inventory, billing, and reports in one platform so your team can work faster and make fewer mistakes.
             </p>
             <Link
-              href="#"
+              href="/solutions"
               className="inline-flex justify-center items-center text-center rounded-full bg-[#111111] dark:bg-white px-8 py-3 text-[15px] font-semibold text-white dark:text-zinc-900 transition-all duration-200 hover:bg-black dark:hover:bg-zinc-100 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
             >
               Explore Platform
@@ -79,28 +127,40 @@ export default function Features() {
 
         {/* Features Card Container with 3x2 inner grid */}
         <div className="border border-zinc-200 rounded-[28px] overflow-hidden bg-white grid grid-cols-1 md:grid-cols-3">
-          {featureItems.map((item, idx) => (
-            <div
-              key={idx}
-              className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 ${item.borderClasses}`}
-            >
-              {/* Feature Index */}
-              <span className="text-sm font-bold text-zinc-400 mb-2">{item.num}</span>
+          {features.map((item, idx) => {
+            const borderClasses =
+              idx === 0 || idx === 1
+                ? 'border-b border-zinc-200 md:border-r md:border-b'
+                : idx === 2
+                ? 'border-b border-zinc-200 md:border-b'
+                : idx === 3 || idx === 4
+                ? 'border-b border-zinc-200 md:border-b-0 md:border-r'
+                : 'border-b-0';
 
-              {/* Feature Image Mockup */}
-              <div className="w-full h-[140px] flex items-center justify-center my-4 select-none relative">
-                <img
-                  src={item.imageSrc}
-                  alt={item.title}
-                  className="max-w-[240px] max-h-[140px] object-contain rounded-xl"
-                />
+            return (
+              <div
+                key={idx}
+                onClick={() => handleCardClick(item.slug)}
+                className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 cursor-pointer group ${borderClasses}`}
+              >
+                {/* Feature Index */}
+                <span className="text-sm font-bold text-zinc-400 mb-2">{item.num}</span>
+
+                {/* Feature Image Mockup */}
+                <div className="w-full h-[140px] flex items-center justify-center my-4 select-none relative">
+                  <img
+                    src={item.imageSrc}
+                    alt={item.title}
+                    className="max-w-[240px] max-h-[140px] object-contain rounded-xl"
+                  />
+                </div>
+
+                {/* Title & Description */}
+                <h3 className="text-lg font-bold text-zinc-950 mb-2 mt-4">{item.title}</h3>
+                <p className="text-zinc-550 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
               </div>
-
-              {/* Title & Description */}
-              <h3 className="text-lg font-bold text-zinc-950 mb-2 mt-4">{item.title}</h3>
-              <p className="text-zinc-550 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </section>

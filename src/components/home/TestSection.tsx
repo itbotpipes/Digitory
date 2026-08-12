@@ -30,47 +30,48 @@ export default function TestSection() {
     },
     {
       num: 5,
-      title: 'Outlet performance',
-      desc: 'Monitor all your outlets from one dashboard.',
+      title: 'Digitory brings it all together',
+      desc: 'Orders. Inventory. Sales. Operations.',
       highlighted: true,
+      isGreen: true,
     },
   ];
 
   const chatMessages = [
     {
       role: 'Chef',
-      text: 'Orders reaching kitchen on time. 🍳',
+      text: "Table 12's order isn't showing in the kitchen. 🍳",
       time: '7:42 PM',
       avatarColor: 'bg-emerald-100 text-emerald-700',
       avatarLabel: '👨‍🍳',
     },
     {
       role: 'Inventory',
-      text: 'Stock updated. No low stock. 📦',
+      text: "We're out of paneer. Please stop taking paneer orders. 📦",
       time: '7:45 PM',
       avatarColor: 'bg-orange-100 text-orange-700',
       avatarLabel: '📦',
     },
     {
       role: 'Cashier',
-      text: 'Billing running smoothly. 🧾',
+      text: 'Billing has stopped. Customers are waiting. 🧾',
       time: '7:48 PM',
       avatarColor: 'bg-blue-100 text-blue-700',
       avatarLabel: '💵',
     },
     {
-      role: 'Captain',
-      text: 'All tables served on time. 🍽️',
-      time: '7:52 PM',
-      avatarColor: 'bg-indigo-100 text-indigo-700',
-      avatarLabel: '🤵',
-    },
-    {
       role: 'Manager',
-      text: 'Sales looking great today! 🚀',
-      time: '7:53 PM',
+      text: "Can you share today's sales till now? 👔",
+      time: '7:52 PM',
       avatarColor: 'bg-amber-100 text-amber-700',
       avatarLabel: '👔',
+    },
+    {
+      role: 'Captain',
+      text: 'Three orders are getting delayed. Guests are asking. ⏱️',
+      time: '7:53 PM',
+      avatarColor: 'bg-indigo-100 text-indigo-700',
+      avatarLabel: '🤵',
     },
   ];
 
@@ -158,7 +159,7 @@ export default function TestSection() {
               </div>
 
               {/* Chat Area */}
-              <div className="p-4 space-y-4 max-h-[460px] overflow-y-auto">
+              <div className="p-4 space-y-4 min-h-[400px] max-h-[440px] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
                 {/* Date Separator */}
                 <div className="flex justify-center my-2">
@@ -245,10 +246,13 @@ export default function TestSection() {
                   {/* Number Circle */}
                   <div className="absolute -left-16 flex items-center justify-center">
                     <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 font-bold text-base transition-all duration-300 ${step.highlighted
-                        ? 'bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_12px_rgba(255,79,24,0.35)]'
-                        : 'bg-white border-[#FF4F18] text-zinc-800'
-                        }`}
+                      className={`flex h-12 w-12 items-center justify-center rounded-full border-2 font-bold text-base transition-all duration-300 ${
+                        step.isGreen
+                          ? 'bg-[#13B257] border-[#13B257] text-white shadow-[0_4px_12px_rgba(19,178,87,0.35)]'
+                          : step.highlighted
+                          ? 'bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_12px_rgba(255,79,24,0.35)]'
+                          : 'bg-white border-[#FF4F18] text-zinc-800'
+                      }`}
                     >
                       {step.num}
                     </div>
