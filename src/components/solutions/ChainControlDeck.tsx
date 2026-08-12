@@ -21,7 +21,7 @@ export default function ChainControlDeck() {
       badgeBg: "bg-white",
       revenue: "₹ 14,85,200",
       metricLabel: "↑ Consolidated Real-Time Sync",
-      metricColor: "text-[#FF4F18]",
+      metricColor: "text-[#13B257]",
     },
     "Mumbai Flagship": {
       title: "Mumbai Flagship Outlet",
@@ -30,7 +30,7 @@ export default function ChainControlDeck() {
       badgeBg: "bg-white",
       revenue: "₹ 5,42,800",
       metricLabel: "↑ 12% increase from yesterday",
-      metricColor: "text-[#FF4F18]",
+      metricColor: "text-[#13B257]",
     },
     "Delhi QSR": {
       title: "Delhi QSR Outlet",
@@ -39,7 +39,7 @@ export default function ChainControlDeck() {
       badgeBg: "bg-white",
       revenue: "₹ 4,12,400",
       metricLabel: "↑ Peak hour sales active",
-      metricColor: "text-[#FF4F18]",
+      metricColor: "text-[#13B257]",
     },
     "Bangalore Cloud": {
       title: "Bangalore Cloud Kitchen",
@@ -48,7 +48,7 @@ export default function ChainControlDeck() {
       badgeBg: "bg-white",
       revenue: "₹ 5,30,000",
       metricLabel: "↑ High order volume",
-      metricColor: "text-[#FF4F18]",
+      metricColor: "text-[#13B257]",
     },
   };
 

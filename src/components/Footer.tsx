@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { api } from "@/lib/api";
 
 const FOOTER_COLUMNS = [
   {
@@ -23,6 +25,59 @@ const FOOTER_COLUMNS = [
 ];
 
 export default function FooterPage() {
+  const [slugsMap, setSlugsMap] = useState<Record<string, string>>({
+    // Fallbacks
+    "Order Engine": "/solutions/pos",
+    "Kitchen Display": "/solutions/kds",
+    "Inventory Control": "/solutions/inventory",
+    "Owner Dashboard": "/solutions/control-system",
+    "Multi-Outlet": "/solutions/event-management",
+    "Breweries & Pubs": "/restaurant-types/micro-breweries",
+    "QSR Chains": "/restaurant-types/qsr",
+    "Fine Dining": "/restaurant-types/casual-dining",
+    "Cloud Kitchens": "/restaurant-types/cloud-kitchens",
+    "Multi-Outlet Groups": "/restaurant-types/bars-restaurants"
+  });
+
+  useEffect(() => {
+    const fetchSlugs = async () => {
+      try {
+        const solRes = await api.get('/solutions?limit=30');
+        const loadedSols = solRes.data?.docs || solRes.data?.results || solRes.data || [];
+        
+        const indRes = await api.get('/industries?limit=30');
+        const loadedInds = indRes.data?.docs || indRes.data?.results || indRes.data || [];
+
+        const newMap = { ...slugsMap };
+
+        // Map solutions by matching ID
+        loadedSols.forEach((s: any) => {
+          const staticId = s.id || s._id;
+          if (staticId === 'pos') newMap["Order Engine"] = `/solutions/${s.slug}`;
+          if (staticId === 'kds') newMap["Kitchen Display"] = `/solutions/${s.slug}`;
+          if (staticId === 'inventory') newMap["Inventory Control"] = `/solutions/${s.slug}`;
+          if (staticId === 'control-system') newMap["Owner Dashboard"] = `/solutions/${s.slug}`;
+          if (staticId === 'event-management') newMap["Multi-Outlet"] = `/solutions/${s.slug}`;
+        });
+
+        // Map industries by matching ID
+        loadedInds.forEach((i: any) => {
+          const staticId = i.id || i._id;
+          if (staticId === 'micro-breweries') newMap["Breweries & Pubs"] = `/restaurant-types/${i.slug}`;
+          if (staticId === 'qsr') newMap["QSR Chains"] = `/restaurant-types/${i.slug}`;
+          if (staticId === 'casual-dining') newMap["Fine Dining"] = `/restaurant-types/${i.slug}`;
+          if (staticId === 'cloud-kitchens') newMap["Cloud Kitchens"] = `/restaurant-types/${i.slug}`;
+          if (staticId === 'bars-restaurants') newMap["Multi-Outlet Groups"] = `/restaurant-types/${i.slug}`;
+        });
+
+        setSlugsMap(newMap);
+      } catch (err) {
+        console.warn('Failed to load dynamic slugs for footer:', err);
+      }
+    };
+    fetchSlugs();
+  }, []);
+
   return (
     <footer className="bg-[#0B0C0E] text-white pt-12 pb-6 font-sans antialiased border-t border-[#1F2124]/40">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -63,17 +118,6 @@ export default function FooterPage() {
                 </svg>
               </a>
               <a
-                href="https://www.facebook.com/DigitoryS"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white transition-colors cursor-pointer select-none"
-              >
-                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
-              </a>
-              <a
                 href="https://www.instagram.com/dinewithdigitory/"
                 aria-label="Instagram"
                 target="_blank"
@@ -84,6 +128,17 @@ export default function FooterPage() {
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </a>
+              <a
+                href="https://www.facebook.com/DigitoryS"
+                aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 bg-[#161719] hover:bg-[#202225] border border-zinc-800/80 rounded-xl flex items-center justify-center text-[#888888] hover:text-white transition-colors cursor-pointer select-none"
+              >
+                <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                 </svg>
               </a>
             </div>
@@ -106,6 +161,7 @@ export default function FooterPage() {
                       "Solutions": "/solutions",
                       "Contact": "/contact",
                       "Book a Demo": "/request-demo",
+                      ...slugsMap
                     };
 
                     if (hrefMap[link]) {

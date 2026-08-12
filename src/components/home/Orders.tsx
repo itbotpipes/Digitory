@@ -225,7 +225,7 @@ export default function OrdersPage() {
             </div>
 
             {/* Right Column - Live Order Queue Card (static across all tabs) */}
-            <div className="lg:col-span-5 w-full lg:-mt-48">
+            <div className="lg:col-span-5 w-full lg:-mt-24">
               <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 space-y-6 w-full max-w-[500px] mx-auto lg:mx-0">
                 {/* Card Header */}
                 <div className="flex items-center justify-between">

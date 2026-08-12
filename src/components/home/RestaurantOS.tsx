@@ -121,7 +121,7 @@ export default function RestaurantOSPage() {
         <div className="space-y-6">
           {/* Stat Pill */}
           <div>
-            <div className="bg-[#FFF3EF] text-[#FF4F18] py-2.5 px-4 rounded-xl text-[14px] font-extrabold inline-flex items-center gap-1.5">
+            <div className="text-[#13B257] dark:text-[#10B981] py-1 text-[14px] font-extrabold inline-flex items-center gap-1.5">
               {item.stat}
             </div>
           </div>
