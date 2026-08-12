@@ -13,11 +13,30 @@ interface FeatureItem {
   image?: string;
 }
 
+function renderHighlightedText(text: string) {
+  if (!text) return null;
+  const parts = text.split(/(\*[^*]+\*)/g);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('*') && part.endsWith('*')) {
+          return (
+            <span key={index} className="text-[#FF4F18]">
+              {part.slice(1, -1)}
+            </span>
+          );
+        }
+        return <React.Fragment key={index}>{part}</React.Fragment>;
+      })}
+    </>
+  );
+}
+
 export default function Capabilities() {
   const router = useRouter();
 
   const [features, setFeatures] = useState<FeatureItem[]>([]);
-  const [gridTitle, setGridTitle] = useState('Twelve powerful features to help your restaurant run better');
+  const [gridTitle, setGridTitle] = useState('Twelve powerful features to help *your restaurant run better*');
   const [gridDesc, setGridDesc] = useState('Click on any feature card below to open its full specifications and details on a new page.');
   const [loading, setLoading] = useState(true);
 
@@ -270,7 +289,7 @@ export default function Capabilities() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start">
         <div className="lg:col-span-7">
           <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
-            {gridTitle}
+            {renderHighlightedText(gridTitle)}
           </h2>
         </div>
         <div className="lg:col-span-5 text-sm md:text-base text-zinc-650 dark:text-zinc-400 leading-relaxed lg:pt-2">

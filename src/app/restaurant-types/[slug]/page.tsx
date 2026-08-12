@@ -530,7 +530,7 @@ function IndustriesDetailsContent() {
         )}
 
         {/* COUNTER SECTION (from About page) */}
-        <BeliefsSection showBeliefs={false} />
+        <BeliefsSection showBeliefs={false} showHeading={false} />
 
         {/* CONNECTS WITH YOUR FAV APP (from Solutions page) */}
         <ToolIntegrations />

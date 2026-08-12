@@ -474,7 +474,7 @@ export default function IndustriesPage() {
         </section>
 
         {/* Counter Section (from About Page) */}
-        <BeliefsSection showBeliefs={false} />
+        <BeliefsSection showBeliefs={false} showHeading={false} />
 
         {/* Connects with your fav app section (from Solutions Page) */}
         <ToolIntegrations />

@@ -9,6 +9,7 @@ export default function TeamSection() {
       name: 'Shiv Mogali',
       role: 'Founder and CEO',
       image: '/founder.jpg',
+      linkedin: 'https://www.linkedin.com/in/shivmogali/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         '20+ years of experience in business development and technology.',
@@ -18,6 +19,7 @@ export default function TeamSection() {
       name: 'Sudhanshu Killedar',
       role: 'CTO',
       image: '/cto.png',
+      linkedin: 'https://www.linkedin.com/in/sudhanshu-killedar-1473859/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Experienced entrepreneur in the IT & ITES industry, MSRIT alumni',
@@ -28,6 +30,7 @@ export default function TeamSection() {
       name: 'Ashish Sharnagat',
       role: 'Strategy & Marketing',
       image: '/strategy.jpg',
+      linkedin: 'https://www.linkedin.com/in/ashishsharnagat/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Retail & consumer business expert, ISB alumni, Ex-Reliance, Shoppers Stop & Landmark',
@@ -38,6 +41,7 @@ export default function TeamSection() {
       name: 'Sandeep S',
       role: 'Delivery and Client Relations',
       image: '/delivery.png',
+      linkedin: 'https://www.linkedin.com/in/sandeep-singh-92931a20/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Ex-Infosys, MSRIT alumni',
@@ -48,6 +52,7 @@ export default function TeamSection() {
       name: 'Bala Sundrasamy',
       role: 'Product & Design',
       image: '/product.png',
+      linkedin: 'https://www.linkedin.com/in/balasundrasamy/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'Product development expert, COEG alumni, Software & Consulting head',
@@ -58,6 +63,7 @@ export default function TeamSection() {
       name: 'Panjury V',
       role: 'Marketing Director',
       image: '/marketing.png',
+      linkedin: 'https://www.linkedin.com/in/panjury-v-226871a2/',
       gradient: 'from-[#FF4F18] to-[#FF8A00]',
       highlights: [
         'B.E - Industrial Engineering and management, MBA Marketing, Passionate Entrepreneur',
@@ -101,6 +107,17 @@ export default function TeamSection() {
                     className="object-cover"
                     sizes="96px"
                   />
+                  {/* LinkedIn Hover Overlay */}
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 cursor-pointer"
+                  >
+                    <svg className="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                    </svg>
+                  </a>
                 </div>
                 {/* Visual ring overlay */}
                 <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-black dark:border-white group-hover:rotate-45 transition-transform duration-700 z-0" />

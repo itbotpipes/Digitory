@@ -129,9 +129,6 @@ export default function RestaurantOSHero() {
             <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer">
               Book a Live Demo
             </button>
-            <button className="inline-flex justify-center items-center text-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-3 text-[15px] font-semibold text-zinc-800 dark:text-white transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 active:scale-[0.98] cursor-pointer">
-              Explore Features
-            </button>
           </div>
 
           {/* Trust and Social Proof */}

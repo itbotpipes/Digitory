@@ -52,7 +52,16 @@ export default function AboutHero() {
               width={540}
               height={675}
               priority
-              className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal hover:scale-[1.03] transition-transform duration-500 ease-out"
+              className="
+        w-full
+        h-full
+        object-contain
+        scale-[1.05]
+        hover:scale-[1.08]
+        transition-transform
+        duration-500
+        ease-out
+      "
             />
           </div>
         </div>
