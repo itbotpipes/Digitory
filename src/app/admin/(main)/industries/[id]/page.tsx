@@ -16,30 +16,52 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
     slug: '',
     shortLabel: '',
     title: '',
+    badge: '',
     subtitle: '',
     description: '',
+    ctaText: '',
     trustText: '',
     heroImage: '',
+    image: '',
     icon: '',
+    gridTitle: '',
+    gridDesc: '',
+    opsTitle: '',
+    opsParagraph: '',
+    opsHighlights: '',
     featuresTitle: '',
     features: [] as any[],
     whyChooseTitle: '',
     whyChoose: [] as string[],
     ctaBlock: { title: '', desc: '' },
+
+    heroTitle: '',
+    legacyTitle: '',
+    legacyItems: [] as any[],
+    workflowTitle: '',
+    workflowDesc: '',
+    workflowItems: [] as any[],
+    controlTitle: '',
+    controlDesc: '',
+    controlItems: [] as any[],
+    efficiencyTitle: '',
+    efficiencyItems: [] as any[],
+    faqs: [] as any[],
   });
 
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [message, setMessage] = useState('');
 
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const heroImageInputRef = React.useRef<HTMLInputElement>(null);
+  const cardImageInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'heroImage' | 'image') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadingImage(true);
+    setUploadingField(fieldName);
     setMessage('');
 
     try {
@@ -57,14 +79,14 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
       const json = await res.json();
       const cloudUrl = json.data?.url || json.url;
       
-      setFormData(prev => ({ ...prev, heroImage: cloudUrl }));
-      setMessage('Hero image uploaded successfully!');
+      setFormData(prev => ({ ...prev, [fieldName]: cloudUrl }));
+      setMessage(`${fieldName === 'heroImage' ? 'Hero image' : 'Card image'} uploaded successfully!`);
     } catch (err: any) {
       console.error(err);
-      setMessage(err.message || 'Failed to upload hero image');
-      alert(err.message || 'Failed to upload hero image');
+      setMessage(err.message || 'Failed to upload image');
+      alert(err.message || 'Failed to upload image');
     } finally {
-      setUploadingImage(false);
+      setUploadingField(null);
     }
   };
 
@@ -74,6 +96,19 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
       window.location.href = '/admin/login';
       return;
     }
+
+    const cachedPerms = localStorage.getItem('admin_permissions');
+    if (cachedPerms) {
+      try {
+        const perms: string[] = JSON.parse(cachedPerms);
+        if (!perms.includes('*') && !perms.includes('manage_industries')) {
+          alert('You do not have permission to manage industries');
+          window.location.href = '/admin/dashboard';
+          return;
+        }
+      } catch (_) {}
+    }
+
     if (!isNew) {
       fetchIndustry(token);
     }
@@ -87,16 +122,37 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
         slug: s.slug || '',
         shortLabel: s.shortLabel || '',
         title: s.title || '',
+        badge: s.badge || '',
         subtitle: s.subtitle || '',
         description: s.description || '',
+        ctaText: s.ctaText || '',
         trustText: s.trustText || '',
         heroImage: s.heroImage || '',
+        image: s.image || '',
         icon: s.icon || '',
+        gridTitle: s.gridTitle || '',
+        gridDesc: s.gridDesc || '',
+        opsTitle: s.opsTitle || '',
+        opsParagraph: s.opsParagraph || '',
+        opsHighlights: s.opsHighlights || '',
         featuresTitle: s.featuresTitle || '',
         features: s.features || [],
         whyChooseTitle: s.whyChooseTitle || '',
         whyChoose: s.whyChoose || [],
         ctaBlock: s.ctaBlock || { title: '', desc: '' },
+
+        heroTitle: s.heroTitle || '',
+        legacyTitle: s.legacyTitle || '',
+        legacyItems: s.legacyItems || [],
+        workflowTitle: s.workflowTitle || '',
+        workflowDesc: s.workflowDesc || '',
+        workflowItems: s.workflowItems || [],
+        controlTitle: s.controlTitle || '',
+        controlDesc: s.controlDesc || '',
+        controlItems: s.controlItems || [],
+        efficiencyTitle: s.efficiencyTitle || '',
+        efficiencyItems: s.efficiencyItems || [],
+        faqs: s.faqs || [],
       });
     } catch (err) {
       console.error(err);
@@ -180,86 +236,146 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
         </div>
       )}
 
+      <div className="p-4 bg-orange-50 dark:bg-orange-900/20 text-[#FF4F18] rounded-xl mb-8 font-medium text-sm border border-orange-100 dark:border-orange-800/30">
+        💡 <strong>Pro Tip:</strong> In any Title field below, you can wrap words in asterisks to make them orange on the website! For example: <code>Optimized operations for *Bars & Restaurants*</code>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-12">
         {/* BASIC INFO */}
         <section className="space-y-6">
           <h3 className="text-lg font-extrabold text-[#FF4F18]">Basic Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Title *</label>
+              <label className="block text-sm font-medium mb-1">Title (Internal) *</label>
               <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required className={inputCls} />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Slug *</label>
               <input type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} required className={inputCls} />
             </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Hero Title (Public)</label>
+              <input type="text" value={formData.heroTitle} onChange={e => setFormData({...formData, heroTitle: e.target.value})} placeholder="e.g. Optimized operations for *Bars & Restaurants*" className={inputCls} />
+            </div>
             <div>
               <label className="block text-sm font-medium mb-1">Short Label (for menus) *</label>
               <input type="text" value={formData.shortLabel} onChange={e => setFormData({...formData, shortLabel: e.target.value})} required className={inputCls} />
             </div>
             <div>
+              <label className="block text-sm font-medium mb-1">Badge (e.g. 01 • Café OS)</label>
+              <input type="text" value={formData.badge} onChange={e => setFormData({...formData, badge: e.target.value})} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">CTA Button Text (e.g. Book a Demo)</label>
+              <input type="text" value={formData.ctaText} onChange={e => setFormData({...formData, ctaText: e.target.value})} className={inputCls} />
+            </div>
+            <div>
               <label className="block text-sm font-medium mb-1">Trust Text</label>
               <input type="text" value={formData.trustText} onChange={e => setFormData({...formData, trustText: e.target.value})} className={inputCls} />
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">Hero Image</label>
+
+            {/* Hero Image */}
+            <div className="md:col-span-2 border-t border-zinc-150 dark:border-zinc-800 pt-6">
+              <label className="block text-sm font-bold text-zinc-800 dark:text-zinc-200 mb-2">Hero Page Banner Image</label>
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {formData.heroImage ? (
-                  <div className="relative w-48 aspect-[4/5] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
+                  <div className="relative w-48 aspect-[16/9] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
                     <img src={formData.heroImage} alt="Hero Preview" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                       <button
                         type="button"
                         onClick={() => setFormData({ ...formData, heroImage: '' })}
-                        className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors"
+                        className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors cursor-pointer"
                       >
                         Remove Image
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="w-48 aspect-[4/5] rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center p-4 text-center text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-900/20">
-                    <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span className="text-[11px] font-medium leading-tight">No Hero Image Uploaded</span>
+                  <div className="w-48 aspect-[16/9] rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center p-4 text-center text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-900/20">
+                    <span className="text-[11px] font-medium leading-tight">No Hero Image</span>
                   </div>
                 )}
                 
                 <div className="flex flex-col gap-2">
                   <button
                     type="button"
-                    disabled={uploadingImage}
-                    onClick={() => fileInputRef.current?.click()}
-                    className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] disabled:opacity-50 transition-colors cursor-pointer"
+                    disabled={uploadingField !== null}
+                    onClick={() => heroImageInputRef.current?.click()}
+                    className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] disabled:opacity-50 transition-colors cursor-pointer w-max"
                   >
-                    {uploadingImage ? 'Uploading to Cloudinary...' : 'Upload New Image'}
+                    {uploadingField === 'heroImage' ? 'Uploading to Cloudinary...' : 'Upload Hero Image'}
                   </button>
-                  <p className="text-[11px] text-zinc-500 max-w-[200px] leading-normal">
-                    JPG, PNG or WEBP. This image will automatically be optimized and hosted on Cloudinary.
-                  </p>
                   <input
-                    ref={fileInputRef}
+                    ref={heroImageInputRef}
                     type="file"
                     accept="image/*"
-                    onChange={handleImageUpload}
+                    onChange={e => handleImageUpload(e, 'heroImage')}
                     className="hidden"
                   />
-                  
                   {formData.heroImage && (
-                    <div className="mt-2">
-                      <label className="block text-[10px] uppercase tracking-wider text-zinc-500 mb-1">Or edit URL directly</label>
-                      <input 
-                        type="text" 
-                        value={formData.heroImage} 
-                        onChange={e => setFormData({...formData, heroImage: e.target.value})} 
-                        className={`${inputCls} text-xs py-1.5 font-mono max-w-xs`} 
-                      />
-                    </div>
+                    <input 
+                      type="text" 
+                      value={formData.heroImage} 
+                      onChange={e => setFormData({...formData, heroImage: e.target.value})} 
+                      className={`${inputCls} text-xs py-1.5 font-mono max-w-sm`} 
+                    />
                   )}
                 </div>
               </div>
             </div>
+
+            {/* Grid Card Image */}
+            <div className="md:col-span-2 border-t border-zinc-150 dark:border-zinc-800 pt-6">
+              <label className="block text-sm font-bold text-zinc-800 dark:text-zinc-200 mb-2">Grid Card Preview Image</label>
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                {formData.image ? (
+                  <div className="relative w-48 aspect-[16/9] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 group">
+                    <img src={formData.image} alt="Card Preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, image: '' })}
+                        className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700 transition-colors cursor-pointer"
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-48 aspect-[16/9] rounded-2xl border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex flex-col items-center justify-center p-4 text-center text-zinc-400 dark:text-zinc-500 bg-zinc-50 dark:bg-zinc-900/20">
+                    <span className="text-[11px] font-medium leading-tight">No Card Image</span>
+                  </div>
+                )}
+                
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    disabled={uploadingField !== null}
+                    onClick={() => cardImageInputRef.current?.click()}
+                    className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] disabled:opacity-50 transition-colors cursor-pointer w-max"
+                  >
+                    {uploadingField === 'image' ? 'Uploading to Cloudinary...' : 'Upload Card Image'}
+                  </button>
+                  <input
+                    ref={cardImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageUpload(e, 'image')}
+                    className="hidden"
+                  />
+                  {formData.image && (
+                    <input 
+                      type="text" 
+                      value={formData.image} 
+                      onChange={e => setFormData({...formData, image: e.target.value})} 
+                      className={`${inputCls} text-xs py-1.5 font-mono max-w-sm`} 
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div>
@@ -272,10 +388,145 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
             <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} rows={4} className={inputCls} />
           </div>
 
+          {/* Grid Information */}
+          <div className="border-t border-zinc-150 dark:border-zinc-800 pt-6 space-y-6">
+            <h4 className="text-md font-bold text-zinc-800 dark:text-zinc-200">Main Grid Headers</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium mb-1">Grid Section Heading</label>
+                <input type="text" value={formData.gridTitle} onChange={e => setFormData({...formData, gridTitle: e.target.value})} className={inputCls} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Grid Section Description</label>
+                <input type="text" value={formData.gridDesc} onChange={e => setFormData({...formData, gridDesc: e.target.value})} className={inputCls} />
+              </div>
+            </div>
+          </div>
+
+          {/* Operational Highlight */}
+          <div className="border-t border-zinc-150 dark:border-zinc-800 pt-6 space-y-4">
+            <h4 className="text-md font-bold text-zinc-800 dark:text-zinc-200">Operational Highlight Section</h4>
+            <div>
+              <label className="block text-sm font-medium mb-1">Highlight Title</label>
+              <input type="text" placeholder="e.g. Turn tables faster with unified systems" value={formData.opsTitle} onChange={e => setFormData({...formData, opsTitle: e.target.value})} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Highlight Description</label>
+              <textarea value={formData.opsParagraph} onChange={e => setFormData({...formData, opsParagraph: e.target.value})} rows={3} className={inputCls} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Orange Highlights (comma separated words to make orange)</label>
+              <input type="text" placeholder="e.g. faster, unified" value={formData.opsHighlights} onChange={e => setFormData({...formData, opsHighlights: e.target.value})} className={inputCls} />
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">Icon (SVG String)</label>
             <textarea value={formData.icon} onChange={e => setFormData({...formData, icon: e.target.value})} rows={2} className={`${inputCls} font-mono text-xs`} />
           </div>
+        </section>
+
+        {/* LEGACY SYSTEMS */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Legacy Systems Fail</h3>
+            <button type="button" onClick={() => addArrayItem('legacyItems', { title: '', body: '', stat: '', statLabel: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Legacy Item</button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Section Title</label>
+            <input type="text" placeholder="e.g. Where legacy systems *fail QSR*" value={formData.legacyTitle} onChange={e => setFormData({...formData, legacyTitle: e.target.value})} className={inputCls} />
+          </div>
+          {formData.legacyItems.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('legacyItems', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <input type="text" placeholder="Title (e.g. Lagging Inventory)" value={item.title} onChange={e => updateArrayItem('legacyItems', idx, 'title', e.target.value)} className={innerInputCls} />
+                <textarea placeholder="Body" rows={2} value={item.body} onChange={e => updateArrayItem('legacyItems', idx, 'body', e.target.value)} className={innerInputCls} />
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Stat (e.g. 40%)" value={item.stat} onChange={e => updateArrayItem('legacyItems', idx, 'stat', e.target.value)} className={innerInputCls} />
+                  <input type="text" placeholder="Stat Label" value={item.statLabel} onChange={e => updateArrayItem('legacyItems', idx, 'statLabel', e.target.value)} className={innerInputCls} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* MODERN WORKFLOW */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Modern Workflow</h3>
+            <button type="button" onClick={() => addArrayItem('workflowItems', { n: '', title: '', desc: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Workflow Item</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Section Title</label>
+              <input type="text" placeholder="e.g. A modern system should connect *every workflow automatically*" value={formData.workflowTitle} onChange={e => setFormData({...formData, workflowTitle: e.target.value})} className={inputCls} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Section Description</label>
+              <textarea rows={2} value={formData.workflowDesc} onChange={e => setFormData({...formData, workflowDesc: e.target.value})} className={inputCls} />
+            </div>
+          </div>
+          {formData.workflowItems.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('workflowItems', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <input type="text" placeholder="Number / Tag (e.g. 01 / Instant Routing)" value={item.n || item.title} onChange={e => { updateArrayItem('workflowItems', idx, 'title', e.target.value); updateArrayItem('workflowItems', idx, 'n', e.target.value); }} className={innerInputCls} />
+                <textarea placeholder="Description" rows={2} value={item.desc} onChange={e => updateArrayItem('workflowItems', idx, 'desc', e.target.value)} className={innerInputCls} />
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* EFFICIENCY GAINS */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Efficiency Gains (Stats)</h3>
+            <button type="button" onClick={() => addArrayItem('efficiencyItems', { value: '', label: '', desc: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Stat</button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Section Title</label>
+            <input type="text" placeholder="e.g. Quantifiable efficiency gains *recorded by our partners*" value={formData.efficiencyTitle} onChange={e => setFormData({...formData, efficiencyTitle: e.target.value})} className={inputCls} />
+          </div>
+          {formData.efficiencyItems.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('efficiencyItems', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Value (e.g. 15s)" value={item.value} onChange={e => updateArrayItem('efficiencyItems', idx, 'value', e.target.value)} className={innerInputCls} />
+                  <input type="text" placeholder="Label (e.g. Average Order Processing)" value={item.label} onChange={e => updateArrayItem('efficiencyItems', idx, 'label', e.target.value)} className={innerInputCls} />
+                </div>
+                <textarea placeholder="Description (e.g. Simplified queue busting...)" rows={2} value={item.desc} onChange={e => updateArrayItem('efficiencyItems', idx, 'desc', e.target.value)} className={innerInputCls} />
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* CONTROL SECTION */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Control Section</h3>
+            <button type="button" onClick={() => addArrayItem('controlItems', { title: '', desc: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Control Item</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Section Title</label>
+              <input type="text" placeholder="e.g. Total control over your *menu, staff and sales numbers*" value={formData.controlTitle} onChange={e => setFormData({...formData, controlTitle: e.target.value})} className={inputCls} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Section Description</label>
+              <textarea rows={3} value={formData.controlDesc} onChange={e => setFormData({...formData, controlDesc: e.target.value})} className={inputCls} />
+            </div>
+          </div>
+          {formData.controlItems.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('controlItems', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <input type="text" placeholder="Title (e.g. 100% cloud)" value={item.title} onChange={e => updateArrayItem('controlItems', idx, 'title', e.target.value)} className={innerInputCls} />
+                <textarea placeholder="Description" rows={2} value={item.desc} onChange={e => updateArrayItem('controlItems', idx, 'desc', e.target.value)} className={innerInputCls} />
+              </div>
+            </div>
+          ))}
         </section>
 
         {/* FEATURES */}
@@ -315,6 +566,23 @@ export default function AdminIndustryEditor({ params }: IndustryEditorProps) {
             <div key={idx} className="flex gap-3 items-center">
               <input type="text" placeholder={`Point ${idx + 1}`} value={item} onChange={e => updateArrayItem('whyChoose', idx, '', e.target.value)} className={`${innerInputCls} flex-1`} />
               <button type="button" onClick={() => removeArrayItem('whyChoose', idx)} className="text-red-500 hover:text-red-700 text-sm font-bold shrink-0">Remove</button>
+            </div>
+          ))}
+        </section>
+
+        {/* SECTION: FAQs */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Frequently Asked Questions</h3>
+            <button type="button" onClick={() => addArrayItem('faqs', { question: '', answer: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add FAQ</button>
+          </div>
+          {formData.faqs.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('faqs', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <input type="text" placeholder="Question" value={item.question} onChange={e => updateArrayItem('faqs', idx, 'question', e.target.value)} className={innerInputCls} />
+                <textarea placeholder="Answer" rows={2} value={item.answer} onChange={e => updateArrayItem('faqs', idx, 'answer', e.target.value)} className={innerInputCls} />
+              </div>
             </div>
           ))}
         </section>

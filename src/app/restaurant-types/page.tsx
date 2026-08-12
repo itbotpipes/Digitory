@@ -22,14 +22,22 @@ export default function IndustriesPage() {
             shortLabel: s.shortLabel || s.title || '',
             icon: null,
             title: s.title || '',
+            badge: s.badge || '',
             subtitle: s.subtitle || '',
             description: s.description || '',
+            ctaText: s.ctaText || 'Book a demo',
             trustText: s.trustText || 'Trusted by restaurants across India.',
             featuresTitle: s.featuresTitle || 'Key capabilities',
             features: s.features || [],
             whyChooseTitle: s.whyChooseTitle || 'Why choose Digitory?',
             whyChoose: s.whyChoose || [],
             ctaBlock: s.ctaBlock || { title: 'Ready to grow?', desc: 'Talk to us today.' },
+            image: s.image || '',
+            gridTitle: s.gridTitle || '',
+            gridDesc: s.gridDesc || '',
+            opsTitle: s.opsTitle || '',
+            opsParagraph: s.opsParagraph || '',
+            opsHighlights: s.opsHighlights || '',
           }));
 
           const merged = normalized.map(item => {
@@ -132,14 +140,23 @@ export default function IndustriesPage() {
                     ${!isLastInRow ? "md:border-r" : ""}
                   `}
                 >
-                  <div className="space-y-6">
+                  <div className="space-y-6 w-full">
                     {/* Header: Number and raw Icon */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-zinc-400 dark:text-zinc-600">0{idx + 1}</span>
-                      <div className="text-[#FF4F18] shrink-0">
-                        {item.icon}
+                    {!item.image && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-zinc-400 dark:text-zinc-600">0{idx + 1}</span>
+                        <div className="text-[#FF4F18] shrink-0">
+                          {item.icon}
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Dynamic Card Image if uploaded */}
+                    {item.image && (
+                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-6 border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-50 dark:bg-zinc-900">
+                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
 
                     {/* Title & Description */}
                     <div>

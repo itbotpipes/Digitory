@@ -8,8 +8,8 @@ import { useSearchParams } from 'next/navigation';
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const tabParam = searchParams?.get('tab') || 'leads';
-  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users', 'admins'].includes(tabParam)
-    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users' | 'admins')
+  const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users', 'admins', 'roles'].includes(tabParam)
+    ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users' | 'admins' | 'roles')
     : 'leads';
 
   const [data, setData] = useState<any[]>([]);
@@ -19,6 +19,12 @@ export default function AdminDashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', roleId: '' });
   const [creatingUser, setCreatingUser] = useState(false);
+
+  // Roles management states
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [editingRole, setEditingRole] = useState<any | null>(null);
+  const [roleForm, setRoleForm] = useState({ name: '', permissions: [] as string[] });
+  const [savingRole, setSavingRole] = useState(false);
 
   // Updates management states
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -77,10 +83,10 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    if (activeTab === 'users' || activeTab === 'admins') {
+    if (activeTab === 'users' || activeTab === 'admins' || activeTab === 'roles') {
       const token = localStorage.getItem('admin_token');
       if (token) {
-        api.get('/users/roles', token).then((res) => {
+        api.get('/roles', token).then((res) => {
           setRoles(res.data || []);
           if (res.data && res.data.length > 0 && !newUser.roleId) {
             setNewUser((prev) => ({ ...prev, roleId: res.data[0]._id }));
@@ -126,8 +132,55 @@ export default function AdminDashboard() {
       window.location.href = '/admin/login';
       return;
     }
+
+    // Verify tab permissions
+    const cachedPerms = localStorage.getItem('admin_permissions');
+    const cachedRoleName = localStorage.getItem('admin_role_name');
+    const isAdmin = cachedRoleName === 'Admin';
+    if (cachedPerms && !isAdmin) {
+      try {
+        const perms: string[] = JSON.parse(cachedPerms);
+        if (!perms.includes('*')) {
+          const tabPermissions: Record<string, string> = {
+            leads: 'manage_leads',
+            contacts: 'manage_contacts',
+            updates: 'manage_blogs',
+            blogs: 'manage_blogs',
+            solutions: 'manage_solutions',
+            industries: 'manage_industries',
+            comments: 'manage_comments',
+            users: 'manage_users',
+            admins: 'manage_users',
+            roles: 'manage_users'
+          };
+          const required = tabPermissions[activeTab];
+          if (required && !perms.includes(required)) {
+            // Redirect to first available tab they have permission for
+            const allowedTab = Object.keys(tabPermissions).find(tab => perms.includes(tabPermissions[tab]));
+            if (allowedTab) {
+              window.location.href = `/admin/dashboard?tab=${allowedTab}`;
+              return;
+            }
+          }
+        }
+      } catch (_) {}
+    }
+
     fetchData(token);
   }, [activeTab]);
+
+  const handleUpdateStatus = async (endpoint: 'demo-requests' | 'contact-messages', id: string, newStatus: string) => {
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      await api.patch(`/${endpoint}/${id}/status`, { status: newStatus }, token);
+      setData((prev: any) =>
+        prev.map((item: any) => (item._id === id ? { ...item, status: newStatus } : item))
+      );
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to update status');
+    }
+  };
 
   const fetchData = async (token: string) => {
     setLoading(true);
@@ -142,6 +195,7 @@ export default function AdminDashboard() {
       if (activeTab === 'comments') endpoint = '/comments';
       if (activeTab === 'users') endpoint = '/users?role=User';
       if (activeTab === 'admins') endpoint = '/users?role=Admin,Editor';
+      if (activeTab === 'roles') endpoint = '/roles';
 
       const res = await api.get(endpoint, token);
       setData(res.data?.docs || res.data?.results || res.data || []);
@@ -177,6 +231,56 @@ export default function AdminDashboard() {
     } catch (err: any) {
       console.error(err);
       alert(err.message || 'Failed to delete user');
+    }
+  };
+
+  const handleOpenCreateRole = () => {
+    setEditingRole(null);
+    setRoleForm({ name: '', permissions: [] });
+    setShowRoleModal(true);
+  };
+
+  const handleOpenEditRole = (role: any) => {
+    setEditingRole(role);
+    setRoleForm({ name: role.name, permissions: role.permissions || [] });
+    setShowRoleModal(true);
+  };
+
+  const handleDeleteRole = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this role?')) return;
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      await api.delete(`/roles/${id}`, token);
+      setData((prev) => prev.filter((item: any) => item._id !== id));
+      alert('Role deleted successfully');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to delete role');
+    }
+  };
+
+  const handleSaveRole = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingRole(true);
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      if (editingRole) {
+        const res = await api.put(`/roles/${editingRole._id}`, roleForm, token);
+        const updated = res.data?.doc || res.data || res;
+        setData((prev) => prev.map((item: any) => item._id === editingRole._id ? updated : item));
+        alert('Role updated successfully');
+      } else {
+        const res = await api.post('/roles', roleForm, token);
+        const created = res.data?.doc || res.data || res;
+        setData((prev) => [created, ...prev]);
+        alert('Role created successfully');
+      }
+      setShowRoleModal(false);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Failed to save role');
+    } finally {
+      setSavingRole(false);
     }
   };
 
@@ -348,13 +452,29 @@ export default function AdminDashboard() {
               </Link>
             </div>
           )}
-          {activeTab === 'users' && (
-            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
+          {activeTab === 'admins' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between bg-zinc-50/50 dark:bg-black/20">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Admin & staff accounts with panel access</p>
               <button 
                 onClick={() => setShowCreateModal(true)} 
                 className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200"
               >
-                + Create New User
+                + Create New Admin
+              </button>
+            </div>
+          )}
+          {activeTab === 'users' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-black/20">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Public users who signed up via the blog comments section</p>
+            </div>
+          )}
+          {activeTab === 'roles' && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
+              <button 
+                onClick={handleOpenCreateRole} 
+                className="bg-[#FF4F18] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-[#E03F0D] transition-colors shadow-[0_4px_14px_rgba(255,79,24,0.35)] hover:shadow-[0_6px_20px_rgba(255,79,24,0.4)] transform hover:-translate-y-0.5 duration-200"
+              >
+                + Create New Role
               </button>
             </div>
           )}
@@ -380,6 +500,7 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Phone</th>
                       <th className="px-6 py-4 font-semibold">Interested In</th>
                       <th className="px-6 py-4 font-semibold">Message</th>
+                      <th className="px-6 py-4 font-semibold">Status</th>
                     </>
                   )}
                   {activeTab === 'updates' && (
@@ -430,6 +551,13 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
+                  {activeTab === 'roles' && (
+                    <>
+                      <th className="px-6 py-4 font-semibold">Role Name</th>
+                      <th className="px-6 py-4 font-semibold">Permissions</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
+                    </>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60">
@@ -443,9 +571,18 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4">{item.locations}</td>
                         <td className="px-6 py-4 max-w-[200px] truncate">{item.goal}</td>
                         <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${item.status === 'New' ? 'bg-[#FFF3EF] text-[#FF4F18] dark:bg-orange-500/10 dark:text-orange-400' : 'bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400'}`}>
-                            {item.status}
-                          </span>
+                          <select
+                            value={item.status === 'Contacted' || item.status === 'Closed' || item.status === 'Qualified' ? 'Contacted' : 'Not Contacted'}
+                            onChange={(e) => handleUpdateStatus('demo-requests', item._id, e.target.value === 'Contacted' ? 'Contacted' : 'New')}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FF4F18] ${
+                              item.status === 'Contacted' || item.status === 'Closed' || item.status === 'Qualified'
+                                ? 'bg-green-50 text-green-600 dark:bg-green-950/20 dark:text-green-400'
+                                : 'bg-orange-50 text-[#FF4F18] dark:bg-orange-950/20'
+                            }`}
+                          >
+                            <option value="Not Contacted">Not Contacted</option>
+                            <option value="Contacted">Contacted</option>
+                          </select>
                         </td>
                       </>
                     )}
@@ -456,6 +593,20 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4">{item.phone}</td>
                         <td className="px-6 py-4">{item.interested}</td>
                         <td className="px-6 py-4 max-w-[300px] truncate">{item.message}</td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={item.status === 'Resolved' ? 'Contacted' : 'Not Contacted'}
+                            onChange={(e) => handleUpdateStatus('contact-messages', item._id, e.target.value === 'Contacted' ? 'Resolved' : 'New')}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FF4F18] ${
+                              item.status === 'Resolved'
+                                ? 'bg-green-50 text-green-600 dark:bg-green-950/20 dark:text-green-400'
+                                : 'bg-orange-50 text-[#FF4F18] dark:bg-orange-950/20'
+                            }`}
+                          >
+                            <option value="Not Contacted">Not Contacted</option>
+                            <option value="Contacted">Contacted</option>
+                          </select>
+                        </td>
                       </>
                     )}
                     {activeTab === 'updates' && (
@@ -470,13 +621,13 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 space-x-2">
                           <button 
                             onClick={() => handleOpenEditUpdate(item)} 
-                            className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="text-[#FF4F18] font-bold hover:underline transition-opacity"
                           >
                             Edit
                           </button>
                           <button 
                             onClick={() => handleDeleteUpdate(item._id)} 
-                            className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                            className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors"
                           >
                             Delete
                           </button>
@@ -493,7 +644,7 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4">
-                          <Link href={`/admin/blogs/${item._id}`} className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link href={`/admin/blogs/${item._id}`} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
                             Edit Post
                           </Link>
                         </td>
@@ -504,7 +655,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
                         <td className="px-6 py-4">{item.slug}</td>
                         <td className="px-6 py-4">
-                          <Link href={`/admin/solutions/${item._id}`} className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link href={`/admin/solutions/${item._id}`} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
                             Edit Solution
                           </Link>
                         </td>
@@ -515,7 +666,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
                         <td className="px-6 py-4">{item.slug}</td>
                         <td className="px-6 py-4">
-                          <Link href={`/admin/industries/${item._id}`} className="text-[#FF4F18] font-bold hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link href={`/admin/industries/${item._id}`} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
                             Edit Industry
                           </Link>
                         </td>
@@ -528,7 +679,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 max-w-[200px] truncate">{item.post?.title || 'Unknown Post'}</td>
                         <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
                         <td className="px-6 py-4">
-                          <button onClick={() => handleDeleteComment(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleDeleteComment(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors">
                             Delete
                           </button>
                         </td>
@@ -545,7 +696,27 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
                         <td className="px-6 py-4">
-                          <button onClick={() => handleDeleteUser(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleDeleteUser(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors">
+                            Delete
+                          </button>
+                        </td>
+                      </>
+                    )}
+                    {activeTab === 'roles' && (
+                      <>
+                        <td className="px-6 py-4 font-medium">{item.name}</td>
+                        <td className="px-6 py-4 max-w-[400px] truncate">{item.permissions?.join(', ') || 'None'}</td>
+                        <td className="px-6 py-4 space-x-2">
+                          <button 
+                            onClick={() => handleOpenEditRole(item)} 
+                            className="text-[#FF4F18] font-bold hover:underline transition-opacity"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteRole(item._id)} 
+                            className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors"
+                          >
                             Delete
                           </button>
                         </td>
@@ -570,7 +741,8 @@ export default function AdminDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setShowCreateModal(false)} />
           <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl z-10">
-            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-6">Create New User</h2>
+            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-2">Create New Admin</h2>
+            <p className="text-xs text-zinc-500 mb-6">Create a staff account with access to the admin panel.</p>
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Name</label>
@@ -615,7 +787,7 @@ export default function AdminDashboard() {
                   className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white cursor-pointer"
                 >
                   <option value="" disabled>Select Role</option>
-                  {roles.map((role) => (
+                  {roles.filter((role) => role.name !== 'User').map((role) => (
                     <option key={role._id} value={role._id}>{role.name}</option>
                   ))}
                 </select>
@@ -786,6 +958,82 @@ export default function AdminDashboard() {
                   className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
                 >
                   {savingUpdate ? 'Saving...' : (editingUpdate ? 'Save Changes' : 'Create')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Role Create/Edit Modal */}
+      {showRoleModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-[#111111] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 w-full max-w-md shadow-2xl animate-scale-up">
+            <h3 className="text-xl font-bold mb-4 text-[#111111] dark:text-white">
+              {editingRole ? 'Edit Role' : 'Create New Role'}
+            </h3>
+            <form onSubmit={handleSaveRole} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Role Name</label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="e.g. Content Writer"
+                  value={roleForm.name} 
+                  onChange={e => setRoleForm({ ...roleForm, name: e.target.value })} 
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" 
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Permissions</label>
+                <div className="space-y-2 max-h-60 overflow-y-auto border border-zinc-150 dark:border-zinc-800 rounded-xl p-3 bg-zinc-50 dark:bg-zinc-950/20">
+                  {[
+                    { val: 'manage_solutions', label: 'Manage Solutions' },
+                    { val: 'manage_industries', label: 'Manage Industries' },
+                    { val: 'manage_blogs', label: 'Manage Announcements & Blogs' },
+                    { val: 'manage_comments', label: 'Manage Comments' },
+                    { val: 'manage_leads', label: 'Manage Leads & Demos' },
+                    { val: 'manage_contacts', label: 'Manage Contacts' },
+                    { val: 'manage_users', label: 'Manage Users & Roles' },
+                    { val: '*', label: 'Super Admin (All Access)' }
+                  ].map(perm => (
+                    <label key={perm.val} className="flex items-center gap-2.5 text-sm font-semibold cursor-pointer">
+                      <input 
+                        type="checkbox"
+                        checked={roleForm.permissions.includes(perm.val)}
+                        onChange={e => {
+                          const checked = e.target.checked;
+                          let nextPerms = [...roleForm.permissions];
+                          if (checked) {
+                            nextPerms.push(perm.val);
+                          } else {
+                            nextPerms = nextPerms.filter(p => p !== perm.val);
+                          }
+                          setRoleForm({ ...roleForm, permissions: nextPerms });
+                        }}
+                        className="rounded text-[#FF4F18] focus:ring-[#FF4F18]"
+                      />
+                      <span>{perm.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowRoleModal(false)}
+                  className="flex-1 px-4 py-2.5 font-bold text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={savingRole}
+                  className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+                >
+                  {savingRole ? 'Saving...' : (editingRole ? 'Save Changes' : 'Create')}
                 </button>
               </div>
             </form>

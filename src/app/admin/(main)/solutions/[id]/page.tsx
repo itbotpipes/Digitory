@@ -38,6 +38,14 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
     supportItems: [] as string[],
     securityItems: [] as string[],
     ctaBlock: { title: '', desc: '' },
+    category: '',
+    layerTitle: '',
+    layerDesc: '',
+    metricsTitle: '',
+    metricsItems: [] as any[],
+    businessTypesTitle: '',
+    businessTypesDesc: '',
+    faqs: [] as any[],
   });
 
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -93,6 +101,18 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
       window.location.href = '/admin/login';
       return;
     }
+
+    const cachedPerms = localStorage.getItem('admin_permissions');
+    if (cachedPerms) {
+      try {
+        const perms: string[] = JSON.parse(cachedPerms);
+        if (!perms.includes('*') && !perms.includes('manage_solutions')) {
+          alert('You do not have permission to manage solutions');
+          window.location.href = '/admin/dashboard';
+          return;
+        }
+      } catch (_) {}
+    }
     
     if (!isNew) {
       fetchSolution(token);
@@ -129,6 +149,14 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
         supportItems: s.supportItems || [],
         securityItems: s.securityItems || [],
         ctaBlock: s.ctaBlock || { title: '', desc: '' },
+        category: s.category || '',
+        layerTitle: s.layerTitle || '',
+        layerDesc: s.layerDesc || '',
+        metricsTitle: s.metricsTitle || '',
+        metricsItems: s.metricsItems || [],
+        businessTypesTitle: s.businessTypesTitle || '',
+        businessTypesDesc: s.businessTypesDesc || '',
+        faqs: s.faqs || [],
       });
     } catch (err) {
       console.error(err);
@@ -214,6 +242,10 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
         </div>
       )}
 
+      <div className="p-4 bg-orange-50 dark:bg-orange-900/20 text-[#FF4F18] rounded-xl mb-8 font-medium text-sm border border-orange-100 dark:border-orange-800/30">
+        💡 <strong>Pro Tip:</strong> In any Title field below, you can wrap words in asterisks to make them orange on the website! For example: <code>Real operational *outcomes & metrics*</code>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-12">
         {/* SECTION: BASIC INFO */}
         <section className="space-y-6">
@@ -236,6 +268,15 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
                 value={formData.slug}
                 onChange={e => setFormData({...formData, slug: e.target.value})}
                 required
+                className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Category (e.g. core, frontend, etc.)</label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={e => setFormData({...formData, category: e.target.value})}
                 className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18]"
               />
             </div>
@@ -450,11 +491,50 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
           ))}
         </section>
 
+        {/* SECTION: UNIFIED LAYER */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <h3 className="text-lg font-extrabold text-[#FF4F18]">Unified Layer Section</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Layer Section Title</label>
+              <input type="text" placeholder="e.g. One unified layer, *infinite control*" value={formData.layerTitle} onChange={e => setFormData({...formData, layerTitle: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Layer Section Description</label>
+              <textarea rows={2} value={formData.layerDesc} onChange={e => setFormData({...formData, layerDesc: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: OUTCOMES & METRICS */}
+        <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Outcomes & Metrics</h3>
+            <button type="button" onClick={() => addArrayItem('metricsItems', { value: '', label: '', desc: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Metric</button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Metrics Section Title</label>
+            <input type="text" placeholder="e.g. Real operational *outcomes & metrics*" value={formData.metricsTitle} onChange={e => setFormData({...formData, metricsTitle: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
+          </div>
+          {formData.metricsItems.map((item: any, idx: number) => (
+            <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
+              <button type="button" onClick={() => removeArrayItem('metricsItems', idx)} className="absolute top-4 right-4 text-red-500 hover:text-red-700 text-sm font-bold">Remove</button>
+              <div className="space-y-3 pr-16">
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Value (e.g. 22%)" value={item.value} onChange={e => updateArrayItem('metricsItems', idx, 'value', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                  <input type="text" placeholder="Label (e.g. Faster Table Turnover)" value={item.label} onChange={e => updateArrayItem('metricsItems', idx, 'label', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                </div>
+                <textarea placeholder="Description" rows={2} value={item.desc} onChange={e => updateArrayItem('metricsItems', idx, 'desc', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+              </div>
+            </div>
+          ))}
+        </section>
+
         {/* SECTION: FEATURES */}
         <section className="space-y-4 pt-6 border-t border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-extrabold text-[#FF4F18]">Features</h3>
-            <button type="button" onClick={() => addArrayItem('features', { title: '', desc: '', icon: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Feature</button>
+            <h3 className="text-lg font-extrabold text-[#FF4F18]">Features (Interactive Modules)</h3>
+            <button type="button" onClick={() => addArrayItem('features', { title: '', desc: '', icon: '', speed: '', accuracy: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Feature</button>
           </div>
           <input type="text" placeholder="Features Section Title" value={formData.featuresTitle} onChange={e => setFormData({...formData, featuresTitle: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
           
@@ -464,6 +544,10 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
               <div className="space-y-4 pr-16">
                 <input type="text" placeholder="Feature Title" value={item.title} onChange={e => updateArrayItem('features', idx, 'title', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
                 <textarea placeholder="Feature Description" rows={2} value={item.desc} onChange={e => updateArrayItem('features', idx, 'desc', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="Simulator Speed (e.g. 12ms)" value={item.speed || ''} onChange={e => updateArrayItem('features', idx, 'speed', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                  <input type="text" placeholder="Simulator Accuracy (e.g. 99.8%)" value={item.accuracy || ''} onChange={e => updateArrayItem('features', idx, 'accuracy', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                </div>
                 <textarea placeholder="Icon SVG (optional)" rows={1} value={item.icon} onChange={e => updateArrayItem('features', idx, 'icon', e.target.value)} className="w-full font-mono text-xs px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
               </div>
             </div>
@@ -475,6 +559,10 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-extrabold text-[#FF4F18]">Business Types</h3>
             <button type="button" onClick={() => addArrayItem('businessTypes', { name: '', desc: '', icon: '' })} className="text-sm font-bold bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700">+ Add Business Type</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" placeholder="Section Title (e.g. Built for every kind of *food business*)" value={formData.businessTypesTitle} onChange={e => setFormData({...formData, businessTypesTitle: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
+            <textarea placeholder="Section Description" rows={2} value={formData.businessTypesDesc} onChange={e => setFormData({...formData, businessTypesDesc: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900" />
           </div>
           {formData.businessTypes.map((item, idx) => (
             <div key={idx} className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 relative">
@@ -505,9 +593,51 @@ export default function AdminSolutionEditor({ params }: SolutionEditorProps) {
           </div>
           
           <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-sm">Support Items (Bullet Points)</h4>
+              <button type="button" onClick={() => addArrayItem('supportItems', '')} className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded hover:bg-zinc-200">- Add Support Point</button>
+            </div>
+            {formData.supportItems.map((item, idx) => (
+              <div key={idx} className="flex gap-2 items-center">
+                <input type="text" placeholder={`Support point ${idx + 1}`} value={item} onChange={e => updateArrayItem('supportItems', idx, '', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                <button type="button" onClick={() => removeArrayItem('supportItems', idx)} className="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-sm">Security Items (Bullet Points)</h4>
+              <button type="button" onClick={() => addArrayItem('securityItems', '')} className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded hover:bg-zinc-200">- Add Security Point</button>
+            </div>
+            {formData.securityItems.map((item, idx) => (
+              <div key={idx} className="flex gap-2 items-center">
+                <input type="text" placeholder={`Security point ${idx + 1}`} value={item} onChange={e => updateArrayItem('securityItems', idx, '', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+                <button type="button" onClick={() => removeArrayItem('securityItems', idx)} className="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+              </div>
+            ))}
+          </div>
+          
+          <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-4">
             <h4 className="font-bold text-sm">Bottom CTA Block</h4>
             <input type="text" placeholder="Title" value={formData.ctaBlock.title} onChange={e => updateObjectField('ctaBlock', 'title', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
             <textarea placeholder="Description" rows={2} value={formData.ctaBlock.desc} onChange={e => updateObjectField('ctaBlock', 'desc', e.target.value)} className="w-full px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900" />
+          </div>
+
+          <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-bold text-sm">Frequently Asked Questions (FAQs)</h4>
+              <button type="button" onClick={() => addArrayItem('faqs', { question: '', answer: '' })} className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded hover:bg-zinc-200">+ Add FAQ</button>
+            </div>
+            {formData.faqs.map((item: any, idx: number) => (
+              <div key={idx} className="bg-zinc-100/50 dark:bg-zinc-800/50 p-3 rounded-lg border border-zinc-200/50 dark:border-zinc-700/50 relative">
+                <button type="button" onClick={() => removeArrayItem('faqs', idx)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+                <div className="space-y-2 pr-12">
+                  <input type="text" placeholder="Question" value={item.question} onChange={e => updateArrayItem('faqs', idx, 'question', e.target.value)} className="w-full px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 text-sm bg-white dark:bg-zinc-900" />
+                  <textarea placeholder="Answer" rows={2} value={item.answer} onChange={e => updateArrayItem('faqs', idx, 'answer', e.target.value)} className="w-full px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 text-sm bg-white dark:bg-zinc-900" />
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

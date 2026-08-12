@@ -9,6 +9,8 @@ export interface FeatureItem {
   title: string;
   desc: string;
   icon?: React.ReactNode;
+  speed?: string;
+  accuracy?: string;
 }
 
 export interface BusinessTypeItem {
@@ -25,6 +27,7 @@ export interface IntegrationCategory {
 export interface SolutionData {
   id: string;
   slug?: string;
+  category?: string;
   shortLabel: string;
   icon: React.ReactNode;
   title: string;
@@ -55,6 +58,14 @@ export interface SolutionData {
     title: string;
     desc: string;
   };
+
+  layerTitle?: string;
+  layerDesc?: string;
+  metricsTitle?: string;
+  metricsItems?: { value: string; label: string; desc: string }[];
+  faqs?: { question: string; answer: string }[];
+  businessTypesTitle?: string;
+  businessTypesDesc?: string;
 }
 
 const icons = {

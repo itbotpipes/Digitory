@@ -25,6 +25,30 @@ export interface IndustryData {
     desc: string;
   };
   heroImage?: string;
+  image?: string;
+  heroTitle?: string;
+  badge?: string;
+  ctaText?: string;
+  gridTitle?: string;
+  gridDesc?: string;
+  opsTitle?: string;
+  opsParagraph?: string;
+  opsHighlights?: string;
+
+  legacyTitle?: string;
+  legacyItems?: { title: string; body: string; stat: string; statLabel: string }[];
+
+  workflowTitle?: string;
+  workflowDesc?: string;
+  workflowItems?: { n: string; title: string; desc: string }[];
+
+  controlTitle?: string;
+  controlDesc?: string;
+  controlItems?: { title: string; desc: string }[];
+
+  efficiencyTitle?: string;
+  efficiencyItems?: { value: string; label: string; desc: string }[];
+  faqs?: { question: string; answer: string }[];
 }
 
 const icons = {

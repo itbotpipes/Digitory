@@ -8,6 +8,29 @@ import InsightsPage from '../../../components/home/Insights';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
 import { api } from '@/lib/api';
 
+/**
+ * Helper to render highlighted text. 
+ * E.g., "This is *highlighted* text" -> "This is <span className="text-[#FF4F18]">highlighted</span> text"
+ */
+function renderHighlightedText(text: string) {
+  if (!text) return null;
+  const parts = text.split(/(\*[^*]+\*)/g);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('*') && part.endsWith('*')) {
+          return (
+            <span key={index} className="text-[#FF4F18]">
+              {part.slice(1, -1)}
+            </span>
+          );
+        }
+        return <React.Fragment key={index}>{part}</React.Fragment>;
+      })}
+    </>
+  );
+}
+
 function DynamicSolutionDetailContent({ slug }: { slug: string }) {
   const [activeKey, setActiveKey] = useState<string>("pos");
   const [solutionsList, setSolutionsList] = useState<SolutionData[]>([]);
@@ -35,6 +58,7 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
             opsParagraph: s.opsParagraph || '',
             opsHighlights: s.opsHighlights || '',
             icon: s.icon || '',
+            category: s.category || '',
             whyChoose: s.whyChoose || [],
             featuresTitle: s.featuresTitle || 'Key Capabilities',
             features: s.features || [],
@@ -44,7 +68,13 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
             extraOwnersChoice: s.extraOwnersChoice,
             supportItems: s.supportItems || [],
             securityItems: s.securityItems || [],
-            ctaBlock: s.ctaBlock || { title: 'Ready to upgrade?', desc: 'Talk to us today' }
+            ctaBlock: s.ctaBlock || { title: 'Ready to upgrade?', desc: 'Talk to us today' },
+            layerTitle: s.layerTitle || '',
+            layerDesc: s.layerDesc || '',
+            metricsTitle: s.metricsTitle || '',
+            metricsItems: s.metricsItems || [],
+            businessTypesTitle: s.businessTypesTitle || '',
+            businessTypesDesc: s.businessTypesDesc || ''
           }));
           setSolutionsList(normalized);
         } else {
@@ -117,20 +147,24 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
             <div className="lg:col-span-7 flex flex-col justify-center space-y-6 md:space-y-8 text-left">
               <div className="max-w-xl space-y-6 md:space-y-8">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-                  {(() => {
-                    const words = (solution.title || '').split(' ');
-                    if (words.length <= 1) return solution.title;
-                    const highlightCount = words.length >= 3 ? 2 : 1;
-                    const splitIndex = words.length - highlightCount;
-                    const normalText = words.slice(0, splitIndex).join(' ');
-                    const orangeText = words.slice(splitIndex).join(' ');
-                    return (
-                      <>
-                        {normalText}{' '}
-                        <span className="text-[#FF4F18]">{orangeText}</span>
-                      </>
-                    );
-                  })()}
+                  {solution.title && solution.title.includes('*') ? (
+                    renderHighlightedText(solution.title)
+                  ) : (
+                    (() => {
+                      const words = (solution.title || '').split(' ');
+                      if (words.length <= 1) return solution.title;
+                      const highlightCount = words.length >= 3 ? 2 : 1;
+                      const splitIndex = words.length - highlightCount;
+                      const normalText = words.slice(0, splitIndex).join(' ');
+                      const orangeText = words.slice(splitIndex).join(' ');
+                      return (
+                        <>
+                          {normalText}{' '}
+                          <span className="text-[#FF4F18]">{orangeText}</span>
+                        </>
+                      );
+                    })()
+                  )}
                 </h1>
 
                 <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed">
@@ -223,13 +257,13 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
                         <div>
                           <span className="block text-[8px] uppercase tracking-wider text-zinc-400">Response Speed</span>
                           <span className="text-zinc-900 dark:text-white font-extrabold">
-                            {activeFeatureIdx === 0 ? "12ms" : activeFeatureIdx === 1 ? "18ms" : "24ms"}
+                            {activeFeature.speed || (activeFeatureIdx === 0 ? "12ms" : activeFeatureIdx === 1 ? "18ms" : "24ms")}
                           </span>
                         </div>
                         <div>
                           <span className="block text-[8px] uppercase tracking-wider text-zinc-400">Accuracy Rate</span>
                           <span className="text-zinc-900 dark:text-white font-extrabold">
-                            {activeFeatureIdx === 0 ? "99.8%" : activeFeatureIdx === 1 ? "99.4%" : "99.9%"}
+                            {activeFeature.accuracy || (activeFeatureIdx === 0 ? "99.8%" : activeFeatureIdx === 1 ? "99.4%" : "99.9%")}
                           </span>
                         </div>
                       </div>
@@ -285,12 +319,16 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start mb-12">
             <div className="lg:col-span-7">
               <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                One unified layer, <span className="text-[#FF4F18]">infinite control</span>
+                {solution.layerTitle ? (
+                  renderHighlightedText(solution.layerTitle)
+                ) : (
+                  <>One unified layer, <span className="text-[#FF4F18]">infinite control</span></>
+                )}
               </h2>
             </div>
             <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed lg:pt-2">
               <p>
-                Digitory works as a smart, real-time operating layer. We interface directly with POS, inventory levels, recipe configurations, and KDS monitors to automate every task seamlessly.
+                {solution.layerDesc || "Digitory works as a smart, real-time operating layer. We interface directly with POS, inventory levels, recipe configurations, and KDS monitors to automate every task seamlessly."}
               </p>
             </div>
           </div>
@@ -323,20 +361,24 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
           <div className="mx-auto max-w-7xl px-6 md:px-8">
             <div className="text-left mb-12">
               <h3 className="text-3xl sm:text-4xl md:text-[44px] font-[850] text-[#111111] dark:text-white tracking-tight mt-2 leading-[1.15]">
-                {(() => {
-                  const words = (solution.featuresTitle || 'Key Capabilities').split(' ');
-                  if (words.length <= 1) return solution.featuresTitle;
-                  const highlightCount = words.length >= 3 ? 2 : 1;
-                  const splitIndex = words.length - highlightCount;
-                  const normalText = words.slice(0, splitIndex).join(' ');
-                  const orangeText = words.slice(splitIndex).join(' ');
-                  return (
-                    <>
-                      {normalText}{' '}
-                      <span className="text-[#FF4F18]">{orangeText}</span>
-                    </>
-                  );
-                })()}
+                {solution.featuresTitle && solution.featuresTitle.includes('*') ? (
+                  renderHighlightedText(solution.featuresTitle)
+                ) : (
+                  (() => {
+                    const words = (solution.featuresTitle || 'Key Capabilities').split(' ');
+                    if (words.length <= 1) return solution.featuresTitle;
+                    const highlightCount = words.length >= 3 ? 2 : 1;
+                    const splitIndex = words.length - highlightCount;
+                    const normalText = words.slice(0, splitIndex).join(' ');
+                    const orangeText = words.slice(splitIndex).join(' ');
+                    return (
+                      <>
+                        {normalText}{' '}
+                        <span className="text-[#FF4F18]">{orangeText}</span>
+                      </>
+                    );
+                  })()
+                )}
               </h3>
             </div>
 
@@ -378,17 +420,21 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 text-left">
           <div className="mb-16 md:mb-20 text-center">
             <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-              Real operational <span className="text-[#FF4F18]">outcomes & metrics</span>
+              {solution.metricsTitle ? (
+                renderHighlightedText(solution.metricsTitle)
+              ) : (
+                <>Real operational <span className="text-[#FF4F18]">outcomes & metrics</span></>
+              )}
             </h2>
           </div>
 
           <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
-            {[
+            {(solution.metricsItems && solution.metricsItems.length > 0 ? solution.metricsItems : [
               { value: "22%", label: "Faster Table Turnover", desc: "Reduce wait times during peak shifts" },
               { value: "32%", label: "Less Ingredient Waste", desc: "Optimise portions & control recipes" },
               { value: "98%", label: "KDS Accuracy", desc: "Eliminate order errors & lost tickets" },
               { value: "15 hrs", label: "Saved Weekly", desc: "Cut manual inventory check stress" }
-            ].map((stat, idx) => (
+            ]).map((stat, idx) => (
               <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
                 <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
                   <span className="text-[#FF4F18]">{stat.value}</span>
@@ -411,12 +457,16 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-16 items-start">
                 <div className="lg:col-span-7">
                   <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                    Built for every kind of <span className="text-[#FF4F18]">food business</span>
+                    {solution.businessTypesTitle ? (
+                      renderHighlightedText(solution.businessTypesTitle)
+                    ) : (
+                      <>Built for every kind of <span className="text-[#FF4F18]">food business</span></>
+                    )}
                   </h2>
                 </div>
                 <div className="lg:col-span-5 text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed lg:pt-2">
                   <p>
-                    No matter what type of food or beverage business you run, Digitory adapts to your operations, inventory configurations, and team roles.
+                    {solution.businessTypesDesc || "No matter what type of food or beverage business you run, Digitory adapts to your operations, inventory configurations, and team roles."}
                   </p>
                 </div>
               </div>
@@ -496,7 +546,7 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
         )}
 
         {/* 9. FAQs Section */}
-        <SolutionsDetailsFaq />
+        <SolutionsDetailsFaq items={solution.faqs} />
 
         {/* 10. Latest Insights Section */}
         <InsightsPage />
@@ -566,50 +616,45 @@ export default function SolutionsDetailsAllInOne({ params }: { params: Promise<{
   );
 }
 
-function SolutionsDetailsFaq() {
-  const [openId, setOpenId] = useState<number | null>(1);
+function SolutionsDetailsFaq({ items }: { items?: { question: string; answer: string }[] }) {
+  const [openId, setOpenId] = useState<number | null>(0);
 
   const handleToggle = (id: number) => {
     setOpenId(prev => (prev === id ? null : id));
   };
 
-  const FAQ_ITEMS = [
+  const defaultFaqs = [
     {
-      id: 1,
       question: "How does Digitory manage orders from different platforms?",
       answer: "Whether it's dine-in, online orders, QR or direct orders, everything flows into one connected system, so you never have to switch between multiple apps."
     },
     {
-      id: 2,
       question: "How does the kitchen stay in sync during rush hours?",
       answer: "Orders are sent to the right kitchen station instantly, reducing communication gaps, delays and missed tickets when every second counts."
     },
     {
-      id: 3,
       question: "Can Digitory help reduce inventory wastage?",
       answer: "Yes. Inventory updates automatically with every sale, helping you track stock movement, reduce wastage and protect your margins."
     },
     {
-      id: 4,
       question: "Can I manage customer loyalty and repeat business?",
       answer: "Absolutely. Build customer profiles, run loyalty programs and targeted campaigns that keep guests coming back."
     },
     {
-      id: 5,
       question: "Will I get real-time reports and insights?",
       answer: "Yes. Monitor sales, inventory, outlet performance and business trends in real time, so you can make faster, data-backed decisions."
     },
     {
-      id: 6,
       question: "Can I manage multiple outlets from one dashboard?",
       answer: "Yes. Compare outlet performance, monitor operations, and track key metrics across all your locations without chasing managers for updates."
     },
     {
-      id: 7,
       question: "Will billing slow us down during peak hours?",
       answer: "Not at all. Digitory is built for handling chaos better, helping your team bill faster, reducing queues, and keeping operations moving smoothly during rush hours."
     }
   ];
+
+  const listToRender = items && items.length > 0 ? items : defaultFaqs;
 
   return (
     <div className="bg-white dark:bg-[#0d0d0e] font-sans antialiased text-[#111111] dark:text-white py-10 md:py-16">
@@ -620,19 +665,20 @@ function SolutionsDetailsFaq() {
           </h2>
         </div>
 
-        <div className="max-w-4xl mx-auto border-t border-zinc-100 dark:border-zinc-800">
-          {FAQ_ITEMS.map((item) => {
-            const isOpen = openId === item.id;
+        <div className="max-w-4xl mx-auto border-t border-zinc-150 dark:border-zinc-800">
+          {listToRender.map((item, idx) => {
+            const isOpen = openId === idx;
             return (
               <div
-                key={item.id}
-                className="border-b border-zinc-100 dark:border-zinc-800"
+                key={idx}
+                className="border-b border-zinc-150 dark:border-zinc-800"
               >
                 <button
-                  onClick={() => handleToggle(item.id)}
+                  type="button"
+                  onClick={() => handleToggle(idx)}
                   className="w-full flex items-center justify-between py-6 text-left outline-none cursor-pointer group"
                 >
-                  <span className="text-[16px] sm:text-[18px] font-bold text-[#111111] dark:text-white pr-6 transition-colors duration-200 group-hover:text-zinc-600">
+                  <span className="text-[16px] sm:text-[18px] font-bold text-[#111111] dark:text-white pr-6 transition-colors duration-200 group-hover:text-zinc-650">
                     {item.question}
                   </span>
 
