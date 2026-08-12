@@ -19,6 +19,7 @@ export default function Capabilities() {
   const [features, setFeatures] = useState<FeatureItem[]>([]);
   const [gridTitle, setGridTitle] = useState('Twelve powerful features to help your restaurant run better');
   const [gridDesc, setGridDesc] = useState('Click on any feature card below to open its full specifications and details on a new page.');
+  const [loading, setLoading] = useState(true);
 
   const featureItems: FeatureItem[] = [
     {
@@ -156,8 +157,6 @@ export default function Capabilities() {
   ];
 
   useEffect(() => {
-    setFeatures(featureItems);
-
     async function loadSolutions() {
       try {
         const res = await api.get('/solutions?limit=30');
@@ -195,9 +194,14 @@ export default function Capabilities() {
           } else {
             setFeatures(reindexed);
           }
+        } else {
+          setFeatures(featureItems);
         }
       } catch (err) {
         console.warn('Failed to load solutions from backend:', err);
+        setFeatures(featureItems);
+      } finally {
+        setLoading(false);
       }
     }
     async function loadSettings() {
@@ -219,6 +223,45 @@ export default function Capabilities() {
     // Use the dynamic routing system for solution details
     router.push(`/solutions/${featureId}`);
   };
+
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">
+        {/* Header Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 mb-12 md:mb-16 items-start">
+          <div className="lg:col-span-7">
+            <div className="h-10 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded-lg animate-pulse" />
+          </div>
+          <div className="lg:col-span-5 lg:pt-2">
+            <div className="h-6 w-full bg-zinc-200 dark:bg-zinc-800 rounded-lg animate-pulse mb-2" />
+            <div className="h-6 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded-lg animate-pulse" />
+          </div>
+        </div>
+
+        {/* Grid Container Skeleton */}
+        <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
+          {Array.from({ length: 12 }).map((_, idx) => (
+            <div
+              key={idx}
+              className={`p-8 sm:p-10 flex flex-col justify-start border-zinc-200/60 dark:border-zinc-800/60 animate-pulse
+                ${idx !== 11 ? "border-b" : ""}
+                ${idx >= 9 ? "md:border-b-0" : ""}
+                ${idx % 3 !== 2 ? "md:border-r" : ""}
+              `}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="h-4 w-6 bg-zinc-200 dark:bg-zinc-800 rounded" />
+                <div className="h-6 w-6 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+              </div>
+              <div className="h-5 w-1/2 bg-zinc-200 dark:bg-zinc-800 rounded mb-4" />
+              <div className="h-4 w-full bg-zinc-200 dark:bg-zinc-800 rounded mb-2" />
+              <div className="h-4 w-5/6 bg-zinc-200 dark:bg-zinc-800 rounded" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16">

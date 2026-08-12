@@ -125,7 +125,7 @@ export default function OperationsReveal({
 
           {/* Centered Scroll Reveal Paragraph */}
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg sm:text-xl md:text-2xl text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+            <p className="text-base sm:text-lg md:text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
               {words.map((word, idx) => renderWord(word, idx))}
             </p>
           </div>
