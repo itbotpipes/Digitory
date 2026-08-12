@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../../lib/api';
 
+import Image from 'next/image';
+
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +13,7 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (localStorage.getItem('admin_token')) {
-      window.location.href = '/admin/dashboard?tab=leads';
+      window.location.href = '/admin/seo';
     }
   }, []);
 
@@ -23,7 +25,7 @@ export default function AdminLogin() {
       const res = await api.post('/auth/login', { email, password });
       if (res.data?.token) {
         localStorage.setItem('admin_token', res.data.token);
-        window.location.href = '/admin/dashboard?tab=leads';
+        window.location.href = '/admin/seo';
       }
     } catch (err: any) {
       setError(err.message || 'Login failed');
@@ -35,11 +37,23 @@ export default function AdminLogin() {
     <div className="flex flex-col items-center justify-center pt-20">
       <div className="bg-white dark:bg-[#111111] p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm w-full max-w-md">
         {/* Logo */}
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#FF4F18] flex items-center justify-center text-white font-extrabold text-sm shadow-[0_4px_12px_rgba(255,79,24,0.35)]">
-            D
-          </div>
-          <span className="font-extrabold text-xl tracking-tight text-zinc-900 dark:text-white">Digitory</span>
+        <div className="flex items-center justify-center mb-6">
+          <Image
+            src="/digitory-black.png"
+            alt="Digitory Logo"
+            width={140}
+            height={36}
+            className="object-contain h-8 w-auto block dark:hidden"
+            priority
+          />
+          <Image
+            src="/digitory-white.png"
+            alt="Digitory Logo"
+            width={140}
+            height={36}
+            className="object-contain h-8 w-auto hidden dark:block"
+            priority
+          />
         </div>
 
         <h2 className="text-2xl font-bold mb-1 text-center text-[#111111] dark:text-white">Welcome back</h2>

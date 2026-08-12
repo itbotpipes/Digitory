@@ -137,7 +137,7 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         
         {/* Logo/Header area */}
         <div className="mb-8 px-2">
-          <Link href="/admin/dashboard?tab=leads" className="block">
+          <Link href="/admin/seo" className="block">
             <Image
               src="/digitory-black.png"
               alt="Digitory Logo"
