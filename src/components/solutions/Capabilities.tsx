@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { api } from "@/lib/api";
 
 interface FeatureItem {
@@ -303,9 +304,9 @@ export default function Capabilities() {
       <div className="border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] overflow-hidden bg-white dark:bg-zinc-950/20 grid grid-cols-1 md:grid-cols-3 shadow-[0_2px_8px_rgba(0,0,0,0.01)]">
         {features.map((item, idx) => {
           return (
-            <div
+            <Link
               key={idx}
-              onClick={() => handleCardClick(item.id)}
+              href={`/solutions/${item.id}`}
               className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 cursor-pointer text-left border-zinc-200/60 dark:border-zinc-800/60
                 ${idx !== features.length - 1 ? "border-b" : ""}
                 ${idx >= 9 ? "md:border-b-0" : ""}
@@ -332,7 +333,7 @@ export default function Capabilities() {
               {/* Title & Description */}
               <h3 className="text-lg font-bold text-zinc-950 dark:text-white mb-2">{item.title}</h3>
               <p className="text-zinc-550 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
-            </div>
+            </Link>
           );
         })}
       </div>

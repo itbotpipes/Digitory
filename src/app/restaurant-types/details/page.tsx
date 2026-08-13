@@ -327,32 +327,6 @@ function IndustriesDetailsContent() {
           </div>
         </section>
 
-        {/* SECTION: OPERATIONAL OUTCOMES & IMPACT NUMBERS */}
-        <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
-          <div className="mx-auto max-w-7xl px-6 md:px-8">
-            <div className="mb-16 text-center">
-              <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                Quantifiable efficiency gains <span className="text-[#FF4F18]">recorded by our partners</span>
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
-              {getIndustryStats(industry.id).map((stat, idx) => (
-                <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
-                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-                    <span className="text-[#FF4F18]">{stat.value}</span>
-                  </h3>
-                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-                    <span className="text-zinc-900 dark:text-white">{stat.label}</span>
-                  </h3>
-                  <p className="text-zinc-400 dark:text-zinc-500 text-[11px] mt-2 font-normal">
-                    {stat.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* SECTION: REAL-TIME VISIBILITY ACROSS OPERATIONS */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e] text-left">

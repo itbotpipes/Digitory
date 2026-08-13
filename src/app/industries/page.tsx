@@ -12,6 +12,8 @@ export default function IndustriesPage() {
 
   // POS Simulator State
   const [businessType, setBusinessType] = useState<"restaurant" | "cloud-kitchen" | "cafes" | "cafe-chains">("restaurant");
+  const [calcOrders, setCalcOrders] = useState<number>(3500);
+  const [calcOutlets, setCalcOutlets] = useState<number>(2);
   const [activeTableIdx, setActiveTableIdx] = useState(1);
   const [cart, setCart] = useState<{ name: string; price: number; quantity: number }[]>([
     { name: "Paneer Butter Masala", price: 280, quantity: 1 },
@@ -236,14 +238,11 @@ export default function IndustriesPage() {
             </div>
             */}
 
-            {/* Right Column - Interactive POS Terminal Simulator */}
-            <div className="lg:col-span-6 flex flex-col justify-center lg:justify-end w-full max-w-[500px] mx-auto lg:mx-0 select-none">
-              
-              {/* POS Interface Card */}
-              <div className="bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 shadow-2xl rounded-[28px] p-5 md:p-6 space-y-5 relative">
-                
-                {/* Dropdown Business Type Selector Inside Card */}
-                <div className="flex items-center justify-between pb-3.5 border-b border-zinc-150 dark:border-zinc-800/80">
+            {/* Right Column - Interactive ROI Savings Calculator Card */}
+            <div className="lg:col-span-6 flex flex-col justify-center w-full max-w-[500px] mx-auto lg:ml-auto lg:mr-0 select-none">
+              <div className="bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 shadow-2xl rounded-[28px] p-6 space-y-6 relative text-left">
+                {/* Dropdown Business Type Selector */}
+                <div className="flex items-center justify-between pb-4 border-b border-zinc-150 dark:border-zinc-800/80">
                   <div className="text-[11px] font-extrabold text-[#FF4F18] uppercase tracking-wider">
                     Select POS Mode:
                   </div>
@@ -259,140 +258,93 @@ export default function IndustriesPage() {
                   </select>
                 </div>
 
-                {/* Header: Terminal name and online status */}
-                <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#13B257] animate-pulse" />
-                    <span className="font-extrabold text-[12px] text-zinc-900 dark:text-white uppercase tracking-wider">
-                      {posData[businessType].terminalName}
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500">v4.2.10</span>
-                </div>
-
-                {/* Table/Channel Selector */}
-                <div className="space-y-2">
-                  <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 tracking-wider">
-                    {posData[businessType].tablesLabel}
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {posData[businessType].tables.map((table, idx) => {
-                      const isActive = activeTableIdx === idx;
-                      return (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => {
-                            setActiveTableIdx(idx);
-                            setSuccessMsg(false);
-                          }}
-                          className={`rounded-xl p-2.5 text-center transition-all duration-200 cursor-pointer border ${
-                            isActive
-                              ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-md shadow-orange-500/10"
-                              : "bg-[#F8F9FA] dark:bg-zinc-850 border-zinc-150 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 hover:bg-[#F1F3F5] dark:hover:bg-zinc-800"
-                          }`}
-                        >
-                          <div className="text-[11.5px] font-extrabold leading-tight">{table.label}</div>
-                          <div className={`text-[7.5px] mt-0.5 font-semibold ${isActive ? "text-orange-100" : "text-zinc-450 dark:text-zinc-500"}`}>
-                            {table.sub}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Billing Shortcuts */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 tracking-wider">
-                      FAST BILLING SHORTCUTS:
-                    </span>
-                    <span className="text-xs font-extrabold text-[#FF4F18]">
-                      TOTAL: ₹ {totalCartValue}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {posData[businessType].shortcuts.map((item, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleAddShortcut(item)}
-                        className="flex items-center justify-between bg-[#F8F9FA] dark:bg-zinc-850 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 border border-zinc-150 dark:border-zinc-800 rounded-xl p-2.5 transition-colors cursor-pointer text-left"
-                      >
-                        <span className="text-[10.5px] font-extrabold text-zinc-800 dark:text-zinc-150 truncate max-w-[120px]">
-                          + {item.name}
-                        </span>
-                        <span className="text-[10.5px] font-bold text-zinc-450 dark:text-zinc-400">
-                          ₹{item.price}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Cart Items List */}
-                <div className="bg-[#F8F9FA] dark:bg-zinc-850/60 rounded-2xl p-4 border border-zinc-150 dark:border-zinc-800/80 space-y-2.5 max-h-[140px] overflow-y-auto">
-                  {cart.length === 0 ? (
-                    <div className="text-center text-[11px] text-zinc-400 dark:text-zinc-500 py-4">
-                      Cart is empty. Tap shortcuts to add items.
+                {/* Sliders Container */}
+                <div className="space-y-6 pt-2">
+                  {/* Slider 1: Monthly Orders */}
+                  <div className="space-y-2.5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                        Monthly Orders:
+                      </span>
+                      <span className="font-black text-[#FF4F18] text-sm">
+                        {calcOrders.toLocaleString()} / mo
+                      </span>
                     </div>
-                  ) : (
-                    cart.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <button
-                            type="button"
-                            onClick={() => handleUpdateQuantity(item.name, -1)}
-                            className="w-4 h-4 rounded bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 flex items-center justify-center text-zinc-700 dark:text-zinc-200 text-[10px] font-bold cursor-pointer"
-                          >
-                            -
-                          </button>
-                          <span className="font-bold text-zinc-900 dark:text-white shrink-0">
-                            {item.quantity}x
-                          </span>
-                          <span className="text-zinc-750 dark:text-zinc-300 font-medium truncate">
-                            {item.name}
-                          </span>
-                        </div>
-                        <span className="font-extrabold text-zinc-900 dark:text-white shrink-0 pl-2">
-                          ₹{item.price * item.quantity}
+                    <input
+                      type="range"
+                      min={500}
+                      max={15000}
+                      step={100}
+                      value={calcOrders}
+                      onChange={(e) => setCalcOrders(Number(e.target.value))}
+                      className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
+                    />
+                  </div>
+
+                  {/* Slider 2: Number of Outlets */}
+                  <div className="space-y-2.5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-extrabold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                        Number of Outlets:
+                      </span>
+                      <span className="font-black text-[#FF4F18] text-sm">
+                        {calcOutlets} {calcOutlets === 1 ? "Outlet" : "Outlets"}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={15}
+                      step={1}
+                      value={calcOutlets}
+                      onChange={(e) => setCalcOutlets(Number(e.target.value))}
+                      className="w-full h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
+                    />
+                  </div>
+                </div>
+
+                {/* Results Display */}
+                {(() => {
+                  let monthlySavings = 0;
+                  let hoursSaved = 0;
+
+                  if (businessType === "restaurant") {
+                    monthlySavings = (calcOrders * 15.5) + (calcOutlets * 12550);
+                    hoursSaved = Math.round((calcOrders * 0.008) + (calcOutlets * 4));
+                  } else if (businessType === "cloud-kitchen") {
+                    monthlySavings = (calcOrders * 11.2) + (calcOutlets * 9500);
+                    hoursSaved = Math.round((calcOrders * 0.006) + (calcOutlets * 3.5));
+                  } else if (businessType === "cafes") {
+                    monthlySavings = (calcOrders * 8.5) + (calcOutlets * 7500);
+                    hoursSaved = Math.round((calcOrders * 0.005) + (calcOutlets * 3));
+                  } else if (businessType === "cafe-chains") {
+                    monthlySavings = (calcOrders * 18.2) + (calcOutlets * 14500);
+                    hoursSaved = Math.round((calcOrders * 0.01) + (calcOutlets * 5));
+                  }
+
+                  return (
+                    <>
+                      <div className="bg-zinc-50 dark:bg-zinc-800/40 rounded-2xl p-5 border border-zinc-150 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center shadow-3xs">
+                        <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 block">
+                          Estimated Monthly Savings
+                        </span>
+                        <span className="text-2xl md:text-3xl font-black text-[#FF4F18] leading-none mb-2">
+                          ₹ {Math.round(monthlySavings).toLocaleString()} / month
+                        </span>
+                        <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">
+                          {hoursSaved} Hours / month saved
                         </span>
                       </div>
-                    ))
-                  )}
-                </div>
 
-                {/* Success Banner */}
-                {successMsg && (
-                  <div className="absolute inset-x-5 bottom-16 bg-[#13B257]/10 border border-[#13B257]/30 rounded-xl p-3 text-center text-[#13B257] text-[11.5px] font-extrabold shadow-sm animate-fade-in">
-                    🚀 Order Dispatched to {posData[businessType].kdsStation}! Ticket Printed.
-                  </div>
-                )}
-
-                {/* Footer KDS details and CTA dispatch */}
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center justify-center gap-2 bg-zinc-50 dark:bg-zinc-850/50 rounded-xl py-2 px-3 border border-zinc-150 dark:border-zinc-800/80">
-                    <svg className="w-3.5 h-3.5 text-[#FF4F18]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v1.244c0 .89-.56 1.6-1.42 1.791-.55.12-1.1.28-1.63.48-.8.3-1.37.98-1.57 1.83a8.87 8.87 0 00-.51 1.83c-.04.32-.23.6-.53.72a2.23 2.23 0 00-1.08 1.08c-.12.3-.12.63 0 .93a2.23 2.23 0 001.08 1.08c.3.12.5.4.53.72.1.6.27 1.2.51 1.83.2.85.77 1.53 1.57 1.83.53.2 1.08.36 1.63.48.86.19 1.42.9 1.42 1.79v1.244" />
-                    </svg>
-                    <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400">
-                      Destination: {posData[businessType].kdsStation}
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSuccessMsg(true);
-                      setTimeout(() => setSuccessMsg(false), 3500);
-                    }}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF4F18] py-3 text-xs font-extrabold text-white transition-all hover:bg-[#E03F0D] shadow-[0_4px_12px_rgba(255,79,24,0.25)] hover:shadow-[0_6px_16px_rgba(255,79,24,0.35)] active:scale-[0.98] cursor-pointer"
-                  >
-                    ⚡ Dispatch Order to KDS & Print Ticket
-                  </button>
-                </div>
-
+                      <Link
+                        href="/request-demo"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF4F18] py-3.5 text-xs font-extrabold text-white transition-all hover:bg-[#E03F0D] shadow-[0_4px_12px_rgba(255,79,24,0.25)] hover:shadow-[0_6px_16px_rgba(255,79,24,0.35)] active:scale-[0.98] cursor-pointer"
+                      >
+                        Book a live demo to save now
+                      </Link>
+                    </>
+                  );
+                })()}
               </div>
             </div>
 

@@ -209,9 +209,27 @@ function IndustriesDetailsContent() {
                 </button>
               </div>
 
-              <p className="text-sm text-zinc-500 font-medium border-t border-zinc-150/60 dark:border-zinc-800/80 pt-6 max-w-sm leading-normal">
-                {industry.trustText}
-              </p>
+              {/* Trust indicators */}
+              <div className="flex items-center gap-4 pt-6 border-t border-zinc-100 dark:border-zinc-800/80 max-w-sm">
+                <div className="flex -space-x-3">
+                  {[
+                    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
+                    { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
+                    { text: 'B', bg: 'bg-[#FFE5D9]', textCol: 'text-orange-600' },
+                    { text: 'K', bg: 'bg-[#E8EAFF]', textCol: 'text-indigo-600' },
+                  ].map((circle, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${circle.bg} ${circle.textCol} font-extrabold text-xs border-2 border-white dark:border-zinc-900`}
+                    >
+                      {circle.text}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs md:text-sm text-zinc-500 max-w-xs leading-normal">
+                  {industry.trustText || "Trusted by restaurants, cafés, bars, breweries and cloud kitchens across India."}
+                </p>
+              </div>
             </div>
 
             {/* Right Column: Hero Image */}
@@ -400,38 +418,6 @@ function IndustriesDetailsContent() {
           </div>
         </section>
 
-        {/* SECTION: OPERATIONAL OUTCOMES & IMPACT NUMBERS */}
-        <section className="bg-white dark:bg-[#0d0d0e] py-10 md:py-16 text-left">
-          <div className="mx-auto max-w-7xl px-6 md:px-8">
-            <div className="mb-16 text-center">
-              <h2 className="text-center text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
-                {industry.efficiencyTitle ? (
-                  renderHighlightedText(industry.efficiencyTitle)
-                ) : (
-                  <>Quantifiable efficiency gains <span className="text-[#FF4F18]">recorded by our partners</span></>
-                )}
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-2 gap-y-12 gap-x-4 md:grid-cols-4 md:gap-0 text-center">
-              {(industry.efficiencyItems && industry.efficiencyItems.length > 0 
-                ? industry.efficiencyItems 
-                : getIndustryStats(industry.id)).map((stat, idx) => (
-                <div key={idx} className="flex flex-col items-center px-4 md:border-r md:border-zinc-200 dark:md:border-zinc-800 last:border-r-0">
-                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-                    <span className="text-[#FF4F18]">{stat.value}</span>
-                  </h3>
-                  <h3 className="text-2xl md:text-3xl font-bold leading-tight max-w-[260px]">
-                    <span className="text-zinc-900 dark:text-white">{stat.label}</span>
-                  </h3>
-                  <p className="text-zinc-400 dark:text-zinc-500 text-[11px] mt-2 font-normal">
-                    {stat.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* SECTION: REAL-TIME VISIBILITY ACROSS OPERATIONS */}
         <section className="mx-auto max-w-7xl px-6 md:px-8 py-10 md:py-16 bg-white dark:bg-[#0d0d0e] text-left">
@@ -588,11 +574,11 @@ function IndustryDetailsFaq({ items }: { items: { question: string; answer: stri
             Questions before you <span className="text-[#FF4F18]">commit?</span>
           </h2>
         </div>
-        <div className="max-w-4xl mx-auto border-t border-zinc-150 dark:border-zinc-800">
+        <div className="max-w-4xl mx-auto border-t border-zinc-100 dark:border-zinc-800">
           {items.map((item, idx) => {
             const isOpen = openId === idx;
             return (
-              <div key={idx} className="border-b border-zinc-150 dark:border-zinc-800">
+              <div key={idx} className="border-b border-zinc-100 dark:border-zinc-800">
                 <button
                   type="button"
                   onClick={() => handleToggle(idx)}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
 import OperationsReveal from '../../../components/solutions/OperationsReveal';
@@ -11,6 +11,7 @@ import { api } from '@/lib/api';
 
 function SolutionsDetailsContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const moduleParam = searchParams.get('module');
   const [activeKey, setActiveKey] = useState<string>("pos");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -82,13 +83,11 @@ function SolutionsDetailsContent() {
   };
 
   const [activeFeatureIdx, setActiveFeatureIdx] = useState(0);
-  const [simulating, setSimulating] = useState(false);
-  const [simulationSuccess, setSimulationSuccess] = useState(false);
+  const [simState, setSimState] = useState<"idle" | "loading" | "demo">("idle");
 
   useEffect(() => {
     setActiveFeatureIdx(0);
-    setSimulating(false);
-    setSimulationSuccess(false);
+    setSimState("idle");
   }, [activeKey]);
 
   if (loading) {
@@ -155,10 +154,27 @@ function SolutionsDetailsContent() {
                 </button>
               </div>
 
-              {/* Trust Badge */}
-              <p className="text-sm text-zinc-550 font-medium border-t border-zinc-150/60 dark:border-zinc-800/80 pt-6 max-w-sm">
-                {solution.trustText}
-              </p>
+              {/* Trust indicators */}
+              <div className="flex items-center gap-4 pt-6 border-t border-zinc-100 dark:border-zinc-800/80 max-w-sm">
+                <div className="flex -space-x-3">
+                  {[
+                    { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
+                    { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
+                    { text: 'B', bg: 'bg-[#FFE5D9]', textCol: 'text-orange-600' },
+                    { text: 'K', bg: 'bg-[#E8EAFF]', textCol: 'text-indigo-600' },
+                  ].map((circle, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full ${circle.bg} ${circle.textCol} font-extrabold text-xs border-2 border-white dark:border-zinc-900`}
+                    >
+                      {circle.text}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs md:text-sm text-zinc-500 max-w-xs leading-normal">
+                  {solution.trustText || "Trusted by restaurants, cafés, bars, breweries and cloud kitchens across India."}
+                </p>
+              </div>
             </div>
 
             {/* Right Column: Interactive Widget (Connected Ecosystem Preview) */}
@@ -166,32 +182,24 @@ function SolutionsDetailsContent() {
               {(() => {
                 const activeFeature = solution.features[activeFeatureIdx] || solution.features[0] || { title: 'System Core', desc: 'Main operations layer.' };
                 return (
-                  <div className="w-full max-w-[460px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-[32px] p-6 shadow-xl relative overflow-hidden flex flex-col gap-5 select-none text-left">
+                  <div className="w-full max-w-[500px] bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 relative overflow-hidden flex flex-col gap-5 select-none text-left">
                     
                     {/* Visual Header */}
-                    <div className="flex items-center justify-between border-b border-zinc-150 dark:border-zinc-800 pb-4">
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#FF4F18]">
+                    <div className="flex items-center justify-between border-b border-zinc-200/60 dark:border-zinc-800/80 pb-4">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
                         Interactive Module Simulator
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[9px] font-extrabold uppercase tracking-wider text-emerald-500">Live</span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#10B981]">Live</span>
                       </span>
                     </div>
 
-                    {/* Module Title */}
-                    <div>
-                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-1">Active Module</span>
-                      <h4 className="text-base font-black text-zinc-900 dark:text-white leading-tight">
-                        {solution.shortLabel || solution.title}
-                      </h4>
-                    </div>
-
-                    {/* Tabs of Features */}
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-0.5">Select Feature to Run</span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {solution.features.slice(0, 4).map((feat, idx) => {
+                    {/* Tabs of Features styled like Table Selectors */}
+                    <div className="flex flex-col gap-2.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-0.5">Select Active Feature:</span>
+                      <div className="grid grid-cols-3 gap-3">
+                        {solution.features.slice(0, 3).map((feat, idx) => {
                           const isActive = activeFeatureIdx === idx;
                           return (
                             <button
@@ -199,15 +207,20 @@ function SolutionsDetailsContent() {
                               type="button"
                               onClick={() => {
                                 setActiveFeatureIdx(idx);
-                                setSimulationSuccess(false);
+                                setSimState("idle");
                               }}
-                              className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all cursor-pointer ${
+                              className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
                                 isActive
-                                  ? "bg-[#FF4F18] text-white shadow-xs"
-                                  : "bg-white dark:bg-zinc-950 border border-zinc-200/50 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                  ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.3)]"
+                                  : "bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200/60 dark:border-zinc-800 text-zinc-650 dark:text-zinc-300 hover:border-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                               }`}
                             >
-                              {feat.title.split(' ').slice(0, 2).join(' ')}
+                              <span className="text-xs font-black truncate max-w-full leading-tight">
+                                {feat.title.split(' ').slice(0, 2).join(' ')}
+                              </span>
+                              <span className={`text-[9px] font-bold mt-0.5 ${isActive ? "text-white/95" : "text-zinc-400 dark:text-zinc-500"}`}>
+                                {idx === 0 ? "Ready" : idx === 1 ? "Active" : "Online"}
+                              </span>
                             </button>
                           );
                         })}
@@ -215,30 +228,30 @@ function SolutionsDetailsContent() {
                     </div>
 
                     {/* Interactive Status Display */}
-                    <div className="bg-white dark:bg-zinc-950 p-4 rounded-2xl border border-zinc-200/50 dark:border-zinc-800/80 space-y-3 min-h-[150px] flex flex-col justify-between">
+                    <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 p-5 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80 space-y-3 min-h-[150px] flex flex-col justify-between">
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-center text-[10px] uppercase tracking-wider text-zinc-400 font-extrabold">
                           <span>Feature Status</span>
-                          <span className="text-emerald-500">Operational</span>
+                          <span className="text-[#10B981] font-bold">Operational</span>
                         </div>
-                        <h5 className="text-xs font-extrabold text-zinc-900 dark:text-white">
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
                           {activeFeature.title}
                         </h5>
-                        <p className="text-[11px] text-zinc-500 dark:text-zinc-450 leading-relaxed font-semibold">
+                        <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">
                           {activeFeature.desc}
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-zinc-100 dark:border-zinc-900 text-[10px] font-bold text-zinc-450 dark:text-zinc-500">
+                      <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-zinc-200/60 dark:border-zinc-700/60 text-[10px] font-bold text-zinc-450 dark:text-zinc-500">
                         <div>
-                          <span className="block text-[8px] uppercase tracking-wider text-zinc-400">Response Speed</span>
-                          <span className="text-zinc-900 dark:text-white font-extrabold">
+                          <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Response Speed</span>
+                          <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
                             {activeFeatureIdx === 0 ? "12ms" : activeFeatureIdx === 1 ? "18ms" : "24ms"}
                           </span>
                         </div>
                         <div>
-                          <span className="block text-[8px] uppercase tracking-wider text-zinc-400">Accuracy Rate</span>
-                          <span className="text-zinc-900 dark:text-white font-extrabold">
+                          <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Accuracy Rate</span>
+                          <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
                             {activeFeatureIdx === 0 ? "99.8%" : activeFeatureIdx === 1 ? "99.4%" : "99.9%"}
                           </span>
                         </div>
@@ -249,30 +262,36 @@ function SolutionsDetailsContent() {
                     <div>
                       <button
                         type="button"
-                        disabled={simulating}
-                        onClick={async () => {
-                          setSimulating(true);
-                          await new Promise((r) => setTimeout(r, 1200));
-                          setSimulating(false);
-                          setSimulationSuccess(true);
+                        onClick={() => {
+                          if (simState === "idle") {
+                            setSimState("loading");
+                            setTimeout(() => {
+                              setSimState("demo");
+                            }, 1200);
+                          } else if (simState === "demo") {
+                            router.push("/request-demo");
+                          }
                         }}
-                        className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 hover:bg-[#FF4F18] dark:hover:bg-[#FF4F18] hover:text-white dark:hover:text-white transition-all duration-200 text-xs font-black tracking-wider uppercase disabled:opacity-50 cursor-pointer text-center"
+                        disabled={simState === "loading"}
+                        className={`w-full inline-flex justify-center items-center gap-2 text-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+                          simState === "loading"
+                            ? "bg-zinc-400 cursor-not-allowed"
+                            : "bg-[#FF4F18] hover:bg-[#E03F0D]"
+                        }`}
                       >
-                        {simulating ? (
+                        {simState === "loading" && (
                           <span className="flex items-center justify-center gap-1.5">
                             <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            Running Simulation...
+                            Configuring Module...
                           </span>
-                        ) : simulationSuccess ? (
-                          "✓ Simulation Success: Module Configured!"
-                        ) : (
-                          `Simulate ${solution.shortLabel || 'Module'}`
                         )}
+                        {simState === "idle" && `Simulate ${solution.shortLabel || 'Module'}`}
+                        {simState === "demo" && "Book a Demo"}
                       </button>
                     </div>
 
                     {/* Footer Tagline inside widget */}
-                    <div className="text-[11px] text-zinc-400 dark:text-zinc-505 font-bold border-t border-zinc-150 dark:border-zinc-800 pt-4 flex justify-between">
+                    <div className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold border-t border-zinc-200/60 dark:border-zinc-800/80 pt-4 flex justify-between">
                       <span>System: DIGI-OS v4.2</span>
                       <span>Region: AP-SOUTH</span>
                     </div>

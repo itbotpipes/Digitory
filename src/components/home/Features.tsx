@@ -138,9 +138,9 @@ export default function Features() {
                 : 'border-b-0';
 
             return (
-              <div
+              <Link
                 key={idx}
-                onClick={() => handleCardClick(item.slug)}
+                href={`/solutions/${item.slug}`}
                 className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 cursor-pointer group ${borderClasses}`}
               >
                 {/* Feature Index */}
@@ -158,7 +158,7 @@ export default function Features() {
                 {/* Title & Description */}
                 <h3 className="text-lg font-bold text-zinc-950 mb-2 mt-4">{item.title}</h3>
                 <p className="text-zinc-550 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
-              </div>
+              </Link>
             );
           })}
         </div>
