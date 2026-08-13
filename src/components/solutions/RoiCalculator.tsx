@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RoiCalculator() {
+  const router = useRouter();
   const [orders, setOrders] = useState<number>(3500);
   const [outlets, setOutlets] = useState<number>(2);
 
@@ -14,7 +16,7 @@ export default function RoiCalculator() {
 
   // Exact math from reference design:
   // (3500 * 15.5) + (2 * 12500) = 79,250
-  const monthlySavings = (orders * 15.5) + (outlets * 12500);
+  const monthlySavings = (orders * 15.5) + (outlets * 12550);
   // (3500 * 0.008) + (2 * 4) = 36
   const hoursSaved = Math.round((orders * 0.008) + (outlets * 4));
 
@@ -81,14 +83,14 @@ export default function RoiCalculator() {
       </div>
 
       {/* Main Calculator Panel */}
-      <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-2xs grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left mb-12">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-10 border border-zinc-250/50 dark:border-zinc-800/80 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left">
 
         {/* Left Side: Sliders (7 Cols) */}
         <div className="md:col-span-7 space-y-8 pr-0 md:pr-4">
           {/* Slider 1: Monthly Orders */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-extrabold text-zinc-800">
+              <span className="text-sm font-extrabold text-zinc-850 dark:text-zinc-200">
                 Monthly Orders:
               </span>
               <span className="text-sm font-black text-[#FF4F18]">
@@ -102,14 +104,14 @@ export default function RoiCalculator() {
               step={100}
               value={orders}
               onChange={(e) => setOrders(Number(e.target.value))}
-              className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
+              className="w-full h-2 bg-zinc-200 dark:bg-zinc-850 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
             />
           </div>
 
           {/* Slider 2: Number of Outlets */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-extrabold text-zinc-800">
+              <span className="text-sm font-extrabold text-zinc-850 dark:text-zinc-200">
                 Number of Outlets:
               </span>
               <span className="text-sm font-black text-[#FF4F18]">
@@ -123,26 +125,36 @@ export default function RoiCalculator() {
               step={1}
               value={outlets}
               onChange={(e) => setOutlets(Number(e.target.value))}
-              className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
+              className="w-full h-2 bg-zinc-200 dark:bg-zinc-850 rounded-lg appearance-none cursor-pointer accent-[#FF4F18]"
             />
           </div>
         </div>
 
         {/* Right Side: Results Display Card (5 Cols) */}
         <div className="md:col-span-5">
-          <div className="bg-white rounded-2xl p-6 border border-zinc-200/50 flex flex-col items-center justify-center text-center shadow-3xs select-none min-h-[160px]">
-            <span className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-widest mb-3 block">
+          <div className="bg-zinc-50 dark:bg-zinc-800/40 rounded-2xl p-6 border border-zinc-150 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center shadow-3xs select-none min-h-[160px]">
+            <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 block">
               Estimated Monthly Savings
             </span>
             <span className="text-3xl md:text-4xl font-black text-[#FF4F18] leading-none mb-3">
               ₹ {Math.round(monthlySavings).toLocaleString()} / month
             </span>
-            <span className="text-sm font-bold text-zinc-700">
+            <span className="text-sm font-bold text-zinc-700 dark:text-zinc-350">
               {hoursSaved} Hours / month saved
             </span>
           </div>
         </div>
 
+      </div>
+
+      {/* Booking CTA Button Centered Below Card */}
+      <div className="flex justify-center mt-8">
+        <button
+          onClick={() => router.push("/request-demo")}
+          className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-8 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer"
+        >
+          Click here to save
+        </button>
       </div>
 
     </section>

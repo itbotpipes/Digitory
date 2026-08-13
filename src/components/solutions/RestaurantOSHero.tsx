@@ -9,16 +9,9 @@ const TABLES = [
   { id: 9, label: "Table 09", status: "Billing" },
 ];
 
-const MENU_ITEMS = [
-  { id: 1, name: "Paneer Masala", price: 280 },
-  { id: 2, name: "Butter Naan", price: 70 },
-  { id: 3, name: "Chicken Biryani", price: 320 },
-  { id: 4, name: "Mango Lassi", price: 110 },
-];
-
 export default function RestaurantOSHero() {
   const router = useRouter();
-  const [dispatchState, setDispatchState] = useState<"idle" | "loading" | "demo">("idle");
+  const [dispatchState, setDispatchState] = useState<"idle" | "loading" | "success">("idle");
   const [activeTable, setActiveTable] = useState(4);
   
   const [tablesData, setTablesData] = useState<Record<number, {
@@ -71,6 +64,9 @@ export default function RestaurantOSHero() {
   const total = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   const handleAddItem = (item: { id: number; name: string; price: number }) => {
+    if (dispatchState === "success") {
+      setDispatchState("idle");
+    }
     setTablesData((prev) => {
       const table = prev[activeTable];
       const existing = table.orders.find((o) => o.id === item.id);
@@ -93,6 +89,9 @@ export default function RestaurantOSHero() {
   };
 
   const handleRemoveItem = (id: number) => {
+    if (dispatchState === "success") {
+      setDispatchState("idle");
+    }
     setTablesData((prev) => {
       const table = prev[activeTable];
       const newOrders = table.orders
@@ -127,9 +126,12 @@ export default function RestaurantOSHero() {
             Running a restaurant is busy enough. Digitory brings billing, orders, inventory, kitchen management, and reports into one simple system, so your team can work faster and with fewer mistakes.
           </p>
 
-          {/* Action CTAs — no glow shadow */}
+          {/* Action CTAs — Book a Demo turns Green on success */}
           <div className="flex flex-wrap gap-4 items-center">
-            <button className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer">
+            <button 
+              onClick={() => router.push("/request-demo")}
+              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer"
+            >
               Book a Live Demo
             </button>
           </div>
@@ -154,8 +156,8 @@ export default function RestaurantOSHero() {
         </div>
 
         {/* Right Column: Interactive POS Terminal */}
-        <div className="lg:col-span-6 flex justify-center w-full">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 w-full max-w-[500px] mx-auto lg:mx-0 flex flex-col gap-4 md:gap-5 relative select-none text-zinc-900 dark:text-white">
+        <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 w-full max-w-[500px] ml-auto mr-auto lg:mr-0 flex flex-col gap-4 md:gap-5 relative select-none text-zinc-900 dark:text-white">
 
             {/* 1. Terminal Topbar */}
             <div className="flex items-center">
@@ -178,7 +180,12 @@ export default function RestaurantOSHero() {
                   return (
                     <button
                       key={table.id}
-                      onClick={() => setActiveTable(table.id)}
+                      onClick={() => {
+                        if (dispatchState === "success") {
+                          setDispatchState("idle");
+                        }
+                        setActiveTable(table.id);
+                      }}
                       className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
                         isActive
                           ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.3)]"
@@ -219,31 +226,43 @@ export default function RestaurantOSHero() {
               </div>
             </div>
 
-            {/* 4. Order List — live, with qty controls */}
-            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-4 border border-transparent flex flex-col gap-2 min-h-[80px]">
-              {orderItems.length === 0 ? (
-                <p className="text-[12px] text-zinc-400 text-center py-2">No items added yet. Tap a shortcut above.</p>
-              ) : (
-                orderItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-[13px]">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <button
-                        onClick={() => handleRemoveItem(item.id)}
-                        className="w-5 h-5 rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center text-[11px] font-bold hover:bg-red-100 hover:text-red-500 transition-colors flex-shrink-0 cursor-pointer"
-                      >
-                        −
-                      </button>
-                      <span className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">
-                        {item.qty}x {item.name}
+            {/* 4. Order List / Success Area */}
+            {dispatchState === "success" ? (
+              <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl p-5 border border-emerald-250 dark:border-emerald-800/30 flex flex-col items-center justify-center text-center gap-2 min-h-[80px] animate-[fadeIn_0.3s_ease]">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400">Order Placed Successfully!</p>
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-550">Sent to KDS Station & Ticket Printed.</p>
+              </div>
+            ) : (
+              <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-4 border border-transparent flex flex-col gap-2 min-h-[80px]">
+                {orderItems.length === 0 ? (
+                  <p className="text-[12px] text-zinc-400 text-center py-2">No items added yet. Tap a shortcut above.</p>
+                ) : (
+                  orderItems.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center text-[13px]">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <button
+                          onClick={() => handleRemoveItem(item.id)}
+                          className="w-5 h-5 rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center text-[11px] font-bold hover:bg-red-100 hover:text-red-500 transition-colors flex-shrink-0 cursor-pointer"
+                        >
+                          −
+                        </button>
+                        <span className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                          {item.qty}x {item.name}
+                        </span>
+                      </div>
+                      <span className="font-extrabold text-zinc-500 dark:text-zinc-400 flex-shrink-0 ml-2">
+                        ₹{item.price * item.qty}
                       </span>
                     </div>
-                    <span className="font-extrabold text-zinc-500 dark:text-zinc-400 flex-shrink-0 ml-2">
-                      ₹{item.price * item.qty}
-                    </span>
-                  </div>
-                ))
-              )}
-            </div>
+                  ))
+                )}
+              </div>
+            )}
 
             {/* 5. KDS Status Bar */}
             <div className="flex items-center bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800">
@@ -263,9 +282,9 @@ export default function RestaurantOSHero() {
                 if (dispatchState === "idle") {
                   setDispatchState("loading");
                   setTimeout(() => {
-                    setDispatchState("demo");
+                    setDispatchState("success");
                   }, 1500);
-                } else if (dispatchState === "demo") {
+                } else if (dispatchState === "success") {
                   router.push("/request-demo");
                 }
               }}
@@ -273,6 +292,8 @@ export default function RestaurantOSHero() {
               className={`w-full inline-flex justify-center items-center gap-2 text-center rounded-full px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 active:scale-[0.98] cursor-pointer ${
                 dispatchState === "loading"
                   ? "bg-zinc-400 cursor-not-allowed"
+                  : dispatchState === "success"
+                  ? "bg-emerald-600 hover:bg-emerald-750 shadow-[0_4px_14px_rgba(16,185,129,0.2)]"
                   : "bg-[#FF4F18] hover:bg-[#E03F0D]"
               }`}
             >
@@ -287,14 +308,14 @@ export default function RestaurantOSHero() {
                   <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
                 </svg>
               )}
-              {dispatchState === "demo" && (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
+              {dispatchState === "success" && (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               )}
               {dispatchState === "idle" && "Dispatch Order to KDS & Print Ticket"}
               {dispatchState === "loading" && "Printing Ticket..."}
-              {dispatchState === "demo" && "Book a Demo"}
+              {dispatchState === "success" && "Book a Demo"}
             </button>
 
           </div>

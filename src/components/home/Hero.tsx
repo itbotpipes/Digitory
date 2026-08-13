@@ -1,10 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Hero() {
+  const router = useRouter();
+  const [simFlow, setSimFlow] = useState<'dinein' | 'inventory' | 'sync'>('dinein');
+  const [activeTab, setActiveTab] = useState<'what' | 'does' | 'how'>('what');
+
+  // Reset tab to Step 1 when flow changes
+  React.useEffect(() => {
+    setActiveTab('what');
+  }, [simFlow]);
+
   const trustCircles = [
     { text: 'R', bg: 'bg-[#ECECEC]', textCol: 'text-zinc-600' },
     { text: 'C', bg: 'bg-[#D2E9E9]', textCol: 'text-teal-600' },
@@ -53,7 +63,7 @@ export default function Hero() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 md:px-8 pt-4 pb-10 md:pt-8 md:pb-16 lg:pt-10 lg:pb-20">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16 items-center -mt-3 md:-mt-6 lg:-mt-8">
 
         {/* Left Copy Column */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-6 md:space-y-8">
@@ -67,9 +77,7 @@ export default function Hero() {
 
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-            Manage busy hours <span className="text-[#FF4F18]">with ease</span>
-            <br />
-            {/* <span className="text-[#FF4F18]">not chaos.</span> */}
+            Manage busy hours <span className="text-[#FF4F18]">with<br />ease</span>
           </h1>
 
           {/* Subtitle */}
@@ -246,170 +254,374 @@ export default function Hero() {
                 <div className="font-extrabold text-[10.5px] text-zinc-100 tracking-wide">Analytics & AI layer</div>
                 <div className="text-[6.5px] font-mono text-zinc-400 mt-0.5 uppercase tracking-widest">Reads and acts across every module above</div>
               </div>
-              <div className="text-center text-[7.5px] font-mono text-zinc-450 dark:text-zinc-500 pt-0.5 tracking-wide">
-                Nothing re-entered. Nothing reconciled.
+              <div className="text-center text-[7.5px] font-mono text-zinc-4        {/* Right Column - Interactive Workflow Simulator Widget */}
+        <div className="lg:col-span-6 flex flex-col items-center lg:items-end w-full lg:pt-8 select-none">
+
+          {/* Premium Interactive Simulator Card */}
+          <div className="w-full max-w-[500px] bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 rounded-[24px] p-6 md:p-8 flex flex-col gap-4 relative text-zinc-900 dark:text-white shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
+            
+            {/* Widget Title */}
+            <div className="flex items-center justify-between pb-1">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
+                <span className="text-[11px] font-extrabold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">
+                  POS TELEMETRY SYSTEM • MULTI-FLOW
+                </span>
               </div>
             </div>
-          </div>
-          <p className="mt-4 text-xs md:text-sm text-zinc-650 dark:text-zinc-400 text-center lg:text-left font-medium max-w-[480px]">
-            One record underneath, AI across the top — <span className="font-extrabold text-zinc-900 dark:text-white">nothing re-entered,<br />nothing reconciled.</span>
-          </p>
-        </div>
-        */}
 
-        {/* Right Column - New premium platform diagram with Twelve Pillars */}
-        <div className="lg:col-span-6 flex flex-col items-center lg:items-end w-full lg:pt-8">
-
-          {/* New Flow Diagram Card */}
-          <div className="w-full max-w-[540px] bg-white dark:bg-[#0c0d12] rounded-2xl p-4 md:p-6 border border-zinc-200/80 dark:border-zinc-800/80 shadow-xl">
-            <div className="space-y-0.5">
-              
-              {/* Row 1 Modules */}
-              <div className="grid grid-cols-3 gap-2.5 relative z-10">
-                {[
-                  { title: 'POS & Billing', sub: 'COUNTER · FAST & ACCURATE' },
-                  { title: 'QR Code Ordering', sub: 'TABLE · PREPAID & POSTPAID' },
-                  { title: 'Order Management', sub: 'CAPTAIN APP · AGGREGATORS' }
-                ].map((card, i) => (
-                  <div key={i} className="bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-2.5 flex items-start gap-2 min-h-[50px] shadow-sm">
-                    {/* Orange Dot grid icon */}
-                    <div className="grid grid-cols-3 gap-[2px] w-3.5 h-3.5 pt-0.5 flex-shrink-0">
-                      {[...Array(9)].map((_, idx) => (
-                        <span key={idx} className={`w-[3px] h-[3px] rounded-[1px] ${idx % 3 === 0 ? 'bg-[#FF4F18] shadow-[0_0_3px_#FF4F18]' : 'bg-zinc-300 dark:bg-zinc-700'}`} />
-                      ))}
-                    </div>
-                    <div>
-                      <div className="font-extrabold text-[10px] md:text-[10.5px] text-zinc-900 dark:text-white leading-tight">{card.title}</div>
-                      <div className="text-[6.5px] font-mono text-zinc-450 dark:text-zinc-500 mt-0.5 tracking-wide">{card.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Divider 1 - Row 1 to One Live Record */}
-              <div className="relative h-6 z-0">
-                <div className="absolute left-[16.6%] right-[16.6%] top-[10px] h-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[16.6%] top-[2px] h-2 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute right-[16.6%] top-[2px] h-2 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[50%] top-[2px] h-6 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                
-                {/* Glowing junction dots */}
-                <div className="absolute left-[16.6%] top-[8.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2px]" />
-                <div className="absolute right-[16.6%] top-[8.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] translate-x-[2px]" />
-                <div className="absolute left-[50%] top-[8.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2.5px]" />
-              </div>
-
-              {/* Middle Layer - One Live Record */}
-              <div className="relative z-10 text-center">
-                <div className="inline-block w-full bg-white dark:bg-[#121319] border border-[#FF4F18]/45 rounded-xl px-4 py-2.5 shadow-sm">
-                  <div className="font-extrabold text-[#FF4F18] text-[12px] tracking-wide">One Live Record</div>
-                  <div className="text-[7.5px] font-mono text-zinc-500 dark:text-zinc-400 mt-0.5 uppercase tracking-wider">The bill and the stock movement are the same write</div>
+            {/* Simulation Flow Selection Dropdown */}
+            <div className="space-y-1">
+              <label htmlFor="sim-flow-select" className="text-[9px] font-black text-zinc-400 dark:text-zinc-550 tracking-wider block uppercase">
+                Select Simulation Flow:
+              </label>
+              <div className="relative">
+                <select
+                  id="sim-flow-select"
+                  value={simFlow}
+                  onChange={(e) => setSimFlow(e.target.value as any)}
+                  className="w-full bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800/80 text-zinc-800 dark:text-zinc-200 py-2 px-3 rounded-xl text-[10px] font-bold tracking-wide appearance-none focus:outline-hidden focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] transition-all duration-200 cursor-pointer"
+                >
+                  <option value="dinein">🍴 Dine-In Billing Flow</option>
+                  <option value="inventory">📦 Smart Inventory Audit Flow</option>
+                  <option value="sync">⚡ Aggregator Menu Price Sync</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-500">
+                  <svg className="fill-current h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
                 </div>
               </div>
-
-              {/* Divider 2 - One Live Record to Row 2 */}
-              <div className="relative h-6 z-0">
-                <div className="absolute left-[50%] top-0 h-3 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                <div className="absolute left-[16.6%] right-[16.6%] top-[12px] h-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[16.6%] top-[12px] h-3 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[50%] top-[12px] h-3 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                <div className="absolute right-[16.6%] top-[12px] h-3 w-[1.5px] bg-[#FF4F18]/80" />
-                
-                {/* Glowing junction dots */}
-                <div className="absolute left-[50%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2.5px]" />
-                <div className="absolute left-[16.6%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2px]" />
-                <div className="absolute right-[16.6%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] translate-x-[2px]" />
-              </div>
-
-              {/* Row 2 Modules */}
-              <div className="grid grid-cols-3 gap-2.5 relative z-10">
-                {[
-                  { title: 'Kitchen Display System', sub: 'STATIONS · REAL-TIME KOT' },
-                  { title: 'Smart Stock Counting', sub: 'LIVE, AS YOU SELL', highlight: true },
-                  { title: 'Inventory Management', sub: 'GRN · PO · VENDORS' }
-                ].map((card, i) => (
-                  <div key={i} className={`border rounded-xl p-2.5 flex items-start gap-2 min-h-[50px] shadow-sm transition-all ${
-                    card.highlight 
-                      ? 'border-[#FF4F18] bg-orange-50/20 dark:bg-[#FF4F18]/5 shadow-[0_0_12px_rgba(255,79,24,0.1)]' 
-                      : 'bg-white dark:bg-[#121319] border-zinc-200 dark:border-zinc-800/80'
-                  }`}>
-                    {/* Orange grid icon */}
-                    <div className="grid grid-cols-3 gap-[2px] w-3.5 h-3.5 pt-0.5 flex-shrink-0">
-                      {[...Array(9)].map((_, idx) => (
-                        <span key={idx} className={`w-[3px] h-[3px] rounded-[1px] ${card.highlight || idx % 2 === 0 ? 'bg-[#FF4F18] shadow-[0_0_3px_#FF4F18]' : 'bg-zinc-300 dark:bg-zinc-700'}`} />
-                      ))}
-                    </div>
-                    <div>
-                      <div className={`font-extrabold text-[10px] md:text-[10.5px] leading-tight ${card.highlight ? 'text-[#FF4F18]' : 'text-zinc-900 dark:text-white'}`}>{card.title}</div>
-                      <div className="text-[6.5px] font-mono text-zinc-450 dark:text-zinc-500 mt-0.5 tracking-wide">{card.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Divider 3 - Row 2 to Row 3 (Straight drops) */}
-              <div className="relative h-5 z-0">
-                <div className="absolute left-[16.6%] top-0 h-5 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[50%] top-0 h-5 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                <div className="absolute right-[16.6%] top-0 h-5 w-[1.5px] bg-[#FF4F18]/80" />
-              </div>
-
-              {/* Row 3 Modules */}
-              <div className="grid grid-cols-3 gap-2.5 relative z-10">
-                {[
-                  { title: 'Recipe Management', sub: 'COST PER DISH' },
-                  { title: 'Clubs & Events', sub: 'CASHLESS, EVENT COSTING' },
-                  { title: 'Business Analytics', sub: 'COST OF ISSUE VS REVENUE, LIVE', highlight: true }
-                ].map((card, i) => (
-                  <div key={i} className={`border rounded-xl p-2.5 flex items-start gap-2 min-h-[50px] shadow-sm transition-all ${
-                    card.highlight 
-                      ? 'border-[#FF4F18] bg-orange-50/20 dark:bg-[#FF4F18]/5 shadow-[0_0_12px_rgba(255,79,24,0.1)]' 
-                      : 'bg-white dark:bg-[#121319] border-zinc-200 dark:border-zinc-800/80'
-                  }`}>
-                    {/* Orange grid icon */}
-                    <div className="grid grid-cols-3 gap-[2px] w-3.5 h-3.5 pt-0.5 flex-shrink-0">
-                      {[...Array(9)].map((_, idx) => (
-                        <span key={idx} className={`w-[3px] h-[3px] rounded-[1px] ${card.highlight || idx % 3 === 1 ? 'bg-[#FF4F18] shadow-[0_0_3px_#FF4F18]' : 'bg-zinc-300 dark:bg-zinc-700'}`} />
-                      ))}
-                    </div>
-                    <div>
-                      <div className={`font-extrabold text-[10px] md:text-[10.5px] leading-tight ${card.highlight ? 'text-[#FF4F18]' : 'text-zinc-900 dark:text-white'}`}>{card.title}</div>
-                      <div className="text-[6.5px] font-mono text-zinc-450 dark:text-zinc-500 mt-0.5 tracking-wide">{card.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Divider 4 - Row 3 to AI Layer */}
-              <div className="relative h-6 z-0">
-                <div className="absolute left-[16.6%] top-0 h-3 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[50%] top-0 h-3 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                <div className="absolute right-[16.6%] top-0 h-3 w-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[16.6%] right-[16.6%] top-[12px] h-[1.5px] bg-[#FF4F18]/80" />
-                <div className="absolute left-[50%] top-[12px] h-3 w-[1.5px] bg-[#FF4F18]/80 -translate-x-[0.75px]" />
-                
-                {/* Glowing junction dots */}
-                <div className="absolute left-[16.6%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2px]" />
-                <div className="absolute right-[16.6%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] translate-x-[2px]" />
-                <div className="absolute left-[50%] top-[10.5px] w-1.5 h-1.5 rounded-full bg-[#FF4F18] shadow-[0_0_8px_#FF4F18] -translate-x-[2.5px]" />
-              </div>
-
-              {/* Bottom Layer - Digitory AI Layer */}
-              <div className="relative z-10 bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-3 text-center shadow-sm">
-                <div className="flex items-center justify-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF4F18] animate-pulse" />
-                  <span className="font-extrabold text-[11.5px] text-zinc-900 dark:text-white tracking-wide">Digitory AI Layer</span>
-                </div>
-                <div className="text-[7.5px] font-mono text-zinc-450 dark:text-zinc-500 mt-0.5 uppercase tracking-widest">
-                  Forecasting, procurement & anomaly detection — reads and acts across every module above
-                </div>
-              </div>
-
             </div>
+
+            {/* Clickable Workflow Progress Tabs */}
+            <div>
+              <span className="text-[10px] font-extrabold text-zinc-500 dark:text-zinc-400 tracking-widest block mb-2 uppercase">
+                Select Active State:
+              </span>
+              <div className="grid grid-cols-3 gap-3">
+                {(['what', 'does', 'how'] as const).map((t) => {
+                  const isActive = activeTab === t;
+                  
+                  // Custom tab headings depending on flow
+                  let label = '';
+                  let status = '';
+                  if (simFlow === 'dinein') {
+                    label = t === 'what' ? '1. Punch' : t === 'does' ? '2. KOT' : '3. Settle';
+                    status = t === 'what' ? 'Order' : t === 'does' ? 'Print KOT' : 'Bill Reconciled';
+                  } else if (simFlow === 'inventory') {
+                    label = t === 'what' ? '1. Receive' : t === 'does' ? '2. Audit' : '3. Reorder';
+                    status = t === 'what' ? 'GRN Entry' : t === 'does' ? 'Variance Check' : 'Auto Stock PO';
+                  } else {
+                    label = t === 'what' ? '1. Change' : t === 'does' ? '2. Toggle' : '3. Broadcast';
+                    status = t === 'what' ? 'Update Price' : t === 'does' ? 'Mark Out' : 'Zomato/Swiggy';
+                  }
+
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setActiveTab(t)}
+                      className={`flex flex-col items-center justify-center py-2 px-2.5 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                        isActive
+                          ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.3)]"
+                          : "bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:border-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      }`}
+                    >
+                      <span className="text-xs font-black">{label}</span>
+                      <span className={`text-[8.5px] font-bold mt-1 ${isActive ? "text-white/90" : "text-zinc-500 dark:text-zinc-400"}`}>
+                        {status}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Display Content Box */}
+            <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 rounded-2xl p-5 border border-transparent h-[175px] flex flex-col justify-between transition-all duration-300 animate-[fadeIn_0.3s_ease]">
+              {(() => {
+                // Dine-In Flow Content
+                if (simFlow === 'dinein') {
+                  if (activeTab === 'what') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-extrabold">
+                          <span>Dine-In Billing • Step 1</span>
+                          <span className="text-[#FF4F18] font-bold">Punching Order</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Punched Dine-in Order
+                        </h5>
+                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-3 flex justify-between items-center shadow-xs">
+                          <div>
+                            <span className="block text-[10px] font-black text-zinc-850 dark:text-zinc-200">Paneer Tikka Double</span>
+                            <span className="text-[8px] font-bold text-zinc-450">Qty: 2 • Table 05</span>
+                          </div>
+                          <span className="text-[12px] font-black text-[#FF4F18]">₹480</span>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Table order punched on screen. Click below to print the Kitchen Order Ticket.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'does') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-[#10B981] font-extrabold animate-pulse">
+                          <span>Dine-In Billing • Step 2</span>
+                          <span>Printing KOT</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          KOT Ticket Dispatched
+                        </h5>
+                        <div className="bg-[#FFFDF9] dark:bg-amber-950/10 border border-amber-250 dark:border-amber-900/30 rounded-xl p-3 flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                            <div>
+                              <span className="block text-[10px] font-black text-amber-800 dark:text-amber-400">Tandoor Printer Status</span>
+                              <span className="text-[8px] font-bold text-amber-600">Table 05 • KOT #118 Sent</span>
+                            </div>
+                          </div>
+                          <span className="text-[9px] font-mono font-black text-amber-700 bg-amber-100 dark:bg-amber-950/40 px-2 py-0.5 rounded">Active</span>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Kitchen ticket printed instantly. Preparation started. Click below to settle billing.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'how') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-emerald-600 font-extrabold">
+                          <span>Dine-In Billing • Step 3</span>
+                          <span>Bill Settled</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Reconciled Settle State
+                        </h5>
+                        <div className="grid grid-cols-2 gap-2 text-[9px] font-bold text-zinc-650 dark:text-zinc-300">
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Settled Amount</span>
+                            <span className="text-emerald-600 font-black">₹480 (UPI)</span>
+                          </div>
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Stock Deduct</span>
+                            <span className="text-[#E11D48]">-400g Paneer</span>
+                          </div>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Reconciliation complete! Ledger settled and stock updated. Zero entry discrepancies.
+                        </p>
+                      </div>
+                    );
+                  }
+                }
+
+                // Inventory Flow Content
+                if (simFlow === 'inventory') {
+                  if (activeTab === 'what') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-extrabold">
+                          <span>Inventory Audit • Step 1</span>
+                          <span className="text-[#FF4F18] font-bold">GRN Entry</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Smart Stock Intake (GRN)
+                        </h5>
+                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-3 flex justify-between items-center shadow-xs">
+                          <div>
+                            <span className="block text-[10px] font-black text-zinc-850 dark:text-zinc-200">Premium Dairy Butter</span>
+                            <span className="text-[8px] font-bold text-zinc-450">Vendor: Mother Dairy • Batch #08</span>
+                          </div>
+                          <span className="text-[12px] font-black text-zinc-800 dark:text-zinc-250">50 Kg</span>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Vendor shipment received. Click below to scale-check variance and audit discrepancies.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'does') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-[#10B981] font-extrabold animate-pulse">
+                          <span>Inventory Audit • Step 2</span>
+                          <span>Variance Audit</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Wastage & Variance Checked
+                        </h5>
+                        <div className="bg-[#FFFDF9] dark:bg-amber-950/10 border border-amber-250 dark:border-amber-900/30 rounded-xl p-3 flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                            <div>
+                              <span className="block text-[10px] font-black text-emerald-800 dark:text-emerald-400">Scale Reading vs Invoice</span>
+                              <span className="text-[8px] font-bold text-emerald-600">Expected: 50.00kg | Actual: 50.00kg</span>
+                            </div>
+                          </div>
+                          <span className="text-[9px] font-mono font-black text-emerald-700 bg-emerald-100 dark:bg-emerald-950/40 px-2 py-0.5 rounded">0.00% Var</span>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Scale telemetry matches invoice weights. Zero wastage variance. Click to run auto-reorders.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'how') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-emerald-600 font-extrabold">
+                          <span>Inventory Audit • Step 3</span>
+                          <span>Auto Reordered</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Automated Vendor Purchase
+                        </h5>
+                        <div className="grid grid-cols-2 gap-2 text-[9px] font-bold text-zinc-650 dark:text-zinc-300">
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Trigger Threshold</span>
+                            <span className="text-zinc-900 dark:text-white font-black">&lt; 10 Kg</span>
+                          </div>
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Auto PO Generated</span>
+                            <span className="text-emerald-600 font-black">PO #992 (Sent)</span>
+                          </div>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Ingredients fell below thresholds. Auto-purchase order generated and sent to vendor.
+                        </p>
+                      </div>
+                    );
+                  }
+                }
+
+                // Sync Flow Content
+                if (simFlow === 'sync') {
+                  if (activeTab === 'what') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-zinc-450 dark:text-zinc-500 font-extrabold">
+                          <span>Aggregator Sync • Step 1</span>
+                          <span className="text-[#FF4F18] font-bold">Update Price</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          POS Menu Price Revision
+                        </h5>
+                        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800/80 rounded-xl p-3 flex justify-between items-center shadow-xs">
+                          <div>
+                            <span className="block text-[10px] font-black text-zinc-850 dark:text-zinc-200">Butter Chicken Full</span>
+                            <span className="text-[8px] font-bold text-zinc-400">POS Pricing Revision</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-[9px] line-through text-zinc-400">₹350</span>
+                            <span className="text-[12px] font-black text-emerald-600">₹380</span>
+                          </div>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Revised dish price on the central terminal dashboard. Click below to toggle item stocks.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'does') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-[#10B981] font-extrabold">
+                          <span>Aggregator Sync • Step 2</span>
+                          <span>Toggle Stock Status</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Mark Dish Out-Of-Stock
+                        </h5>
+                        <div className="bg-[#FFFDF9] dark:bg-amber-950/10 border border-amber-250 dark:border-amber-900/30 rounded-xl p-3 flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48]" />
+                            <div>
+                              <span className="block text-[10px] font-black text-zinc-800 dark:text-zinc-300">Mango Thickshake</span>
+                              <span className="text-[8px] font-bold text-zinc-450">Stock level critical</span>
+                            </div>
+                          </div>
+                          <span className="text-[9px] font-mono font-black text-red-700 bg-red-100 dark:bg-red-950/40 px-2 py-0.5 rounded">Toggled Off</span>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Marked shake out-of-stock globally. Click below to broadcast price and status online.
+                        </p>
+                      </div>
+                    );
+                  }
+                  if (activeTab === 'how') {
+                    return (
+                      <div className="space-y-3 animate-[fadeIn_0.2s_ease] text-left">
+                        <div className="flex justify-between items-center text-[9px] uppercase tracking-wider text-emerald-600 font-extrabold">
+                          <span>Aggregator Sync • Step 3</span>
+                          <span>Zomato/Swiggy Broadcasted</span>
+                        </div>
+                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                          Global Delivery Synchronized
+                        </h5>
+                        <div className="grid grid-cols-2 gap-2 text-[9px] font-bold text-zinc-650 dark:text-zinc-300">
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Swiggy Menu API</span>
+                            <span className="text-emerald-600 font-black">Sync (Success)</span>
+                          </div>
+                          <div className="bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl p-2 text-center">
+                            <span className="block text-[7px] text-zinc-400 uppercase">Zomato Menu API</span>
+                            <span className="text-emerald-600 font-black">Sync (Success)</span>
+                          </div>
+                        </div>
+                        <p className="text-[10.5px] text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed">
+                          Revised price and status pushed globally. Swiggy & Zomato updated instantly without manual portal management.
+                        </p>
+                      </div>
+                    );
+                  }
+                }
+              })()}
+            </div>
+
+            {/* Simulation Trigger / Control Button */}
+            <div>
+              {activeTab === 'what' && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('does')}
+                  className="w-full flex items-center justify-center gap-2 rounded-full bg-[#FF4F18] py-3.5 text-xs font-black text-white transition-all hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer"
+                >
+                  {simFlow === 'dinein' && "Print Kitchen Order Ticket (KOT) ➔"}
+                  {simFlow === 'inventory' && "Check Variance Audit ➔"}
+                  {simFlow === 'sync' && "Toggle Item Availability ➔"}
+                </button>
+              )}
+              {activeTab === 'does' && (
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('how')}
+                  className="w-full flex items-center justify-center gap-2 rounded-full bg-[#FF4F18] py-3.5 text-xs font-black text-white transition-all hover:bg-[#E03F0D] active:scale-[0.98] cursor-pointer"
+                >
+                  {simFlow === 'dinein' && "Guest Requests Bill ➔"}
+                  {simFlow === 'inventory' && "Process Auto Reorder ➔"}
+                  {simFlow === 'sync' && "Sync to Zomato & Swiggy ➔"}
+                </button>
+              )}
+              {activeTab === 'how' && (
+                <button
+                  type="button"
+                  onClick={() => router.push("/request-demo")}
+                  className="w-full flex items-center justify-center gap-2 rounded-full bg-emerald-600 py-3.5 text-xs font-black text-white transition-all hover:bg-emerald-750 shadow-[0_4px_12px_rgba(16,185,129,0.2)] active:scale-[0.98] cursor-pointer animate-[fadeIn_0.3s_ease]"
+                >
+                  Book a Live Demo
+                </button>
+              )}
+            </div>
+
           </div>
 
           {/* Under Caption */}
-          <p className="mt-4 text-xs md:text-sm text-zinc-650 dark:text-zinc-400 text-center lg:text-left font-medium max-w-[540px] w-full">
+          <p className="mt-4 text-xs md:text-sm text-zinc-650 dark:text-zinc-400 text-center lg:text-left font-medium max-w-[500px] w-full">
             One record underneath, AI across the top — <span className="font-extrabold text-[#FF4F18]">nothing re-entered, nothing reconciled.</span>
           </p>
         </div>

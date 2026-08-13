@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Header from '../../../components/Header';
 import FooterPage from '../../../components/Footer';
@@ -38,6 +38,7 @@ function renderHighlightedText(text: string) {
 }
 
 function IndustriesDetailsContent() {
+  const router = useRouter();
   const params = useParams();
   const slugParam = params.slug as string;
   const moduleParam = slugParam ? slugParam.replace('details-', '') : null;
@@ -45,10 +46,17 @@ function IndustriesDetailsContent() {
   const [industriesList, setIndustriesList] = useState<IndustryData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [mounted, setMounted] = useState<boolean>(false);
+  const [activeOutlet, setActiveOutlet] = useState<number>(1);
+  const [outletSimState, setOutletSimState] = useState<"idle" | "loading" | "success">("idle");
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setActiveOutlet(1);
+    setOutletSimState("idle");
+  }, [activeKey]);
 
   useEffect(() => {
     const loadIndustriesData = async () => {
@@ -232,20 +240,103 @@ function IndustriesDetailsContent() {
               </div>
             </div>
 
-            {/* Right Column: Hero Image */}
+            {/* Right Column: Interactive Outlet Data Simulator */}
             <div className="lg:col-span-6 flex justify-center lg:justify-end w-full relative">
-              <div 
-                className="relative w-full max-w-[400px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(255,79,24,0.15)] z-10 transition-transform duration-500 hover:-translate-y-1"
-              >
-                <Image
-                  src={industry.heroImage || "/home-hero.png"}
-                  alt={`Digitory for ${industry.title}`}
-                  fill
-                  className="object-cover transition-transform duration-500"
-                  priority
-                />
-                {/* Subtle inner overlay for premium finish */}
-                <div className="absolute inset-0 border border-black/5 dark:border-white/10 rounded-[32px] pointer-events-none" />
+              <div className="w-full max-w-[450px] bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 rounded-[28px] p-6 md:p-8 relative overflow-hidden flex flex-col gap-5 select-none text-left">
+                {/* Visual Header */}
+                <div className="flex items-center justify-between border-b border-zinc-200/60 dark:border-zinc-800/80 pb-4">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#FF4F18]">
+                    Multi-Outlet Live Sync
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#10B981]">Live</span>
+                  </span>
+                </div>
+
+                {/* Outlet Selection Tabs */}
+                <div className="flex flex-col gap-2.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-0.5">Select Active Outlet:</span>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[1, 2, 3].map((num) => {
+                      const isActive = activeOutlet === num;
+                      return (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => {
+                            setActiveOutlet(num);
+                            setOutletSimState("idle");
+                          }}
+                          className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                            isActive
+                              ? "bg-[#FF4F18] border-[#FF4F18] text-white shadow-[0_4px_14px_rgba(255,79,24,0.3)]"
+                              : "bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-800 text-zinc-655 dark:text-zinc-300 hover:border-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                          }`}
+                        >
+                          <span className="text-xs font-black">Outlet 0{num}</span>
+                          <span className={`text-[9px] font-bold mt-0.5 ${isActive ? "text-white/95" : "text-zinc-400 dark:text-zinc-500"}`}>
+                            {num === 1 ? "Active" : num === 2 ? "Busy" : "Closed"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Outlet Data Display */}
+                <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 p-5 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80 space-y-3 min-h-[150px] flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center text-[10px] uppercase tracking-wider text-zinc-400 font-extrabold">
+                      <span>Outlet Status</span>
+                      <span className="text-[#10B981] font-bold">Connected</span>
+                    </div>
+                    <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                      Outlet 0{activeOutlet} Metrics
+                    </h5>
+                    <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">
+                      Real-time telemetry from Outlet 0{activeOutlet} POS, Inventory, and Kitchen.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 pt-2.5 border-t border-zinc-200/60 dark:border-zinc-700/60 text-[9px] font-bold text-zinc-450 dark:text-zinc-500">
+                    <div>
+                      <span className="block text-[7px] uppercase tracking-wider text-zinc-455">Total Orders</span>
+                      <span className="text-zinc-900 dark:text-white font-extrabold text-[11px]">
+                        {activeOutlet === 1 ? "342" : activeOutlet === 2 ? "512" : "188"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-[7px] uppercase tracking-wider text-zinc-455">Inventory Avail.</span>
+                      <span className="text-zinc-900 dark:text-white font-extrabold text-[11px]">
+                        {activeOutlet === 1 ? "94%" : activeOutlet === 2 ? "72%" : "45%"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-[7px] uppercase tracking-wider text-zinc-455">Total Sales</span>
+                      <span className="text-zinc-900 dark:text-white font-extrabold text-[11px]">
+                        {activeOutlet === 1 ? "₹89,400" : activeOutlet === 2 ? "₹1,32,000" : "₹42,300"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulation Trigger Button */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => router.push("/request-demo")}
+                    className="w-full inline-flex justify-center items-center gap-2 text-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 active:scale-[0.98] cursor-pointer bg-[#FF4F18] hover:bg-[#E03F0D]"
+                  >
+                    Check your restaurant’s details
+                  </button>
+                </div>
+
+                {/* Footer Tagline inside widget */}
+                <div className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold border-t border-zinc-200/60 dark:border-zinc-800/80 pt-4 flex justify-between">
+                  <span>System: DIGI-OS v4.2</span>
+                  <span>Region: AP-SOUTH</span>
+                </div>
               </div>
             </div>
 

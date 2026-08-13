@@ -56,6 +56,15 @@ export default function AdminDashboard() {
   // Comment filter state
   const [commentSearchName, setCommentSearchName] = useState('');
 
+  // Leads & Contacts state
+  const [leadSearch, setLeadSearch] = useState('');
+  const [leadStatusFilter, setLeadStatusFilter] = useState('');
+  const [leadStartDate, setLeadStartDate] = useState('');
+  const [leadEndDate, setLeadEndDate] = useState('');
+  const [editingLead, setEditingLead] = useState<any>(null);
+  const [leadForm, setLeadForm] = useState({ status: '', lastContactedDate: '', callNotes: '' });
+  const [savingLead, setSavingLead] = useState(false);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -178,10 +187,50 @@ export default function AdminDashboard() {
     fetchData(token);
   }, [activeTab, commentSearchName]);
 
+  const handleSearchLeads = (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('admin_token');
+    if (token) fetchData(token);
+  };
+
+  const handleOpenEditLead = (item: any) => {
+    setEditingLead(item);
+    setLeadForm({
+      status: item.status || 'New',
+      lastContactedDate: item.lastContactedDate ? new Date(item.lastContactedDate).toISOString().slice(0, 16) : '',
+      callNotes: item.callNotes || ''
+    });
+  };
+
+  const handleSaveLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingLead) return;
+    setSavingLead(true);
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      const endpoint = activeTab === 'leads' ? 'demo-requests' : 'contact-messages';
+      
+      const res = await api.put(`/${endpoint}/${editingLead._id}`, {
+        status: leadForm.status,
+        lastContactedDate: leadForm.lastContactedDate ? new Date(leadForm.lastContactedDate) : null,
+        callNotes: leadForm.callNotes
+      }, token);
+      
+      const updatedDoc = res.data?.doc || res.data || res;
+      setData((prev: any) => prev.map((item: any) => (item._id === editingLead._id ? updatedDoc : item)));
+      setEditingLead(null);
+    } catch (err: any) {
+      console.error(err);
+      alert('Failed to update record');
+    } finally {
+      setSavingLead(false);
+    }
+  };
+
   const handleUpdateStatus = async (endpoint: 'demo-requests' | 'contact-messages', id: string, newStatus: string) => {
     try {
       const token = localStorage.getItem('admin_token') || '';
-      await api.patch(`/${endpoint}/${id}/status`, { status: newStatus }, token);
+      await api.put(`/${endpoint}/${id}`, { status: newStatus }, token);
       setData((prev: any) =>
         prev.map((item: any) => (item._id === id ? { ...item, status: newStatus } : item))
       );
@@ -191,23 +240,47 @@ export default function AdminDashboard() {
     }
   };
 
-  const fetchData = async (token: string) => {
+  const fetchData = async (token: string, clearFilters = false) => {
     setLoading(true);
     try {
       let endpoint = '';
-      if (activeTab === 'leads') endpoint = '/demo-requests';
-      if (activeTab === 'contacts') endpoint = '/contact-messages';
-      if (activeTab === 'updates') endpoint = '/updates';
-      if (activeTab === 'blogs') endpoint = '/posts?limit=50';
-      if (activeTab === 'solutions') endpoint = '/solutions?limit=20';
-      if (activeTab === 'industries') endpoint = '/industries?limit=20';
-      if (activeTab === 'pages') endpoint = '/pages?limit=50';
-      if (activeTab === 'comments') {
+      if (activeTab === 'leads') {
+        endpoint = '/demo-requests';
+        const params = new URLSearchParams();
+        if (!clearFilters && leadSearch) params.append('search', leadSearch);
+        if (!clearFilters && leadStatusFilter) params.append('status', leadStatusFilter);
+        if (!clearFilters && leadStartDate) params.append('startDate', leadStartDate);
+        if (!clearFilters && leadEndDate) params.append('endDate', leadEndDate);
+        const queryStr = params.toString();
+        if (queryStr) endpoint += `?${queryStr}`;
+      } else if (activeTab === 'contacts') {
+        endpoint = '/contact-messages';
+        const params = new URLSearchParams();
+        if (!clearFilters && leadSearch) params.append('search', leadSearch);
+        if (!clearFilters && leadStatusFilter) params.append('status', leadStatusFilter);
+        if (!clearFilters && leadStartDate) params.append('startDate', leadStartDate);
+        if (!clearFilters && leadEndDate) params.append('endDate', leadEndDate);
+        const queryStr = params.toString();
+        if (queryStr) endpoint += `?${queryStr}`;
+      } else if (activeTab === 'updates') {
+        endpoint = '/updates';
+      } else if (activeTab === 'blogs') {
+        endpoint = '/posts?limit=50';
+      } else if (activeTab === 'solutions') {
+        endpoint = '/solutions?limit=20';
+      } else if (activeTab === 'industries') {
+        endpoint = '/industries?limit=20';
+      } else if (activeTab === 'pages') {
+        endpoint = '/pages?limit=50';
+      } else if (activeTab === 'comments') {
         endpoint = commentSearchName ? `/comments?name=${encodeURIComponent(commentSearchName)}` : '/comments';
+      } else if (activeTab === 'users') {
+        endpoint = '/users?role=User';
+      } else if (activeTab === 'admins') {
+        endpoint = '/users?role=Admin,Editor';
+      } else if (activeTab === 'roles') {
+        endpoint = '/roles';
       }
-      if (activeTab === 'users') endpoint = '/users?role=User';
-      if (activeTab === 'admins') endpoint = '/users?role=Admin,Editor';
-      if (activeTab === 'roles') endpoint = '/roles';
 
       const res = await api.get(endpoint, token);
       const docs = res.data?.docs || res.data?.results || res.data || [];
@@ -446,6 +519,78 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <div className="bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl shadow-sm overflow-hidden">
+          {(activeTab === 'leads' || activeTab === 'contacts') && (
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-black/20">
+              <form onSubmit={handleSearchLeads} className="flex flex-col sm:flex-row gap-4 items-end">
+                <div className="w-full sm:w-auto flex-1">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-1">Search</label>
+                  <input
+                    type="text"
+                    placeholder="Name, Email, or Phone"
+                    value={leadSearch}
+                    onChange={(e) => setLeadSearch(e.target.value)}
+                    className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18]"
+                  />
+                </div>
+                <div className="w-full sm:w-auto">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-1">Status</label>
+                  <select
+                    value={leadStatusFilter}
+                    onChange={(e) => setLeadStatusFilter(e.target.value)}
+                    className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18]"
+                  >
+                    <option value="">All Statuses</option>
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Lost">Lost</option>
+                    <option value="Not Interested">Not Interested</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+                </div>
+                <div className="w-full sm:w-auto">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-1">From Date</label>
+                  <input
+                    type="date"
+                    value={leadStartDate}
+                    onChange={(e) => setLeadStartDate(e.target.value)}
+                    className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18]"
+                  />
+                </div>
+                <div className="w-full sm:w-auto">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-zinc-500 mb-1">To Date</label>
+                  <input
+                    type="date"
+                    value={leadEndDate}
+                    onChange={(e) => setLeadEndDate(e.target.value)}
+                    className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18]"
+                  />
+                </div>
+                <div className="w-full sm:w-auto flex gap-2">
+                  <button type="submit" className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] transition-colors">
+                    Search
+                  </button>
+                  {(leadSearch || leadStatusFilter || leadStartDate || leadEndDate) && (
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        setLeadSearch('');
+                        setLeadStatusFilter('');
+                        setLeadStartDate('');
+                        setLeadEndDate('');
+                        fetchData(localStorage.getItem('admin_token') || '', true);
+                      }}
+                      className="bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          )}
           {activeTab === 'updates' && (
             <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex justify-end bg-zinc-50/50 dark:bg-black/20">
               <button 
@@ -580,9 +725,11 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Email</th>
                       <th className="px-6 py-4 font-semibold">Phone</th>
-                      <th className="px-6 py-4 font-semibold">Locations</th>
                       <th className="px-6 py-4 font-semibold">Goal</th>
                       <th className="px-6 py-4 font-semibold">Status</th>
+                      <th className="px-6 py-4 font-semibold">Submitted</th>
+                      <th className="px-6 py-4 font-semibold">Last Contacted</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
                   {activeTab === 'contacts' && (
@@ -590,9 +737,11 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Email</th>
                       <th className="px-6 py-4 font-semibold">Phone</th>
-                      <th className="px-6 py-4 font-semibold">Interested In</th>
                       <th className="px-6 py-4 font-semibold">Message</th>
                       <th className="px-6 py-4 font-semibold">Status</th>
+                      <th className="px-6 py-4 font-semibold">Submitted</th>
+                      <th className="px-6 py-4 font-semibold">Last Contacted</th>
+                      <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
                   )}
                   {activeTab === 'updates' && (
@@ -668,21 +817,18 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 font-medium">{item.name}</td>
                         <td className="px-6 py-4">{item.email}</td>
                         <td className="px-6 py-4">{item.phone}</td>
-                        <td className="px-6 py-4">{item.locations}</td>
-                        <td className="px-6 py-4 max-w-[200px] truncate">{item.goal}</td>
+                        <td className="px-6 py-4 max-w-[150px] truncate">{item.goal}</td>
                         <td className="px-6 py-4">
-                          <select
-                            value={item.status === 'Contacted' || item.status === 'Closed' || item.status === 'Qualified' ? 'Contacted' : 'Not Contacted'}
-                            onChange={(e) => handleUpdateStatus('demo-requests', item._id, e.target.value === 'Contacted' ? 'Contacted' : 'New')}
-                            className={`px-3 py-1.5 rounded-full text-xs font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FF4F18] ${
-                              item.status === 'Contacted' || item.status === 'Closed' || item.status === 'Qualified'
-                                ? 'bg-green-50 text-green-600 dark:bg-green-950/20 dark:text-green-400'
-                                : 'bg-orange-50 text-[#FF4F18] dark:bg-orange-950/20'
-                            }`}
-                          >
-                            <option value="Not Contacted">Not Contacted</option>
-                            <option value="Contacted">Contacted</option>
-                          </select>
+                          <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
+                        <td className="px-6 py-4">
+                          <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
+                            View/Edit
+                          </button>
                         </td>
                       </>
                     )}
@@ -691,21 +837,18 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 font-medium">{item.name}</td>
                         <td className="px-6 py-4">{item.email}</td>
                         <td className="px-6 py-4">{item.phone}</td>
-                        <td className="px-6 py-4">{item.interested}</td>
-                        <td className="px-6 py-4 max-w-[300px] truncate">{item.message}</td>
+                        <td className="px-6 py-4 max-w-[150px] truncate">{item.message}</td>
                         <td className="px-6 py-4">
-                          <select
-                            value={item.status === 'Resolved' ? 'Contacted' : 'Not Contacted'}
-                            onChange={(e) => handleUpdateStatus('contact-messages', item._id, e.target.value === 'Contacted' ? 'Resolved' : 'New')}
-                            className={`px-3 py-1.5 rounded-full text-xs font-bold border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FF4F18] ${
-                              item.status === 'Resolved'
-                                ? 'bg-green-50 text-green-600 dark:bg-green-950/20 dark:text-green-400'
-                                : 'bg-orange-50 text-[#FF4F18] dark:bg-orange-950/20'
-                            }`}
-                          >
-                            <option value="Not Contacted">Not Contacted</option>
-                            <option value="Contacted">Contacted</option>
-                          </select>
+                          <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
+                        <td className="px-6 py-4">
+                          <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
+                            View/Edit
+                          </button>
                         </td>
                       </>
                     )}
@@ -1259,6 +1402,92 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* Lead Edit Modal */}
+      {editingLead && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-[#111111] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 w-full max-w-xl shadow-2xl animate-scale-up">
+            <h3 className="text-xl font-bold mb-4 text-[#111111] dark:text-white">
+              Lead / Contact Details
+            </h3>
+            
+            {/* Readonly Info Section */}
+            <div className="mb-6 p-4 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800/80">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Name</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.name}</span></div>
+                <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Email</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.email}</span></div>
+                <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Phone</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.phone}</span></div>
+                <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Submitted</span><span className="font-medium text-zinc-900 dark:text-white">{new Date(editingLead.createdAt).toLocaleString()}</span></div>
+                {editingLead.locations && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Locations</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.locations}</span></div>}
+                {editingLead.goal && <div className="col-span-2"><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Goal</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.goal}</span></div>}
+                {editingLead.interested && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Interested In</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.interested}</span></div>}
+                {editingLead.message && <div className="col-span-2"><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Message</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.message}</span></div>}
+              </div>
+            </div>
+
+            {/* Editable Form Section */}
+            <form onSubmit={handleSaveLead} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500">Status</label>
+                  <select
+                    value={leadForm.status}
+                    onChange={e => setLeadForm({ ...leadForm, status: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 text-sm text-zinc-900 dark:text-white"
+                  >
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Lost">Lost</option>
+                    <option value="Not Interested">Not Interested</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500">Last Contacted</label>
+                  <input 
+                    type="datetime-local" 
+                    value={leadForm.lastContactedDate} 
+                    onChange={e => setLeadForm({ ...leadForm, lastContactedDate: e.target.value })} 
+                    className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 text-sm text-zinc-900 dark:text-white" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500">Call Notes / Updates</label>
+                <textarea 
+                  rows={4}
+                  value={leadForm.callNotes}
+                  onChange={e => setLeadForm({ ...leadForm, callNotes: e.target.value })}
+                  placeholder="Enter details from the call..."
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 text-sm text-zinc-900 dark:text-white font-normal resize-y"
+                />
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setEditingLead(null)}
+                  className="flex-1 px-4 py-2.5 font-bold text-sm text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                >
+                  Close
+                </button>
+                <button 
+                  type="submit"
+                  disabled={savingLead}
+                  className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-sm font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2"
+                >
+                  {savingLead ? 'Saving...' : 'Save Updates'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

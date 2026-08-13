@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import FooterPage from "../../components/Footer";
 import { industriesDb, IndustryData } from "../data/industriesDb";
 import { api } from "@/lib/api";
 
 export default function IndustriesPage() {
+  const router = useRouter();
   const [industries, setIndustries] = useState<IndustryData[]>(Object.values(industriesDb));
 
   // POS Simulator State
@@ -236,11 +238,9 @@ export default function IndustriesPage() {
                 <div className="absolute inset-0 border border-black/5 dark:border-white/10 rounded-[24px] pointer-events-none" />
               </div>
             </div>
-            */}
-
-            {/* Right Column - Interactive ROI Savings Calculator Card */}
+                    {/* Right Column - Interactive ROI Savings Calculator Card */}
             <div className="lg:col-span-6 flex flex-col justify-center w-full max-w-[500px] mx-auto lg:ml-auto lg:mr-0 select-none">
-              <div className="bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 shadow-2xl rounded-[28px] p-6 space-y-6 relative text-left">
+              <div className="bg-white dark:bg-[#121319] border border-zinc-200 dark:border-zinc-800/80 rounded-[28px] p-6 space-y-6 relative text-left">
                 {/* Dropdown Business Type Selector */}
                 <div className="flex items-center justify-between pb-4 border-b border-zinc-150 dark:border-zinc-800/80">
                   <div className="text-[11px] font-extrabold text-[#FF4F18] uppercase tracking-wider">
@@ -322,28 +322,63 @@ export default function IndustriesPage() {
                     hoursSaved = Math.round((calcOrders * 0.01) + (calcOutlets * 5));
                   }
 
+                  let savedMessage = "";
+                  if (businessType === "restaurant") {
+                    savedMessage = `Congratulations! You saved ₹${Math.round(monthlySavings).toLocaleString()} / month on billing, labor, and table operations using Digitory.`;
+                  } else if (businessType === "cloud-kitchen") {
+                    savedMessage = `Congratulations! You saved ₹${Math.round(monthlySavings).toLocaleString()} / month by streamlining aggregators and automated inventory using Digitory.`;
+                  } else if (businessType === "cafes") {
+                    savedMessage = `Congratulations! You saved ₹${Math.round(monthlySavings).toLocaleString()} / month on recipe costing and brew bar wastage using Digitory.`;
+                  } else if (businessType === "cafe-chains") {
+                    savedMessage = `Congratulations! You saved ₹${Math.round(monthlySavings).toLocaleString()} / month on supply-chain forecasting and central kitchen distribution using Digitory.`;
+                  }
+
                   return (
                     <>
-                      <div className="bg-zinc-50 dark:bg-zinc-800/40 rounded-2xl p-5 border border-zinc-150 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center shadow-3xs">
-                        <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 block">
-                          Estimated Monthly Savings
-                        </span>
-                        <span className="text-2xl md:text-3xl font-black text-[#FF4F18] leading-none mb-2">
-                          ₹ {Math.round(monthlySavings).toLocaleString()} / month
-                        </span>
-                        <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">
-                          {hoursSaved} Hours / month saved
-                        </span>
+                      <div className="bg-zinc-50 dark:bg-zinc-800/40 rounded-2xl p-5 border border-zinc-150 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center select-none min-h-[160px] animate-[fadeIn_0.3s_ease]">
+                        {successMsg ? (
+                          <div className="space-y-2">
+                            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 mx-auto">
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <p className="text-sm font-extrabold text-emerald-800 dark:text-emerald-400">Calculation Successful!</p>
+                            <p className="text-xs text-zinc-650 dark:text-zinc-350 leading-relaxed font-bold">
+                              {savedMessage}
+                            </p>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 block">
+                              Estimated Monthly Savings
+                            </span>
+                            <span className="text-2xl md:text-3xl font-black text-[#FF4F18] leading-none mb-2">
+                              ₹ {Math.round(monthlySavings).toLocaleString()} / month
+                            </span>
+                            <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">
+                              {hoursSaved} Hours / month saved
+                            </span>
+                          </>
+                        )}
                       </div>
 
-                      <Link
-                        href="/request-demo"
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF4F18] py-3.5 text-xs font-extrabold text-white transition-all hover:bg-[#E03F0D] shadow-[0_4px_12px_rgba(255,79,24,0.25)] hover:shadow-[0_6px_16px_rgba(255,79,24,0.35)] active:scale-[0.98] cursor-pointer"
-                      >
-                        Book a live demo to save now
-                      </Link>
+                      {successMsg ? (
+                        <button
+                          onClick={() => router.push("/request-demo")}
+                          className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3.5 text-xs font-extrabold text-white transition-all hover:bg-emerald-750 shadow-[0_4px_12px_rgba(16,185,129,0.2)] active:scale-[0.98] cursor-pointer"
+                        >
+                          Book a Live Demo
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setSuccessMsg(true)}
+                          className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#FF4F18] py-3.5 text-xs font-extrabold text-white transition-all hover:bg-[#E03F0D] shadow-[0_4px_12px_rgba(255,79,24,0.25)] active:scale-[0.98] cursor-pointer"
+                        >
+                          Click here to save
+                        </button>
+                      )}
                     </>
-                  );
                 })()}
               </div>
             </div>

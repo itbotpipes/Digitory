@@ -149,72 +149,74 @@ export default function BlogHero({
       </div>
 
       {/* Featured Article Section */}
-      {isLoading ? (
-        <div className="pt-8 md:pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center animate-pulse">
-          {/* Left Content Column Skeleton */}
-          <div className="lg:col-span-6 flex flex-col items-start pr-0 lg:pr-4 space-y-4 w-full">
-            <div className="h-6 w-32 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
-            <div className="h-10 w-full bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
-            <div className="h-10 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
-            <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-md" />
-            <div className="h-12 w-36 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
-          </div>
+      {(activeCategory === 'All Blogs' && searchQuery.trim() === '') && (
+        isLoading ? (
+          <div className="pt-8 md:pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center animate-pulse">
+            {/* Left Content Column Skeleton */}
+            <div className="lg:col-span-6 flex flex-col items-start pr-0 lg:pr-4 space-y-4 w-full">
+              <div className="h-6 w-32 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+              <div className="h-10 w-full bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
+              <div className="h-10 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
+              <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-md" />
+              <div className="h-12 w-36 bg-zinc-200 dark:bg-zinc-800 rounded-full" />
+            </div>
 
-          {/* Right Image Column Skeleton */}
-          <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
-            <div className="w-full max-w-[620px] rounded-[28px] bg-zinc-200 dark:bg-zinc-800 aspect-[16/9]" />
-          </div>
-        </div>
-      ) : (
-        <div className="pt-8 md:pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Content Column */}
-          <div className="lg:col-span-6 flex flex-col items-start pr-0 lg:pr-4">
-            <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#FFF3EF] dark:bg-[#FF4F18]/10 text-[11px] font-extrabold text-[#FF4F18] tracking-widest uppercase mb-4 border border-orange-100 dark:border-transparent">
-              FEATURED ARTICLE
-            </span>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] mb-4 text-left">
-              {title}
-            </h1>
-
-            <p className="text-xs font-bold text-zinc-400 mb-6 uppercase tracking-wide">
-              {date}
-            </p>
-
-            <Link
-              href={`/blog/${slug}`}
-              className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer group"
-            >
-              <span>Read article</span>
-              <svg
-                className="w-4 h-4 text-white ml-2 group-hover:translate-x-0.5 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </Link>
-          </div>
-
-          {/* Right Image Column */}
-          <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
-            <div className="relative w-full max-w-[620px] rounded-[28px] overflow-hidden shadow-2xs border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-100 dark:bg-zinc-900 aspect-[16/9]">
-              <Image
-                src={image}
-                alt={title}
-                fill
-                className="w-full h-full object-cover block"
-                priority
-              />
+            {/* Right Image Column Skeleton */}
+            <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
+              <div className="w-full max-w-[620px] rounded-[28px] bg-zinc-200 dark:bg-zinc-800 aspect-[16/9]" />
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="pt-8 md:pt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Content Column */}
+            <div className="lg:col-span-6 flex flex-col items-start pr-0 lg:pr-4">
+              <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#FFF3EF] dark:bg-[#FF4F18]/10 text-[11px] font-extrabold text-[#FF4F18] tracking-widest uppercase mb-4 border border-orange-100 dark:border-transparent">
+                FEATURED ARTICLE
+              </span>
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] mb-4 text-left">
+                {title}
+              </h1>
+
+              <p className="text-xs font-bold text-zinc-400 mb-6 uppercase tracking-wide">
+                {date}
+              </p>
+
+              <Link
+                href={`/blog/${slug}`}
+                className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer group"
+              >
+                <span>Read article</span>
+                <svg
+                  className="w-4 h-4 text-white ml-2 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Right Image Column */}
+            <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
+              <div className="relative w-full max-w-[620px] rounded-[28px] overflow-hidden shadow-2xs border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-100 dark:bg-zinc-900 aspect-[16/9]">
+                <Image
+                  src={image}
+                  alt={title}
+                  fill
+                  className="w-full h-full object-cover block"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        )
       )}
     </section>
   );

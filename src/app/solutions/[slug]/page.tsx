@@ -118,7 +118,7 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
   const solution = solutionsList.find(s => s.id === activeKey || s.slug === activeKey) || solutionsList[0] || Object.values(solutionsDb)[0];
 
   const [activeFeatureIdx, setActiveFeatureIdx] = useState(0);
-  const [simState, setSimState] = useState<"idle" | "loading" | "demo">("idle");
+  const [simState, setSimState] = useState<"idle" | "loading" | "success">("idle");
 
   useEffect(() => {
     setActiveFeatureIdx(0);
@@ -255,33 +255,51 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
 
                     {/* Interactive Status Display */}
                     <div className="bg-[#F8F9FA] dark:bg-zinc-800/50 p-5 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/80 space-y-3 min-h-[150px] flex flex-col justify-between">
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[10px] uppercase tracking-wider text-zinc-400 font-extrabold">
-                          <span>Feature Status</span>
-                          <span className="text-[#10B981] font-bold">Operational</span>
+                      {simState === "success" ? (
+                        <div className="flex flex-col items-center justify-center text-center gap-2 py-4 h-full my-auto animate-[fadeIn_0.3s_ease]">
+                          <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-[#10B981]">
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <h5 className="text-[14px] font-bold text-emerald-800 dark:text-emerald-400">
+                            Problem Solved!
+                          </h5>
+                          <p className="text-[11px] text-zinc-550 dark:text-zinc-400 leading-normal max-w-[240px]">
+                            <strong>{activeFeature.title}</strong> has been successfully configured. Operational bottlenecks resolved and workflow is fully optimized.
+                          </p>
                         </div>
-                        <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
-                          {activeFeature.title}
-                        </h5>
-                        <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">
-                          {activeFeature.desc}
-                        </p>
-                      </div>
+                      ) : (
+                        <>
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-center text-[10px] uppercase tracking-wider text-zinc-400 font-extrabold">
+                              <span>Feature Status</span>
+                              <span className="text-[#10B981] font-bold">Operational</span>
+                            </div>
+                            <h5 className="text-[13px] font-black text-zinc-900 dark:text-white">
+                              {activeFeature.title}
+                            </h5>
+                            <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-semibold">
+                              {activeFeature.desc}
+                            </p>
+                          </div>
 
-                      <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-zinc-200/60 dark:border-zinc-700/60 text-[10px] font-bold text-zinc-450 dark:text-zinc-500">
-                        <div>
-                          <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Response Speed</span>
-                          <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
-                            {activeFeature.speed || (activeFeatureIdx === 0 ? "12ms" : activeFeatureIdx === 1 ? "18ms" : "24ms")}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Accuracy Rate</span>
-                          <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
-                            {activeFeature.accuracy || (activeFeatureIdx === 0 ? "99.8%" : activeFeatureIdx === 1 ? "99.4%" : "99.9%")}
-                          </span>
-                        </div>
-                      </div>
+                          <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-zinc-200/60 dark:border-zinc-700/60 text-[10px] font-bold text-zinc-450 dark:text-zinc-500">
+                            <div>
+                              <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Response Speed</span>
+                              <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
+                                {activeFeature.speed || (activeFeatureIdx === 0 ? "12ms" : activeFeatureIdx === 1 ? "18ms" : "24ms")}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="block text-[8px] uppercase tracking-wider text-zinc-455">Accuracy Rate</span>
+                              <span className="text-zinc-900 dark:text-white font-extrabold text-[11.5px]">
+                                {activeFeature.accuracy || (activeFeatureIdx === 0 ? "99.8%" : activeFeatureIdx === 1 ? "99.4%" : "99.9%")}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Simulation Trigger Button */}
@@ -292,9 +310,9 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
                           if (simState === "idle") {
                             setSimState("loading");
                             setTimeout(() => {
-                              setSimState("demo");
+                              setSimState("success");
                             }, 1200);
-                          } else if (simState === "demo") {
+                          } else if (simState === "success") {
                             router.push("/request-demo");
                           }
                         }}
@@ -302,6 +320,8 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
                         className={`w-full inline-flex justify-center items-center gap-2 text-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-white transition-all duration-200 active:scale-[0.98] cursor-pointer ${
                           simState === "loading"
                             ? "bg-zinc-400 cursor-not-allowed"
+                            : simState === "success"
+                            ? "bg-emerald-600 hover:bg-emerald-750 shadow-[0_4px_14px_rgba(16,185,129,0.2)]"
                             : "bg-[#FF4F18] hover:bg-[#E03F0D]"
                         }`}
                       >
@@ -312,7 +332,7 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
                           </span>
                         )}
                         {simState === "idle" && `Simulate ${solution.shortLabel || 'Module'}`}
-                        {simState === "demo" && "Book a Demo"}
+                        {simState === "success" && "Book a Demo"}
                       </button>
                     </div>
 
