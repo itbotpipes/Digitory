@@ -69,7 +69,8 @@ export default function SeoManagementPage() {
     setLoading(true);
     try {
       const res = await api.get('/seo', token);
-      setPages(res.data || []);
+      const loaded = res.data?.list || res.data?.docs || res.data?.results || res.data?.pages || res.data || [];
+      setPages(Array.isArray(loaded) ? loaded : []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };

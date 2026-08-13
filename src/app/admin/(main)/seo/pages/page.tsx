@@ -15,7 +15,8 @@ export default function SeoPagesList() {
       try {
         const token = localStorage.getItem('admin_token') || '';
         const res = await api.get('/seo', token);
-        if (res.data) setPages(res.data);
+        const loaded = res.data?.list || res.data?.docs || res.data?.results || res.data?.pages || res.data || [];
+        setPages(Array.isArray(loaded) ? loaded : []);
       } catch (error) {
         console.error('Failed to fetch pages for SEO', error);
       } finally {
