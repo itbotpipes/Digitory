@@ -79,6 +79,12 @@ const links: ILink[] = [
     permission: "manage_users",
   },
   {
+    label: "Pages",
+    href: "/admin/dashboard?tab=pages",
+    Icon: FileText,
+    permission: "manage_blogs",
+  },
+  {
     label: "SEO Management",
     href: "/admin/seo",
     Icon: SearchIcon,

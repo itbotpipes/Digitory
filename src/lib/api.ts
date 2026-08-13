@@ -8,6 +8,7 @@ export const api = {
     const res = await fetch(`${API_URL}${endpoint}`, {
       method: 'GET',
       headers,
+      cache: 'no-store'
     });
     
     if (!res.ok) {

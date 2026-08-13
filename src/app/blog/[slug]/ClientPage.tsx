@@ -24,6 +24,13 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
   const [newCommentText, setNewCommentText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Threaded replies, edits, and reports states
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingCommentText, setEditingCommentText] = useState('');
+  const [replyingCommentId, setReplyingCommentId] = useState<string | null>(null);
+  const [replyCommentText, setReplyCommentText] = useState('');
+  const [reportedCommentIds, setReportedCommentIds] = useState<string[]>([]);
+
   // Login gate state
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
 
@@ -62,6 +69,75 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
     }
   }, [article._id, article.category]);
 
+  const getLoggedInUserId = () => {
+    if (typeof window === 'undefined') return null;
+    const token = localStorage.getItem('user_token');
+    if (!token) return null;
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const decodedJson = JSON.parse(atob(payloadBase64));
+      return decodedJson.id || decodedJson._id || null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const handleEditComment = async (commentId: string) => {
+    if (!editingCommentText.trim()) return;
+    try {
+      const token = localStorage.getItem('user_token') || '';
+      const res = await api.put(`/comments/${commentId}`, { text: editingCommentText }, token);
+      if (res.data) {
+        setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
+        setEditingCommentId(null);
+        setEditingCommentText('');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to edit comment');
+    }
+  };
+
+  const handleReplyComment = async (parentCommentId: string) => {
+    if (!replyCommentText.trim()) return;
+
+    // If not logged in, redirect to login page
+    const savedUser = localStorage.getItem('user_name');
+    if (!savedUser) {
+      window.location.href = `/login?required=comment&redirect=/blog/${article.slug}`;
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('user_token') || '';
+      const res = await api.post('/comments', {
+        post: article._id,
+        name: savedUser,
+        text: replyCommentText,
+        parentId: parentCommentId
+      }, token);
+      if (res.data) {
+        setComments((prev) => [res.data, ...prev]);
+        setReplyingCommentId(null);
+        setReplyCommentText('');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to post reply');
+    }
+  };
+
+  const handleReportComment = async (commentId: string) => {
+    if (reportedCommentIds.includes(commentId)) return;
+    try {
+      await api.post(`/comments/${commentId}/report`);
+      setReportedCommentIds((prev) => [...prev, commentId]);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to report comment');
+    }
+  };
+
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCommentName.trim() || !newCommentText.trim()) return;
@@ -75,11 +151,12 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
 
     setIsSubmitting(true);
     try {
+      const token = localStorage.getItem('user_token') || '';
       const res = await api.post('/comments', {
         post: article._id,
         name: newCommentName,
         text: newCommentText,
-      });
+      }, token);
       if (res.data) {
         setComments((prev) => [res.data, ...prev]);
         setNewCommentName(savedUser); // keep name filled
@@ -365,35 +442,162 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                   Discussion ({comments.length})
                 </h3>
 
-                {/* Comments List */}
-                <div className="space-y-4">
-                  {comments.map((comment) => (
-                    <div
-                      key={comment._id}
-                      className="bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 p-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 animate-[fadeIn_0.3s_ease-out]"
-                    >
-                      {/* Avatar */}
-                      <div className="w-14 h-14 rounded-full shrink-0 bg-gradient-to-br from-[#FF4F18] to-[#ff7a4d] border border-[#FF4F18]/20 flex items-center justify-center font-extrabold text-white text-lg">
-                        {comment.name.charAt(0).toUpperCase()}
-                      </div>
+                 {/* Comments List */}
+                <div className="space-y-6">
+                  {(() => {
+                    const rootComments = comments.filter((c) => !c.parentId);
+                    const loggedInUserId = getLoggedInUserId();
 
-                      {/* Content */}
-                      <div>
-                        <h4 className="text-base font-bold text-[#111111] dark:text-white">
-                          {comment.name}
-                        </h4>
-                        <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 mb-1">
-                          {new Date(comment.createdAt).toLocaleDateString()}
-                        </p>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-                          {comment.text}
-                        </p>
+                    const renderCommentCard = (comment: any, isReply = false) => {
+                      const isOwner = comment.user?._id === loggedInUserId || comment.user === loggedInUserId;
+                      const isEditingThis = editingCommentId === comment._id;
+                      const isReplyingThis = replyingCommentId === comment._id;
+                      const isReported = reportedCommentIds.includes(comment._id) || comment.isReported;
+
+                      return (
+                        <div
+                          key={comment._id}
+                          className={`bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 p-5 rounded-2xl flex flex-col gap-3 transition-all ${
+                            isReply ? "ml-8 sm:ml-12 border-l-2 border-l-[#FF4F18]/50" : ""
+                          }`}
+                        >
+                          {/* Top Row: Avatar & Info */}
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full shrink-0 bg-gradient-to-br from-[#FF4F18] to-[#ff7a4d] flex items-center justify-center font-extrabold text-white text-sm">
+                              {comment.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="text-sm font-bold text-[#111111] dark:text-white">
+                                  {comment.name}
+                                </h4>
+                                {comment.isEdited && (
+                                  <span className="text-[10px] text-zinc-400 dark:text-zinc-550 italic font-medium">(edited)</span>
+                                )}
+                              </div>
+                              <p className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-500">
+                                {new Date(comment.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Middle Row: Text or Edit Input */}
+                          {isEditingThis ? (
+                            <div className="space-y-2 mt-1">
+                              <textarea
+                                value={editingCommentText}
+                                onChange={(e) => setEditingCommentText(e.target.value)}
+                                className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18]"
+                                rows={3}
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleEditComment(comment._id)}
+                                  className="px-3 py-1 bg-[#FF4F18] text-white rounded-lg text-xs font-bold hover:bg-[#E03F0D]"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={() => setEditingCommentId(null)}
+                                  className="px-3 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-bold"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-xs text-zinc-650 dark:text-zinc-300 leading-relaxed font-normal mt-1">
+                              {comment.text}
+                            </p>
+                          )}
+
+                          {/* Bottom Row: Actions */}
+                          {!isEditingThis && (
+                            <div className="flex items-center gap-4 text-[11px] font-bold mt-1 text-zinc-400 dark:text-zinc-500">
+                              <button
+                                onClick={() => {
+                                  setReplyingCommentId(isReplyingThis ? null : comment._id);
+                                  setReplyCommentText("");
+                                }}
+                                className="hover:text-[#FF4F18] transition-colors cursor-pointer"
+                              >
+                                Reply
+                              </button>
+                              {isOwner && (
+                                <button
+                                  onClick={() => {
+                                    setEditingCommentId(comment._id);
+                                    setEditingCommentText(comment.text);
+                                  }}
+                                  className="hover:text-[#FF4F18] transition-colors cursor-pointer"
+                                >
+                                  Edit
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleReportComment(comment._id)}
+                                className={`transition-colors cursor-pointer ${
+                                  isReported ? "text-red-500 cursor-default" : "hover:text-red-500"
+                                }`}
+                                disabled={isReported}
+                              >
+                                {isReported ? "⚠️ Reported" : "Report"}
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Reply Input Box */}
+                          {isReplyingThis && (
+                            <div className="space-y-2 mt-2 pt-2 border-t border-zinc-200/40 dark:border-zinc-800/40">
+                              <textarea
+                                value={replyCommentText}
+                                onChange={(e) => setReplyCommentText(e.target.value)}
+                                placeholder={`Reply to ${comment.name}...`}
+                                className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 focus:outline-none focus:border-[#FF4F18]"
+                                rows={2}
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleReplyComment(comment._id)}
+                                  className="px-3 py-1 bg-[#FF4F18] text-white rounded-lg text-xs font-bold hover:bg-[#E03F0D]"
+                                >
+                                  Post Reply
+                                </button>
+                                <button
+                                  onClick={() => setReplyingCommentId(null)}
+                                  className="px-3 py-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-lg text-xs font-bold"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    };
+
+                    return (
+                      <div className="space-y-6">
+                        {rootComments.map((rootComment) => {
+                          const childReplies = comments
+                            .filter((c) => c.parentId === rootComment._id)
+                            .reverse();
+
+                          return (
+                            <div key={rootComment._id} className="space-y-4">
+                              {renderCommentCard(rootComment, false)}
+                              {childReplies.map((reply) => renderCommentCard(reply, true))}
+                            </div>
+                          );
+                        })}
+                        {rootComments.length === 0 && (
+                          <p className="text-zinc-400 dark:text-zinc-500 italic text-sm">
+                            No comments yet. Be the first to share your thoughts!
+                          </p>
+                        )}
                       </div>
-                    </div>
-                  ))}
-                  {comments.length === 0 && (
-                    <p className="text-zinc-400 dark:text-zinc-500 italic text-sm">No comments yet. Be the first to share your thoughts!</p>
-                  )}
+                    );
+                  })()}
                 </div>
 
                 {/* Add Comment Form — always visible, login check on submit */}

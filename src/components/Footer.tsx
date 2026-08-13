@@ -200,9 +200,9 @@ export default function FooterPage() {
             © 2026 Digitory. All rights reserved.
           </p>
           <div className="flex gap-4 text-[13px] text-[#666666] font-medium">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <span>·</span>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
 

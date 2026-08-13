@@ -33,7 +33,6 @@ export default function TestSection() {
       title: 'Digitory brings it all together',
       desc: 'Orders. Inventory. Sales. Operations.',
       highlighted: true,
-      isGreen: true,
     },
   ];
 
