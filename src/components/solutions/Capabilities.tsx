@@ -42,6 +42,7 @@ export default function Capabilities() {
   const router = useRouter();
 
   const [groupedFeatures, setGroupedFeatures] = useState<FeatureGroup[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("All Solutions");
   const [gridTitle, setGridTitle] = useState('Twelve powerful features to help *your restaurant run better*');
   const [gridDesc, setGridDesc] = useState('Click on any feature card below to open its full specifications and details on a new page.');
   const [loading, setLoading] = useState(true);
@@ -81,17 +82,7 @@ export default function Capabilities() {
           ),
         },
         {
-          id: "order-management",
-          title: "Order Management",
-          desc: "Every order. One flow. Aggregators, your own app, the counter — every channel in a single connected queue. Nothing slips.",
-          icon: (
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-            </svg>
-          ),
-        },
-        {
-          id: "table-reservations",
+          id: "booking",
           title: "Table Reservations",
           desc: "Fill every table. Take bookings, manage covers, seat guests — no paper diary, no double-booking.",
           isComingSoon: true,
@@ -117,19 +108,9 @@ export default function Capabilities() {
           ),
         },
         {
-          id: "recipe-management",
+          id: "purchasing",
           title: "Recipe Management",
           desc: "Cost every plate. Lock recipes, portions and costs so margins hold — even when prices move and staff change.",
-          icon: (
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2h-2" />
-            </svg>
-          ),
-        },
-        {
-          id: "stock-counting",
-          title: "Smart Stock Counting",
-          desc: "Closing stock in minutes. Weigh liquor or count barcoded stock straight into the system. No spreadsheets, no guesswork.",
           icon: (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -182,13 +163,38 @@ export default function Capabilities() {
           desc: "Cashless, end to end. Prepaid ticketing to final settlement — run high-volume events with no cash handling and no leakage.",
           icon: (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+            </svg>
+          ),
+        },
+        {
+          id: "payroll",
+          title: "Shift & Payroll Hub",
+          desc: "Log worker attendance checklists, configure monthly shift schedules, track server table zones, and manage salary reports.",
+          icon: (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          ),
+        },
+        {
+          id: "central-kitchen",
+          title: "Central Prep Kitchen",
+          desc: "Manage batch preparation formulas, track raw material shipping to outlets, and maintain consistent dish recipes centrally.",
+          icon: (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2h-2" />
             </svg>
           ),
         }
       ]
     }
   ];
+
+  const categoriesList = ["All Solutions", ...groupedFeatures.map(g => g.name)];
+  const filteredGroups = activeCategory === "All Solutions" 
+    ? groupedFeatures 
+    : groupedFeatures.filter(g => g.name === activeCategory);
 
   useEffect(() => {
     async function loadSolutions() {
@@ -197,24 +203,49 @@ export default function Capabilities() {
         const loaded = res.data?.docs || res.data?.results || res.data || [];
         
         if (loaded && loaded.length > 0) {
-          // Merge dynamic data into static groups
-          const newGroups = staticGroups.map(group => {
+          // Flat list of static items for fallback icons
+          const staticItems = staticGroups.flatMap(group =>
+            group.items.map(item => ({
+              ...item,
+              category: group.name
+            }))
+          );
+
+          // Map backend data directly
+          const updatedItems = loaded.map((s: any) => {
+            const staticItem = staticItems.find(f => f.id === s.slug);
+            const hasCustomCategory = s.category && s.category !== "Core Operations";
+            const itemCategory = hasCustomCategory ? s.category : (staticItem?.category || "Run Operations");
+
             return {
-              ...group,
-              items: group.items.map(item => {
-                const dynamicItem = loaded.find((s: any) => s.slug === item.id);
-                if (dynamicItem) {
-                  return {
-                    ...item,
-                    title: dynamicItem.gridTitle || item.title,
-                    desc: dynamicItem.gridDesc || item.desc,
-                    image: dynamicItem.image || item.image
-                  };
-                }
-                return item;
-              })
+              id: s.slug || s._id,
+              title: s.gridTitle || s.title || '',
+              desc: s.gridDesc || s.description || s.subtitle || '',
+              image: s.image || '',
+              category: itemCategory,
+              icon: s.icon || staticItem?.icon || null,
+              isComingSoon: s.slug === 'booking' || s.isComingSoon || staticItem?.isComingSoon || false,
             };
           });
+
+          // Reconstruct dynamic groups ordered by standard categories first
+          const categoriesOrder = ["Run Operations", "Manage Inventory & Menu", "Grow & Understand", "Scale & Specialize"];
+          const uniqueCategories = Array.from(new Set<string>(updatedItems.map((item: any) => item.category as string)));
+          
+          const sortedCategories = uniqueCategories.sort((a: string, b: string) => {
+            const indexA = categoriesOrder.indexOf(a);
+            const indexB = categoriesOrder.indexOf(b);
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return a.localeCompare(b);
+          });
+
+          const newGroups: FeatureGroup[] = sortedCategories.map((catName: string) => ({
+            name: catName,
+            items: updatedItems.filter((item: any) => item.category === catName)
+          })).filter(g => g.items.length > 0);
+
           setGroupedFeatures(newGroups);
         } else {
           setGroupedFeatures(staticGroups);
@@ -279,9 +310,30 @@ export default function Capabilities() {
         </div>
       </div>
 
+      {/* Categories Filter Bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 md:pb-8 border-b border-zinc-200/60 dark:border-zinc-800/60 mb-12 md:mb-16">
+        <nav className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-8 justify-start">
+          {categoriesList.map((category) => {
+            const isActive = activeCategory === category;
+            return (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`text-sm font-medium transition-colors cursor-pointer pb-2 -mb-[9px] ${isActive
+                  ? 'text-zinc-900 dark:text-white font-bold border-b-2 border-[#FF4F18]'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
+                  }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
       {/* Structured Groups */}
       <div className="space-y-16 md:space-y-24">
-        {groupedFeatures.map((group, groupIdx) => (
+        {filteredGroups.map((group, groupIdx) => (
           <div key={groupIdx} className="flex flex-col md:flex-row gap-8 lg:gap-12">
             {/* Group Title Column */}
             <div className="w-full md:w-1/4 shrink-0">
@@ -308,10 +360,24 @@ export default function Capabilities() {
                         </div>
                       )}
 
-                      {item.image && (
+                      {item.image ? (
                         <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-4 bg-zinc-50 dark:bg-zinc-900">
                           <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                         </div>
+                      ) : (
+                        item.icon && (
+                          <div className="mb-4 text-[#FF4F18] shrink-0">
+                            {typeof item.icon === 'string' ? (
+                              item.icon.trim().startsWith('<svg') ? (
+                                <div className="w-6 h-6 [&>svg]:w-full [&>svg]:h-full flex items-center justify-center" dangerouslySetInnerHTML={{ __html: item.icon }} />
+                              ) : (
+                                <span className="text-xs font-mono">{item.icon}</span>
+                              )
+                            ) : (
+                              <div className="w-6 h-6 flex items-center justify-center">{item.icon}</div>
+                            )}
+                          </div>
+                        )
                       )}
 
                       <h4 className="text-base font-bold text-zinc-950 dark:text-white mb-2 leading-snug">{item.title}</h4>

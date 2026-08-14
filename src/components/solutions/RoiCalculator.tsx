@@ -83,7 +83,7 @@ export default function RoiCalculator() {
       </div>
 
       {/* Main Calculator Panel */}
-      <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-10 border border-zinc-250/50 dark:border-zinc-800/80 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900/50 rounded-[32px] p-6 md:p-10 border border-zinc-200 dark:border-zinc-800 grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left">
 
         {/* Left Side: Sliders (7 Cols) */}
         <div className="md:col-span-7 space-y-8 pr-0 md:pr-4">
@@ -132,11 +132,11 @@ export default function RoiCalculator() {
 
         {/* Right Side: Results Display Card (5 Cols) */}
         <div className="md:col-span-5">
-          <div className="bg-zinc-50 dark:bg-zinc-800/40 rounded-2xl p-6 border border-zinc-150 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center shadow-3xs select-none min-h-[160px]">
+          <div className="bg-white dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-200/50 dark:border-zinc-800/60 flex flex-col items-center justify-center text-center select-none min-h-[160px]">
             <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-3 block">
               Estimated Monthly Savings
             </span>
-            <span className="text-3xl md:text-4xl font-black text-[#FF4F18] leading-none mb-3">
+            <span className="text-3xl md:text-4xl font-black text-[#10B981] leading-none mb-3">
               ₹ {Math.round(monthlySavings).toLocaleString()} / month
             </span>
             <span className="text-sm font-bold text-zinc-700 dark:text-zinc-350">
