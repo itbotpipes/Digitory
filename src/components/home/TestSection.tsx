@@ -3,7 +3,15 @@
 import React from 'react';
 
 export default function TestSection() {
-  const steps = [
+  interface Step {
+    num: number;
+    title: string;
+    desc: string;
+    highlighted: boolean;
+    isGreen?: boolean;
+  }
+
+  const steps: Step[] = [
     {
       num: 1,
       title: 'Orders synced',
