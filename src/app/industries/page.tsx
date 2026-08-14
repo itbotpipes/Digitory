@@ -379,6 +379,7 @@ export default function IndustriesPage() {
                         </button>
                       )}
                     </>
+                  );
                 })()}
               </div>
             </div>
