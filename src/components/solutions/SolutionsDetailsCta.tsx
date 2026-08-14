@@ -1,7 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function CtaSection() {
+interface SolutionsDetailsCtaProps {
+  title?: string;
+  desc?: string;
+}
+
+export default function CtaSection({ title, desc }: SolutionsDetailsCtaProps) {
   return (
     <section className="w-full bg-white dark:bg-[#0d0d0e] py-16 md:py-24 border-t border-zinc-100 dark:border-zinc-900 transition-colors duration-300 text-center">
       <div className="max-w-6xl mx-auto px-6 md:px-8 flex flex-col items-center">
@@ -16,20 +21,33 @@ export default function CtaSection() {
 
         {/* Two-line Badge Heading */}
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-[850] tracking-tight leading-[1.3] text-zinc-900 dark:text-white max-w-5xl mb-8">
-          Still facing{" "}
-          <span className="text-[#FF4F18]">issues</span>{" "}
-          and{" "}
-          <span className="text-[#FF4F18]">chaos</span>{" "}
-          in your restaurant?
-          <br />
-          <span className="block mt-4">
-            Try our{" "}
-            <span className="text-[#FF4F18]">smart</span>{" "}
-            and{"  "}
-            <span className="text-[#FF4F18]">free</span>{" "}
-            Demo
-          </span>
+          {title ? (
+            title
+          ) : (
+            <>
+              Still facing{" "}
+              <span className="text-[#FF4F18]">issues</span>{" "}
+              and{" "}
+              <span className="text-[#FF4F18]">chaos</span>{" "}
+              in your restaurant?
+              <br />
+              <span className="block mt-4">
+                Try our{" "}
+                <span className="text-[#FF4F18]">smart</span>{" "}
+                and{"  "}
+                <span className="text-[#FF4F18]">free</span>{" "}
+                Demo
+              </span>
+            </>
+          )}
         </h2>
+
+        {/* Optional Description */}
+        {desc && (
+          <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 max-w-2xl mb-8 leading-relaxed font-medium">
+            {desc}
+          </p>
+        )}
 
         {/* CTA Button */}
         <Link
