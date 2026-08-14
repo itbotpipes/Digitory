@@ -130,7 +130,7 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
   const handleReportComment = async (commentId: string) => {
     if (reportedCommentIds.includes(commentId)) return;
     try {
-      await api.post(`/comments/${commentId}/report`);
+      await api.post(`/comments/${commentId}/report`, {});
       setReportedCommentIds((prev) => [...prev, commentId]);
     } catch (err) {
       console.error(err);
