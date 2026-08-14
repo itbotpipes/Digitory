@@ -5,94 +5,37 @@ import React, { useState, useEffect, useRef } from 'react';
 export default function MissionCta() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const progressRef = useRef(0);
-  const doneRef = useRef(false);
-  const lockedRef = useRef(false);
-
   const line1 = ["We", "envision.", "We", "deliver."];
   const line2 = ["We", "execute.", "We", "evolve."];
   const totalWords = line1.length + line2.length;
 
-  // Total accumulated wheel delta needed to go 0→1
-  const TOTAL_DELTA = 900;
-
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const handleScroll = () => {
+      const track = sectionRef.current;
+      if (!track) return;
 
-    // Watch when section reaches center of viewport → lock scroll
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-          lockedRef.current = true;
-        } else if (!entry.isIntersecting) {
-          lockedRef.current = false;
-        }
-      },
-      { threshold: [0, 0.6, 1] }
-    );
-    observer.observe(section);
+      const rect = track.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
 
-    const handleWheel = (e: WheelEvent) => {
-      if (!lockedRef.current) return;
+      // The scroll range is when the top of the track hits the top of the viewport
+      // until the bottom of the track hits the bottom of the viewport
+      const totalDist = rect.height - viewportHeight;
+      const scrolledDist = -rect.top;
 
-      // Allow scrolling UP past section start (so user can go back)
-      if (e.deltaY < 0 && progressRef.current <= 0) {
-        lockedRef.current = false;
-        return;
-      }
-
-      // Allow scrolling DOWN past section end (so user can continue down)
-      if (e.deltaY > 0 && progressRef.current >= 1) {
-        lockedRef.current = false;
-        return;
-      }
-
-      e.preventDefault();
-
-      const accumulated = progressRef.current * TOTAL_DELTA + e.deltaY;
-      const clamped = Math.max(0, Math.min(TOTAL_DELTA, accumulated));
-      progressRef.current = clamped / TOTAL_DELTA;
-      setScrollProgress(progressRef.current);
+      const progress = scrolledDist / totalDist;
+      const clamped = Math.max(0, Math.min(1, progress));
+      setScrollProgress(clamped);
     };
 
-    // Touch support
-    let touchStartY = 0;
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!lockedRef.current) return;
-      const deltaY = touchStartY - e.touches[0].clientY;
-      touchStartY = e.touches[0].clientY;
-
-      if (deltaY < 0 && progressRef.current <= 0) {
-        lockedRef.current = false;
-        return;
-      }
-
-      if (deltaY > 0 && progressRef.current >= 1) {
-        lockedRef.current = false;
-        return;
-      }
-
-      e.preventDefault();
-
-      const accumulated = progressRef.current * TOTAL_DELTA + deltaY * 2.5;
-      const clamped = Math.max(0, Math.min(TOTAL_DELTA, accumulated));
-      progressRef.current = clamped / TOTAL_DELTA;
-      setScrollProgress(progressRef.current);
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    
+    // Initial check
+    handleScroll();
 
     return () => {
-      observer.disconnect();
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
@@ -120,7 +63,7 @@ export default function MissionCta() {
             {/* Pillar 1 */}
             <div className="flex flex-col h-full p-8 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60 border-b md:border-b-0 md:border-r">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 text-[#FF4F18] mb-6 shrink-0">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                 </svg>
               </div>
@@ -133,7 +76,7 @@ export default function MissionCta() {
             {/* Pillar 2 */}
             <div className="flex flex-col h-full p-8 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60 border-b md:border-b-0 md:border-r">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 text-[#FF4F18] mb-6 shrink-0">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
               </div>
@@ -146,7 +89,7 @@ export default function MissionCta() {
             {/* Pillar 3 */}
             <div className="flex flex-col h-full p-8 transition-all duration-300 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/10 border-zinc-200/60 dark:border-[#2a2a2e]/60 md:border-b-0">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 text-[#FF4F18] mb-6 shrink-0">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
               </div>
@@ -158,11 +101,13 @@ export default function MissionCta() {
           </div>
         </div>
 
-        {/* Scroll-locked Word Reveal — natural height, no extra scroll track space */}
+        {/* Scroll-locked Word Reveal — 130vh native sticky track */}
         <div
           ref={sectionRef}
-          className="flex flex-col gap-2 select-none text-center py-16 md:py-24"
+          className="h-[130vh] relative"
         >
+          {/* Sticky container pins text in viewport during track scroll */}
+          <div className="sticky top-[25vh] h-[50vh] flex flex-col justify-center gap-2 select-none text-center overflow-hidden">
           {/* Line 1 */}
           <h3 className="text-[48px] sm:text-[62px] md:text-[82px] font-[900] tracking-tight leading-[1.05]">
             {line1.map((word, idx) => {
@@ -214,6 +159,7 @@ export default function MissionCta() {
             })}
           </h3>
         </div>
+      </div>
 
       </div>
     </section>

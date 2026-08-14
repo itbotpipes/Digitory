@@ -203,10 +203,11 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
               </div>
             </div>
 
-            {/* Right Column: Interactive Widget (Connected Ecosystem Preview) */}
+            {/* Right Column: Interactive Widget (Interactive Module Simulator) */}
             <div className="lg:col-span-5 flex justify-center w-full">
               {(() => {
-                const activeFeature = solution.features[activeFeatureIdx] || solution.features[0] || { title: 'System Core', desc: 'Main operations layer.' };
+                const kdsSol = solutionsList.find(s => s.slug === "kds" || s.id === "kds") || Object.values(solutionsDb).find(s => s.id === "kds") || solution;
+                const activeFeature = kdsSol.features[activeFeatureIdx] || kdsSol.features[0] || { title: 'System Core', desc: 'Main operations layer.' };
                 return (
                   <div className="w-full max-w-[500px] bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.015)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-[24px] p-6 md:p-8 relative overflow-hidden flex flex-col gap-5 select-none text-left">
                     
@@ -225,7 +226,7 @@ function DynamicSolutionDetailContent({ slug }: { slug: string }) {
                     <div className="flex flex-col gap-2.5">
                       <span className="text-[10px] font-extrabold uppercase tracking-wider text-zinc-400 block mb-0.5">Select Active Feature:</span>
                       <div className="grid grid-cols-3 gap-3">
-                        {solution.features.slice(0, 3).map((feat, idx) => {
+                        {kdsSol.features.slice(0, 3).map((feat, idx) => {
                           const isActive = activeFeatureIdx === idx;
                           return (
                             <button

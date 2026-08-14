@@ -47,7 +47,7 @@ export default function AboutHero() {
         <div className="lg:col-span-5 flex justify-center w-full relative">
           <div className="relative w-full max-w-[500px] lg:max-w-[560px] aspect-[4/5] flex items-center justify-center">
             <Image
-              src="/IMG_1458.PNG"
+              src="/mascot_new.png"
               alt="About Digitory Mascot"
               width={540}
               height={675}

@@ -8,12 +8,12 @@ interface SolutionsDetailsCtaProps {
 
 export default function CtaSection({ title, desc }: SolutionsDetailsCtaProps) {
   return (
-    <section className="w-full bg-white dark:bg-[#0d0d0e] py-16 md:py-24 border-t border-zinc-100 dark:border-zinc-900 transition-colors duration-300 text-center">
+    <section className="w-full bg-white dark:bg-[#0d0d0e] pt-8 md:pt-12 pb-16 md:pb-24 transition-colors duration-300 text-center">
       <div className="max-w-6xl mx-auto px-6 md:px-8 flex flex-col items-center">
         {/* Mascot Image at Top */}
         <div className="relative w-56 h-56 mb-8 select-none">
           <img
-            src="/IMG_1458.PNG"
+            src="/mascot_new.png"
             alt="Digitory Mascot"
             className="w-full h-full object-contain"
           />
