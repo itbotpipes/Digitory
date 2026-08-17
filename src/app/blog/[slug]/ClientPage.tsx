@@ -50,7 +50,16 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
       // 1. Comments
       api.get(`/comments/post/${article._id}`)
         .then((res) => {
-          if (res.data) setComments(res.data);
+          if (res.data) {
+            setComments(res.data);
+            const loggedInUserId = getLoggedInUserId();
+            if (loggedInUserId) {
+              const userReported = res.data
+                .filter((c: any) => c.reports && c.reports.some((r: any) => (r.user?._id || r.user) === loggedInUserId))
+                .map((c: any) => c._id);
+              setReportedCommentIds(userReported);
+            }
+          }
         })
         .catch(console.error);
 
@@ -98,6 +107,35 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (!window.confirm('Are you sure you want to delete your comment?')) return;
+    try {
+      const token = localStorage.getItem('user_token') || '';
+      await api.delete(`/comments/${commentId}`, token);
+      setComments((prev) => prev.filter((c) => c._id !== commentId && c.parentId !== commentId));
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete comment');
+    }
+  };
+
+  const handleLikeComment = async (commentId: string) => {
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = `/login?required=comment&redirect=/blog/${article.slug}`;
+      return;
+    }
+    try {
+      const res = await api.post(`/comments/${commentId}/like`, {}, token);
+      if (res.data) {
+        setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to like comment');
+    }
+  };
+
   const handleReplyComment = async (parentCommentId: string) => {
     if (!replyCommentText.trim()) return;
 
@@ -127,14 +165,43 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
     }
   };
 
-  const handleReportComment = async (commentId: string) => {
-    if (reportedCommentIds.includes(commentId)) return;
-    try {
-      await api.post(`/comments/${commentId}/report`, {});
-      setReportedCommentIds((prev) => [...prev, commentId]);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to report comment');
+  const handleReportComment = async (commentId: string, isCurrentlyReported: boolean) => {
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = `/login?required=comment&redirect=/blog/${article.slug}`;
+      return;
+    }
+
+    if (isCurrentlyReported) {
+      if (!window.confirm('Do you want to cancel your report for this comment?')) return;
+      try {
+        const res = await api.post(`/comments/${commentId}/unreport`, {}, token);
+        if (res.data) {
+          setReportedCommentIds((prev) => prev.filter((id) => id !== commentId));
+          setComments((prev) => prev.map((c) => (c._id === commentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to remove report');
+      }
+    } else {
+      const reason = window.prompt('Please enter the reason for reporting this comment:');
+      if (reason === null) return;
+      if (!reason.trim()) {
+        alert('Reason is required to report a comment.');
+        return;
+      }
+
+      try {
+        const res = await api.post(`/comments/${commentId}/report`, { reason: reason.trim() }, token);
+        if (res.data) {
+          setReportedCommentIds((prev) => [...prev, commentId]);
+          setComments((prev) => prev.map((c) => (c._id === commentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Failed to report comment');
+      }
     }
   };
 
@@ -452,7 +519,8 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                       const isOwner = comment.user?._id === loggedInUserId || comment.user === loggedInUserId;
                       const isEditingThis = editingCommentId === comment._id;
                       const isReplyingThis = replyingCommentId === comment._id;
-                      const isReported = reportedCommentIds.includes(comment._id) || comment.isReported;
+                      const hasCurrentUserReported = reportedCommentIds.includes(comment._id);
+                      const hasLiked = comment.likes && comment.likes.includes(loggedInUserId);
 
                       return (
                         <div
@@ -523,25 +591,40 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                               >
                                 Reply
                               </button>
+                              <button
+                                onClick={() => handleLikeComment(comment._id)}
+                                className={`transition-colors cursor-pointer flex items-center gap-1 hover:text-[#FF4F18] ${
+                                  hasLiked ? "text-red-500" : ""
+                                }`}
+                              >
+                                {hasLiked ? "❤️" : "🤍"} {comment.likes ? comment.likes.length : 0}
+                              </button>
                               {isOwner && (
-                                <button
-                                  onClick={() => {
-                                    setEditingCommentId(comment._id);
-                                    setEditingCommentText(comment.text);
-                                  }}
-                                  className="hover:text-[#FF4F18] transition-colors cursor-pointer"
-                                >
-                                  Edit
-                                </button>
+                                <>
+                                  <button
+                                    onClick={() => {
+                                      setEditingCommentId(comment._id);
+                                      setEditingCommentText(comment.text);
+                                    }}
+                                    className="hover:text-[#FF4F18] transition-colors cursor-pointer"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteComment(comment._id)}
+                                    className="hover:text-red-500 transition-colors cursor-pointer"
+                                  >
+                                    Delete
+                                  </button>
+                                </>
                               )}
                               <button
-                                onClick={() => handleReportComment(comment._id)}
+                                onClick={() => handleReportComment(comment._id, hasCurrentUserReported)}
                                 className={`transition-colors cursor-pointer ${
-                                  isReported ? "text-red-500 cursor-default" : "hover:text-red-500"
+                                  hasCurrentUserReported ? "text-red-550 hover:text-[#FF4F18]" : "hover:text-red-500"
                                 }`}
-                                disabled={isReported}
                               >
-                                {isReported ? "⚠️ Reported" : "Report"}
+                                {hasCurrentUserReported ? "⚠️ Cancel Report" : "Report"}
                               </button>
                             </div>
                           )}

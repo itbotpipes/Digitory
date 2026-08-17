@@ -926,15 +926,26 @@ export default function AdminDashboard() {
                              {item.name}
                            </button>
                          </td>
-                         <td className="px-6 py-4 max-w-[300px] truncate">
-                           {item.text}
-                           {item.parentId && (
-                             <span className="ml-2 px-2 py-0.5 text-[9px] font-extrabold uppercase bg-zinc-100 text-zinc-500 rounded">Reply</span>
-                           )}
-                           {item.isReported && (
-                             <span className="ml-2 px-2 py-0.5 text-[9px] font-extrabold uppercase bg-red-50 text-red-500 rounded">⚠️ {item.reportsCount} Reports</span>
-                           )}
-                         </td>
+                          <td className="px-6 py-4 max-w-[300px]">
+                            <div className="font-medium text-zinc-900 dark:text-zinc-150 whitespace-pre-wrap break-words">{item.text}</div>
+                            {item.parentId && (
+                              <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-extrabold uppercase bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded">Reply</span>
+                            )}
+                            {item.isReported && (
+                              <div className="mt-2 space-y-1">
+                                <span className="inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase bg-red-50 dark:bg-red-950/20 text-red-500 rounded">⚠️ {item.reportsCount} Reports</span>
+                                {item.reports && item.reports.length > 0 && (
+                                  <ul className="mt-1 pl-2 border-l border-red-200 dark:border-red-800/60 text-[10px] text-zinc-500 dark:text-zinc-405 space-y-0.5">
+                                    {item.reports.map((r: any, rIdx: number) => (
+                                      <li key={rIdx}>
+                                        <span className="font-bold">{r.user?.name || 'User'}:</span> {r.reason}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                          </td>
                          <td className="px-6 py-4 max-w-[200px] truncate">{item.post?.title || 'Unknown Post'}</td>
                          <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
                          <td className="px-6 py-4">
