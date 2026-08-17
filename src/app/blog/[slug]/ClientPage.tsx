@@ -30,6 +30,17 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
   const [replyingCommentId, setReplyingCommentId] = useState<string | null>(null);
   const [replyCommentText, setReplyCommentText] = useState('');
   const [reportedCommentIds, setReportedCommentIds] = useState<string[]>([]);
+  const [reportingCommentId, setReportingCommentId] = useState<string | null>(null);
+  const [reportReasonText, setReportReasonText] = useState('');
+  
+  // Custom Toast and Confirm states
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  } | null>(null);
 
   // Login gate state
   const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
@@ -91,6 +102,11 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
     }
   };
 
+  const showToast = (text: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToastMessage({ text, type });
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
   const handleEditComment = async (commentId: string) => {
     if (!editingCommentText.trim()) return;
     try {
@@ -100,23 +116,31 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
         setComments((prev) => prev.map((c) => (c._id === commentId ? res.data : c)));
         setEditingCommentId(null);
         setEditingCommentText('');
+        showToast('Comment updated successfully', 'success');
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to edit comment');
+      showToast('Failed to edit comment', 'error');
     }
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    if (!window.confirm('Are you sure you want to delete your comment?')) return;
-    try {
-      const token = localStorage.getItem('user_token') || '';
-      await api.delete(`/comments/${commentId}`, token);
-      setComments((prev) => prev.filter((c) => c._id !== commentId && c.parentId !== commentId));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete comment');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Comment',
+      message: 'Are you sure you want to delete your comment? This cannot be undone.',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('user_token') || '';
+          await api.delete(`/comments/${commentId}`, token);
+          setComments((prev) => prev.filter((c) => c._id !== commentId && c.parentId !== commentId));
+          showToast('Comment deleted successfully', 'success');
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to delete comment', 'error');
+        }
+      }
+    });
   };
 
   const handleLikeComment = async (commentId: string) => {
@@ -132,7 +156,7 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to like comment');
+      showToast('Failed to like comment', 'error');
     }
   };
 
@@ -158,10 +182,11 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
         setComments((prev) => [res.data, ...prev]);
         setReplyingCommentId(null);
         setReplyCommentText('');
+        showToast('Reply posted successfully', 'success');
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to post reply');
+      showToast('Failed to post reply', 'error');
     }
   };
 
@@ -173,36 +198,55 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
     }
 
     if (isCurrentlyReported) {
-      if (!window.confirm('Do you want to cancel your report for this comment?')) return;
-      try {
-        const res = await api.post(`/comments/${commentId}/unreport`, {}, token);
-        if (res.data) {
-          setReportedCommentIds((prev) => prev.filter((id) => id !== commentId));
-          setComments((prev) => prev.map((c) => (c._id === commentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
+      setConfirmModal({
+        isOpen: true,
+        title: 'Cancel Report',
+        message: 'Do you want to cancel your report for this comment?',
+        onConfirm: async () => {
+          try {
+            const res = await api.post(`/comments/${commentId}/unreport`, {}, token);
+            if (res.data) {
+              setReportedCommentIds((prev) => prev.filter((id) => id !== commentId));
+              setComments((prev) => prev.map((c) => (c._id === commentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
+              showToast('Report cancelled successfully', 'success');
+            }
+          } catch (err) {
+            console.error(err);
+            showToast('Failed to remove report', 'error');
+          }
         }
-      } catch (err) {
-        console.error(err);
-        alert('Failed to remove report');
-      }
+      });
     } else {
-      const reason = window.prompt('Please enter the reason for reporting this comment:');
-      if (reason === null) return;
-      if (!reason.trim()) {
-        alert('Reason is required to report a comment.');
-        return;
-      }
-
-      try {
-        const res = await api.post(`/comments/${commentId}/report`, { reason: reason.trim() }, token);
-        if (res.data) {
-          setReportedCommentIds((prev) => [...prev, commentId]);
-          setComments((prev) => prev.map((c) => (c._id === commentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Failed to report comment');
-      }
+      setReportingCommentId(commentId);
+      setReportReasonText('');
     }
+  };
+
+  const submitReportComment = async () => {
+    if (!reportingCommentId || !reportReasonText.trim()) return;
+    const token = localStorage.getItem('user_token');
+    if (!token) return;
+
+    try {
+      const res = await api.post(`/comments/${reportingCommentId}/report`, { reason: reportReasonText.trim() }, token);
+      if (res.data) {
+        setReportedCommentIds((prev) => [...prev, reportingCommentId]);
+        setComments((prev) => prev.map((c) => (c._id === reportingCommentId ? { ...c, reportsCount: res.data.reportsCount, isReported: res.data.isReported, reports: res.data.reports } : c)));
+        setReportingCommentId(null);
+        setReportReasonText('');
+        showToast('Comment reported successfully', 'success');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user_token');
+    localStorage.removeItem('user_name');
+    setLoggedInUser(null);
+    setNewCommentName('');
+    showToast('Signed out successfully', 'success');
   };
 
   const handleAddComment = async (e: React.FormEvent) => {
@@ -228,10 +272,11 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
         setComments((prev) => [res.data, ...prev]);
         setNewCommentName(savedUser); // keep name filled
         setNewCommentText('');
+        showToast('Comment posted successfully', 'success');
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to post comment');
+      showToast('Failed to post comment', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -683,6 +728,19 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                   })()}
                 </div>
 
+                {/* Logged In Info & Sign Out Button */}
+                {loggedInUser && (
+                  <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl px-5 py-3 text-xs font-semibold text-zinc-650 dark:text-zinc-350">
+                    <span>Logged in as <strong className="text-[#FF4F18]">{loggedInUser}</strong></span>
+                    <button
+                      onClick={handleLogout}
+                      className="px-4 py-2 border border-zinc-300 dark:border-zinc-700 hover:bg-black/5 dark:hover:bg-white/5 rounded-full text-zinc-700 dark:text-zinc-300 font-bold transition-all cursor-pointer"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+
                 {/* Add Comment Form — always visible, login check on submit */}
                 <form onSubmit={handleAddComment} className="flex flex-col gap-4 pt-4">
                   <h4 className="text-xs font-extrabold text-[#FF4F18] uppercase tracking-widest">
@@ -758,9 +816,95 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
           )}
         </article>
       </main>
-
+      
       {/* Footer */}
       <FooterPage />
+
+      {reportingCommentId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setReportingCommentId(null)} />
+          <div className="relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl z-10 animate-scale-in">
+            <h2 className="text-lg font-extrabold text-zinc-955 dark:text-white mb-2">Report Comment</h2>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">Please provide a reason for reporting this comment. This helps our team review it.</p>
+            
+            <textarea
+              value={reportReasonText}
+              onChange={(e) => setReportReasonText(e.target.value)}
+              placeholder="E.g., Harassment, spam, inappropriate language..."
+              required
+              rows={4}
+              className="w-full px-4 py-3 text-xs font-medium rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-955 text-[#111111] dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] shadow-2xs resize-none mb-4"
+            />
+            
+            <div className="flex gap-3">
+              <button 
+                type="button" 
+                onClick={() => setReportingCommentId(null)}
+                className="flex-1 px-4 py-2.5 font-bold text-xs text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={submitReportComment}
+                disabled={!reportReasonText.trim()}
+                className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] disabled:opacity-50 text-white py-2.5 rounded-full text-xs font-bold transition-all duration-200 shadow-md flex items-center justify-center cursor-pointer"
+              >
+                Submit Report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-[100] max-w-sm w-full animate-slide-in">
+          <div className={`p-4 rounded-2xl shadow-xl border flex items-center justify-between gap-4 ${
+            toastMessage.type === 'error' 
+              ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400' 
+              : toastMessage.type === 'success' 
+              ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400' 
+              : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
+          }`}>
+            <span className="text-xs font-bold">{toastMessage.text}</span>
+            <button 
+              onClick={() => setToastMessage(null)}
+              className="text-xs font-bold hover:opacity-70 cursor-pointer shrink-0"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {confirmModal && confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setConfirmModal(null)} />
+          <div className="relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl z-10 animate-scale-in">
+            <h2 className="text-base font-extrabold text-zinc-955 dark:text-white mb-2">{confirmModal.title}</h2>
+            <p className="text-xs text-zinc-555 dark:text-zinc-400 mb-6">{confirmModal.message}</p>
+            <div className="flex gap-3">
+              <button 
+                type="button" 
+                onClick={() => setConfirmModal(null)}
+                className="flex-1 px-4 py-2.5 font-bold text-xs text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={() => {
+                  confirmModal.onConfirm();
+                  setConfirmModal(null);
+                }}
+                className="flex-1 bg-red-500 hover:bg-red-650 text-white py-2.5 rounded-full text-xs font-bold transition-all duration-200 shadow-md flex items-center justify-center cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

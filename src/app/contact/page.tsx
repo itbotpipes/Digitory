@@ -10,14 +10,29 @@ export default function ContactPage() {
     name: '',
     phone: '',
     email: '',
-    restaurantName: '',
+    businessName: '',
     category: '',
-    interested: 'Restaurant OS',
+    purpose: 'Restaurant OS',
     message: '',
   });
 
+  const [categories, setCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/industries');
+        const list = res.data?.docs || res.data || [];
+        setCategories(list.map((item: any) => item.title || item.shortLabel));
+      } catch (err) {
+        console.error('Failed to load categories', err);
+        setCategories(['Restaurant', 'Hotel', 'Cloud Kitchen']);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -38,9 +53,9 @@ export default function ContactPage() {
         name: formState.name,
         phone: formState.phone,
         email: formState.email,
-        restaurantName: formState.restaurantName,
-        category: formState.category || undefined, // send undefined if empty
-        interested: formState.interested,
+        businessName: formState.businessName,
+        category: formState.category || undefined,
+        purpose: formState.purpose,
         message: formState.message,
       });
       setIsSubmitting(false);
@@ -49,9 +64,9 @@ export default function ContactPage() {
         name: '',
         phone: '',
         email: '',
-        restaurantName: '',
+        businessName: '',
         category: '',
-        interested: 'Restaurant OS',
+        purpose: 'Restaurant OS',
         message: '',
       });
     } catch (error) {
@@ -226,62 +241,66 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  {/* Restaurant Name */}
+                  {/* Business Name */}
                   <div className="space-y-2">
-                    <label htmlFor="restaurantName" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                      Restaurant Name<span className="text-red-500">*</span>
+                    <label htmlFor="businessName" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Business Name<span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="restaurantName"
-                      name="restaurantName"
+                      id="businessName"
+                      name="businessName"
                       required
-                      value={formState.restaurantName}
+                      value={formState.businessName}
                       onChange={handleChange}
-                      placeholder="Restaurant Name"
-                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
+                      placeholder="Business Name"
+                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-955 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
                     />
                   </div>
 
                   {/* Choose Category */}
-                  <div className="space-y-3">
-                    <label className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 block">
-                      Choose Category
-                    </label>
-                    <div className="flex flex-col gap-2.5">
-                      {['Restaurant', 'Hotel', 'Cloud Kitchen'].map((cat) => (
-                        <label key={cat} className="flex items-center gap-3 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300 font-medium">
-                          <input
-                            type="radio"
-                            name="category"
-                            value={cat}
-                            checked={formState.category === cat}
-                            onChange={handleChange}
-                            className="w-4 h-4 text-[#FF4F18] accent-[#FF4F18] border-zinc-300 focus:ring-[#FF4F18] dark:border-zinc-700 dark:bg-zinc-900"
-                          />
-                          <span>{cat}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Interested */}
                   <div className="space-y-2">
-                    <label htmlFor="interested" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                      Interested
+                    <label htmlFor="category" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Choose Category
                     </label>
                     <div className="relative">
                       <select
-                        id="interested"
-                        name="interested"
-                        value={formState.interested}
+                        id="category"
+                        name="category"
+                        value={formState.category}
+                        onChange={handleChange}
+                        className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
+                      >
+                        <option value="" disabled>Select Category</option>
+                        {categories.map((cat, idx) => (
+                          <option key={cat + '-' + idx} value={cat}>{cat}</option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
+                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Purpose */}
+                  <div className="space-y-2">
+                    <label htmlFor="purpose" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                      Purpose
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="purpose"
+                        name="purpose"
+                        value={formState.purpose}
                         onChange={handleChange}
                         className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-3.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
                       >
                         <option value="Restaurant OS">Restaurant OS</option>
                         <option value="Partnership">Partnership</option>
-                        <option value="Other">Other</option>
-                        <option value="Complaint">Complaint</option>
+                        <option value="Query">Query</option>
+                        <option value="Others">Others</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

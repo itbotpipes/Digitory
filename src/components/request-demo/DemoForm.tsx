@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
 
 export default function DemoForm() {
@@ -8,14 +8,29 @@ export default function DemoForm() {
     name: '',
     phone: '',
     email: '',
-    restaurantName: '',
-    outlets: '1',
-    primaryGoal: 'Kitchen communication',
-    notes: '',
+    businessName: '',
+    category: '',
+    purpose: 'Restaurant OS',
+    message: '',
   });
 
+  const [categories, setCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/industries');
+        const list = res.data?.docs || res.data || [];
+        setCategories(list.map((item: any) => item.title || item.shortLabel));
+      } catch (err) {
+        console.error('Failed to load categories', err);
+        setCategories(['Restaurant', 'Hotel', 'Cloud Kitchen']);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -36,8 +51,10 @@ export default function DemoForm() {
         name: formState.name,
         phone: formState.phone,
         email: formState.email,
-        locations: formState.outlets,
-        goal: formState.primaryGoal,
+        businessName: formState.businessName,
+        category: formState.category || undefined,
+        purpose: formState.purpose,
+        message: formState.message,
       });
       setIsSubmitting(false);
       setSubmitStatus('success');
@@ -45,10 +62,10 @@ export default function DemoForm() {
         name: '',
         phone: '',
         email: '',
-        restaurantName: '',
-        outlets: '1',
-        primaryGoal: 'Kitchen communication',
-        notes: '',
+        businessName: '',
+        category: '',
+        purpose: 'Restaurant OS',
+        message: '',
       });
     } catch (error) {
       console.error(error);
@@ -211,40 +228,40 @@ export default function DemoForm() {
                   />
                 </div>
 
-                {/* Restaurant Name */}
+                {/* Business Name */}
                 <div className="space-y-2">
-                  <label htmlFor="restaurantName" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Restaurant Name
+                  <label htmlFor="businessName" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    Business Name<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    id="restaurantName"
-                    name="restaurantName"
+                    id="businessName"
+                    name="businessName"
                     required
-                    value={formState.restaurantName}
+                    value={formState.businessName}
                     onChange={handleChange}
-                    placeholder="Enter brand or company name"
+                    placeholder="Business Name"
                     className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-955 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200"
                   />
                 </div>
 
-                {/* Number of Outlets */}
+                {/* Choose Category */}
                 <div className="space-y-2">
-                  <label htmlFor="outlets" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Number of Outlets
+                  <label htmlFor="category" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    Choose Category
                   </label>
                   <div className="relative">
                     <select
-                      id="outlets"
-                      name="outlets"
-                      value={formState.outlets}
+                      id="category"
+                      name="category"
+                      value={formState.category}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-955 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
+                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
                     >
-                      <option value="1">Single Outlet</option>
-                      <option value="2-5">2 to 5 Outlets</option>
-                      <option value="6-10">6 to 10 Outlets</option>
-                      <option value="10+">10+ Outlets</option>
+                      <option value="" disabled>Select Category</option>
+                      {categories.map((cat, idx) => (
+                        <option key={cat + '-' + idx} value={cat}>{cat}</option>
+                      ))}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -254,24 +271,23 @@ export default function DemoForm() {
                   </div>
                 </div>
 
-                {/* Primary Area of Focus */}
+                {/* Purpose */}
                 <div className="space-y-2">
-                  <label htmlFor="primaryGoal" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Primary Area of Focus
+                  <label htmlFor="purpose" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    Purpose
                   </label>
                   <div className="relative">
                     <select
-                      id="primaryGoal"
-                      name="primaryGoal"
-                      value={formState.primaryGoal}
+                      id="purpose"
+                      name="purpose"
+                      value={formState.purpose}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-955 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
+                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-950 dark:text-white focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 appearance-none cursor-pointer"
                     >
-                      <option value="Kitchen communication">Kitchen communication (KDS)</option>
-                      <option value="Inventory wastage">Inventory wastage & tracking</option>
-                      <option value="Slow billing">Billing speed & POS queue</option>
-                      <option value="Multi-outlet management">Multi-outlet performance monitoring</option>
-                      <option value="Other">Other / All in one OS</option>
+                      <option value="Restaurant OS">Restaurant OS</option>
+                      <option value="Partnership">Partnership</option>
+                      <option value="Query">Query</option>
+                      <option value="Others">Others</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-zinc-400">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -281,18 +297,19 @@ export default function DemoForm() {
                   </div>
                 </div>
 
-                {/* Additional requirements or notes */}
+                {/* Message */}
                 <div className="space-y-2">
-                  <label htmlFor="notes" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Additional requirements or notes (Optional)
+                  <label htmlFor="message" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    Message
                   </label>
                   <textarea
-                    id="notes"
-                    name="notes"
-                    value={formState.notes}
+                    id="message"
+                    name="message"
+                    required
+                    rows={4}
+                    value={formState.message}
                     onChange={handleChange}
-                    placeholder="Tell us about your kitchen stack, pain points, or specific features you'd like to see."
-                    rows={3}
+                    placeholder="Message"
                     className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-[#08080a] px-4 py-2.5 text-sm text-zinc-955 dark:text-white placeholder-zinc-400 focus:border-[#FF4F18] focus:ring-1 focus:ring-[#FF4F18] outline-none transition-all duration-200 resize-none"
                   />
                 </div>

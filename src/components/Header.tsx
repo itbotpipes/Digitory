@@ -159,7 +159,7 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <div className="mt-2 pt-4 border-t border-zinc-200">
+          <div className="mt-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
             <Link
               href="/request-demo"
               onClick={() => setIsMenuOpen(false)}

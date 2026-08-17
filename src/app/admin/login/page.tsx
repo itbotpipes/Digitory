@@ -28,7 +28,20 @@ export default function AdminLogin() {
         window.location.href = '/admin/seo';
       }
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      let displayMessage = 'Login failed';
+      if (err.message) {
+        try {
+          const parsed = JSON.parse(err.message);
+          if (parsed.error?.details && parsed.error.details.length > 0) {
+            displayMessage = parsed.error.details.map((d: any) => d.message).join(', ');
+          } else {
+            displayMessage = parsed.error?.message || parsed.message || displayMessage;
+          }
+        } catch (_) {
+          displayMessage = err.message;
+        }
+      }
+      setError(displayMessage);
       setLoading(false);
     }
   };

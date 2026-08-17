@@ -20,6 +20,13 @@ export default function AdminDashboard() {
   const [newUser, setNewUser] = useState({ name: '', email: '', password: '', roleId: '' });
   const [creatingUser, setCreatingUser] = useState(false);
 
+  // Edit User states
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [editUserForm, setEditUserForm] = useState({ name: '', email: '', roleId: '', password: '' });
+  const [savingUser, setSavingUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
+
   // Roles management states
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [editingRole, setEditingRole] = useState<any | null>(null);
@@ -55,6 +62,7 @@ export default function AdminDashboard() {
 
   // Comment filter state
   const [commentSearchName, setCommentSearchName] = useState('');
+  const [commentSubTab, setCommentSubTab] = useState<'all' | 'reported'>('all');
 
   // Leads & Contacts state
   const [leadSearch, setLeadSearch] = useState('');
@@ -64,6 +72,20 @@ export default function AdminDashboard() {
   const [editingLead, setEditingLead] = useState<any>(null);
   const [leadForm, setLeadForm] = useState({ status: '', lastContactedDate: '', callNotes: '' });
   const [savingLead, setSavingLead] = useState(false);
+
+  // Custom Toast and Confirm Modal states
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  } | null>(null);
+
+  const showToast = (text: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToastMessage({ text, type });
+    setTimeout(() => setToastMessage(null), 4000);
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -101,6 +123,18 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('admin_token');
+    if (token) {
+      api.get('/auth/me', token)
+        .then((res) => {
+          const user = res.data?.user || res.data || res;
+          setCurrentUser(user);
+        })
+        .catch(console.error);
+    }
+  }, []);
+
+  useEffect(() => {
     if (activeTab === 'users' || activeTab === 'admins' || activeTab === 'roles') {
       const token = localStorage.getItem('admin_token');
       if (token) {
@@ -134,10 +168,10 @@ export default function AdminDashboard() {
         solutionsGridTitle: gridTitle,
         solutionsGridDesc: gridDesc
       }, token || '');
-      alert('Solutions grid headers saved successfully!');
+      showToast('Solutions grid headers saved successfully!', 'success');
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to save grid headers');
+      showToast(err.message || 'Failed to save grid headers', 'error');
     } finally {
       setSavingGridSettings(false);
     }
@@ -219,9 +253,10 @@ export default function AdminDashboard() {
       const updatedDoc = res.data?.doc || res.data || res;
       setData((prev: any) => prev.map((item: any) => (item._id === editingLead._id ? updatedDoc : item)));
       setEditingLead(null);
+      showToast('Record saved successfully!', 'success');
     } catch (err: any) {
       console.error(err);
-      alert('Failed to update record');
+      showToast('Failed to update record', 'error');
     } finally {
       setSavingLead(false);
     }
@@ -234,9 +269,10 @@ export default function AdminDashboard() {
       setData((prev: any) =>
         prev.map((item: any) => (item._id === id ? { ...item, status: newStatus } : item))
       );
+      showToast('Status updated successfully!', 'success');
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to update status');
+      showToast(err.message || 'Failed to update status', 'error');
     }
   };
 
@@ -297,15 +333,22 @@ export default function AdminDashboard() {
   };
 
   const handleDeletePage = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this page?')) return;
-    try {
-      const token = localStorage.getItem('admin_token');
-      await api.delete(`/pages/${id}`, token || '');
-      setData((prev) => prev.filter((item: any) => item._id !== id));
-    } catch (err) {
-      console.error(err);
-      alert('Failed to delete page');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Page',
+      message: 'Are you sure you want to delete this page? This action cannot be undone.',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('admin_token');
+          await api.delete(`/pages/${id}`, token || '');
+          setData((prev) => prev.filter((item: any) => item._id !== id));
+          showToast('Page deleted successfully!', 'success');
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to delete page', 'error');
+        }
+      }
+    });
   };
 
   const handleSavePage = async (e: React.FormEvent) => {
@@ -317,15 +360,17 @@ export default function AdminDashboard() {
         const res = await api.put(`/pages/${editingPage._id}`, pageForm, token);
         const updatedDoc = res.data?.doc || res.data || res;
         setData((prev) => prev.map((item: any) => (item._id === editingPage._id ? updatedDoc : item)));
+        showToast('Page updated successfully!', 'success');
       } else {
         const res = await api.post('/pages', pageForm, token);
         const newDoc = res.data?.doc || res.data || res;
         setData((prev) => [newDoc, ...prev]);
+        showToast('Page created successfully!', 'success');
       }
       setShowPageModal(false);
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to save page');
+      showToast(err.message || 'Failed to save page', 'error');
     } finally {
       setSavingPage(false);
     }
@@ -344,27 +389,92 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteComment = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this comment?')) return;
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Comment',
+      message: 'Are you sure you want to delete this comment? This action cannot be undone.',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('admin_token');
+          await api.delete(`/comments/${id}`, token || '');
+          setData((prev) => prev.filter((item: any) => item._id !== id));
+          showToast('Comment deleted successfully!', 'success');
+        } catch (err) {
+          console.error(err);
+          showToast('Failed to delete comment', 'error');
+        }
+      }
+    });
+  };
+
+  const handleToggleHideComment = async (id: string) => {
     try {
-      const token = localStorage.getItem('admin_token');
-      await api.delete(`/comments/${id}`, token || '');
-      setData((prev) => prev.filter((item: any) => item._id !== id));
-    } catch (err) {
+      const token = localStorage.getItem('admin_token') || '';
+      const res = await api.patch(`/comments/${id}/toggle-hide`, {}, token);
+      const updated = res.data?.doc || res.data || res;
+      setData((prev) => prev.map((item: any) => item._id === id ? { ...item, isHidden: updated.isHidden } : item));
+      showToast(`Comment visibility updated successfully`, 'success');
+    } catch (err: any) {
       console.error(err);
-      alert('Failed to delete comment');
+      showToast(err.message || 'Failed to update comment visibility', 'error');
+    }
+  };
+
+  const handleOpenEditUser = (user: any) => {
+    setEditingUser(user);
+    setEditUserForm({
+      name: user.name || '',
+      email: user.email || '',
+      roleId: user.roleId?._id || user.roleId || '',
+      password: ''
+    });
+    setShowEditUserModal(true);
+  };
+
+  const handleSaveUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setSavingUser(true);
+    try {
+      const token = localStorage.getItem('admin_token') || '';
+      const payload: any = {
+        name: editUserForm.name,
+        email: editUserForm.email,
+        roleId: editUserForm.roleId
+      };
+      if (editUserForm.password) {
+        payload.password = editUserForm.password;
+      }
+      const res = await api.put(`/users/${editingUser._id}`, payload, token);
+      const updated = res.data?.doc || res.data || res;
+      setData((prev) => prev.map((item: any) => item._id === editingUser._id ? updated : item));
+      setShowEditUserModal(false);
+      showToast('User profile updated successfully', 'success');
+    } catch (err: any) {
+      console.error(err);
+      showToast(err.message || 'Failed to update user profile', 'error');
+    } finally {
+      setSavingUser(false);
     }
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
-    try {
-      const token = localStorage.getItem('admin_token');
-      await api.delete(`/users/${id}`, token || '');
-      setData((prev) => prev.filter((item: any) => item._id !== id));
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || 'Failed to delete user');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete User',
+      message: 'Are you sure you want to delete this user/staff account? This action cannot be undone.',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('admin_token');
+          await api.delete(`/users/${id}`, token || '');
+          setData((prev) => prev.filter((item: any) => item._id !== id));
+          showToast('User deleted successfully!', 'success');
+        } catch (err: any) {
+          console.error(err);
+          showToast(err.message || 'Failed to delete user', 'error');
+        }
+      }
+    });
   };
 
   const handleOpenCreateRole = () => {
@@ -380,16 +490,22 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteRole = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this role?')) return;
-    try {
-      const token = localStorage.getItem('admin_token') || '';
-      await api.delete(`/roles/${id}`, token);
-      setData((prev) => prev.filter((item: any) => item._id !== id));
-      alert('Role deleted successfully');
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || 'Failed to delete role');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Role',
+      message: 'Are you sure you want to delete this role? Any user assigned to this role will lose permissions.',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('admin_token') || '';
+          await api.delete(`/roles/${id}`, token);
+          setData((prev) => prev.filter((item: any) => item._id !== id));
+          showToast('Role deleted successfully', 'success');
+        } catch (err: any) {
+          console.error(err);
+          showToast(err.message || 'Failed to delete role', 'error');
+        }
+      }
+    });
   };
 
   const handleSaveRole = async (e: React.FormEvent) => {
@@ -401,17 +517,17 @@ export default function AdminDashboard() {
         const res = await api.put(`/roles/${editingRole._id}`, roleForm, token);
         const updated = res.data?.doc || res.data || res;
         setData((prev) => prev.map((item: any) => item._id === editingRole._id ? updated : item));
-        alert('Role updated successfully');
+        showToast('Role updated successfully', 'success');
       } else {
         const res = await api.post('/roles', roleForm, token);
         const created = res.data?.doc || res.data || res;
         setData((prev) => [created, ...prev]);
-        alert('Role created successfully');
+        showToast('Role created successfully', 'success');
       }
       setShowRoleModal(false);
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to save role');
+      showToast(err.message || 'Failed to save role', 'error');
     } finally {
       setSavingRole(false);
     }
@@ -427,25 +543,32 @@ export default function AdminDashboard() {
       setData((prev) => [createdUser, ...prev]);
       setShowCreateModal(false);
       setNewUser({ name: '', email: '', password: '', roleId: roles[0]?._id || '' });
-      alert('User created successfully');
+      showToast('User created successfully', 'success');
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to create user');
+      showToast(err.message || 'Failed to create user', 'error');
     } finally {
       setCreatingUser(false);
     }
   };
 
   const handleDeleteUpdate = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this announcement?')) return;
-    try {
-      const token = localStorage.getItem('admin_token');
-      await api.delete(`/updates/${id}`, token || '');
-      setData((prev) => prev.filter((item: any) => item._id !== id));
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || 'Failed to delete announcement');
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Announcement',
+      message: 'Are you sure you want to delete this announcement/update?',
+      onConfirm: async () => {
+        try {
+          const token = localStorage.getItem('admin_token');
+          await api.delete(`/updates/${id}`, token || '');
+          setData((prev) => prev.filter((item: any) => item._id !== id));
+          showToast('Announcement deleted successfully', 'success');
+        } catch (err: any) {
+          console.error(err);
+          showToast(err.message || 'Failed to delete announcement', 'error');
+        }
+      }
+    });
   };
 
   const handleOpenCreateUpdate = () => {
@@ -487,17 +610,17 @@ export default function AdminDashboard() {
         res = await api.put(`/updates/${editingUpdate._id}`, updateForm, token);
         const updated = res.data?.doc || res.data || res;
         setData((prev) => prev.map((item: any) => item._id === editingUpdate._id ? updated : item));
-        alert('Announcement updated successfully');
+        showToast('Announcement updated successfully', 'success');
       } else {
         res = await api.post('/updates', updateForm, token);
         const created = res.data?.doc || res.data || res;
         setData((prev) => [created, ...prev]);
-        alert('Announcement created successfully');
+        showToast('Announcement created successfully', 'success');
       }
       setShowUpdateModal(false);
     } catch (err: any) {
       console.error(err);
-      alert(err.message || 'Failed to save announcement');
+      showToast(err.message || 'Failed to save announcement', 'error');
     } finally {
       setSavingUpdate(false);
     }
@@ -694,8 +817,32 @@ export default function AdminDashboard() {
             </div>
           )}
           {activeTab === 'comments' && (
-            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 flex flex-col sm:flex-row justify-between items-center gap-4 bg-zinc-50/50 dark:bg-black/20">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Filter Comments</span>
+            <div className="p-5 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-black/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Filter Comments</span>
+                <div className="flex bg-zinc-150 dark:bg-zinc-800 p-0.5 rounded-lg text-[11px] font-bold shrink-0">
+                  <button
+                    onClick={() => setCommentSubTab('all')}
+                    className={`px-3 py-1 rounded-md transition-colors ${
+                      commentSubTab === 'all'
+                        ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-xs'
+                        : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    All Comments
+                  </button>
+                  <button
+                    onClick={() => setCommentSubTab('reported')}
+                    className={`px-3 py-1 rounded-md transition-colors ${
+                      commentSubTab === 'reported'
+                        ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-xs'
+                        : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    Reported Comments
+                  </button>
+                </div>
+              </div>
               <div className="flex gap-2 w-full sm:w-auto">
                 <input
                   type="text"
@@ -725,7 +872,10 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Email</th>
                       <th className="px-6 py-4 font-semibold">Phone</th>
-                      <th className="px-6 py-4 font-semibold">Goal</th>
+                      <th className="px-6 py-4 font-semibold">Business Name</th>
+                      <th className="px-6 py-4 font-semibold">Category</th>
+                      <th className="px-6 py-4 font-semibold">Purpose</th>
+                      <th className="px-6 py-4 font-semibold">Message</th>
                       <th className="px-6 py-4 font-semibold">Status</th>
                       <th className="px-6 py-4 font-semibold">Submitted</th>
                       <th className="px-6 py-4 font-semibold">Last Contacted</th>
@@ -737,6 +887,9 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Email</th>
                       <th className="px-6 py-4 font-semibold">Phone</th>
+                      <th className="px-6 py-4 font-semibold">Business Name</th>
+                      <th className="px-6 py-4 font-semibold">Category</th>
+                      <th className="px-6 py-4 font-semibold">Purpose</th>
                       <th className="px-6 py-4 font-semibold">Message</th>
                       <th className="px-6 py-4 font-semibold">Status</th>
                       <th className="px-6 py-4 font-semibold">Submitted</th>
@@ -810,48 +963,59 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/60">
-                {data.map((item: any, i: number) => (
-                  <tr key={item._id || i} className="hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
+                {(() => {
+                  let list = data;
+                  if (activeTab === 'comments' && commentSubTab === 'reported') {
+                    list = data.filter((c: any) => c.isReported || (c.reports && c.reports.length > 0));
+                  }
+                  return list.map((item: any, i: number) => (
+                    <tr key={item._id || i} className="hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
                     {activeTab === 'leads' && (
-                      <>
-                        <td className="px-6 py-4 font-medium">{item.name}</td>
-                        <td className="px-6 py-4">{item.email}</td>
-                        <td className="px-6 py-4">{item.phone}</td>
-                        <td className="px-6 py-4 max-w-[150px] truncate">{item.goal}</td>
-                        <td className="px-6 py-4">
-                          <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                            {item.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
-                        <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
-                            View/Edit
-                          </button>
-                        </td>
-                      </>
-                    )}
-                    {activeTab === 'contacts' && (
-                      <>
-                        <td className="px-6 py-4 font-medium">{item.name}</td>
-                        <td className="px-6 py-4">{item.email}</td>
-                        <td className="px-6 py-4">{item.phone}</td>
-                        <td className="px-6 py-4 max-w-[150px] truncate">{item.message}</td>
-                        <td className="px-6 py-4">
-                          <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                            {item.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
-                        <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
-                            View/Edit
-                          </button>
-                        </td>
-                      </>
-                    )}
+                       <>
+                         <td className="px-6 py-4 font-medium">{item.name}</td>
+                         <td className="px-6 py-4">{item.email}</td>
+                         <td className="px-6 py-4">{item.phone}</td>
+                         <td className="px-6 py-4">{item.businessName || 'N/A'}</td>
+                         <td className="px-6 py-4">{item.category || 'N/A'}</td>
+                         <td className="px-6 py-4">{item.purpose || 'N/A'}</td>
+                         <td className="px-6 py-4 max-w-[150px] truncate">{item.message || 'N/A'}</td>
+                         <td className="px-6 py-4">
+                           <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                             {item.status}
+                           </span>
+                         </td>
+                         <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                         <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
+                         <td className="px-6 py-4">
+                           <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
+                             View/Edit
+                           </button>
+                         </td>
+                       </>
+                     )}
+                     {activeTab === 'contacts' && (
+                       <>
+                         <td className="px-6 py-4 font-medium">{item.name}</td>
+                         <td className="px-6 py-4">{item.email}</td>
+                         <td className="px-6 py-4">{item.phone}</td>
+                         <td className="px-6 py-4">{item.businessName || 'N/A'}</td>
+                         <td className="px-6 py-4">{item.category || 'N/A'}</td>
+                         <td className="px-6 py-4">{item.purpose || 'N/A'}</td>
+                         <td className="px-6 py-4 max-w-[150px] truncate">{item.message || 'N/A'}</td>
+                         <td className="px-6 py-4">
+                           <span className="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                             {item.status}
+                           </span>
+                         </td>
+                         <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
+                         <td className="px-6 py-4">{item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : 'Never'}</td>
+                         <td className="px-6 py-4">
+                           <button onClick={() => handleOpenEditLead(item)} className="text-[#FF4F18] font-bold hover:underline transition-opacity">
+                             View/Edit
+                           </button>
+                         </td>
+                       </>
+                     )}
                     {activeTab === 'updates' && (
                       <>
                         <td className="px-6 py-4 font-medium max-w-[250px] truncate">{item.title}</td>
@@ -928,9 +1092,14 @@ export default function AdminDashboard() {
                          </td>
                           <td className="px-6 py-4 max-w-[300px]">
                             <div className="font-medium text-zinc-900 dark:text-zinc-150 whitespace-pre-wrap break-words">{item.text}</div>
-                            {item.parentId && (
-                              <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-extrabold uppercase bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded">Reply</span>
-                            )}
+                            <div className="flex flex-wrap gap-1.5 mt-1.5">
+                              {item.parentId && (
+                                <span className="inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded">Reply</span>
+                              )}
+                              {item.isHidden && (
+                                <span className="inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-500 rounded">Hidden</span>
+                              )}
+                            </div>
                             {item.isReported && (
                               <div className="mt-2 space-y-1">
                                 <span className="inline-block px-2 py-0.5 text-[9px] font-extrabold uppercase bg-red-50 dark:bg-red-950/20 text-red-500 rounded">⚠️ {item.reportsCount} Reports</span>
@@ -948,7 +1117,17 @@ export default function AdminDashboard() {
                           </td>
                          <td className="px-6 py-4 max-w-[200px] truncate">{item.post?.title || 'Unknown Post'}</td>
                          <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
-                         <td className="px-6 py-4">
+                         <td className="px-6 py-4 space-x-2">
+                           <button 
+                             onClick={() => handleToggleHideComment(item._id)} 
+                             className={`font-bold px-3 py-1.5 rounded-lg transition-colors ${
+                               item.isHidden 
+                                 ? 'text-green-600 bg-green-50 dark:bg-green-500/10 hover:bg-green-100 dark:hover:bg-green-500/20' 
+                                 : 'text-zinc-650 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700/50'
+                             }`}
+                           >
+                             {item.isHidden ? 'Unhide' : 'Hide'}
+                           </button>
                            <button onClick={() => handleDeleteComment(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors">
                              Delete
                            </button>
@@ -965,10 +1144,18 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleDeleteUser(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors">
-                            Delete
+                        <td className="px-6 py-4 space-x-2">
+                          <button 
+                            onClick={() => handleOpenEditUser(item)} 
+                            className="text-[#FF4F18] font-bold hover:underline transition-opacity"
+                          >
+                            Edit / Password
                           </button>
+                          {(!currentUser || currentUser._id !== item._id) && (
+                            <button onClick={() => handleDeleteUser(item._id)} className="text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors">
+                              Delete
+                            </button>
+                          )}
                         </td>
                       </>
                     )}
@@ -1018,14 +1205,24 @@ export default function AdminDashboard() {
                       </>
                     )}
                   </tr>
-                ))}
-                {data.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-10 text-center text-zinc-500">
-                      No records found.
-                    </td>
-                  </tr>
-                )}
+                ));
+              })()}
+              {(() => {
+                let list = data;
+                if (activeTab === 'comments' && commentSubTab === 'reported') {
+                  list = data.filter((c: any) => c.isReported || (c.reports && c.reports.length > 0));
+                }
+                if (list.length === 0) {
+                  return (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-10 text-center text-zinc-500">
+                        No records found.
+                      </td>
+                    </tr>
+                  );
+                }
+                return null;
+              })()}
               </tbody>
             </table>
           </div>
@@ -1429,9 +1626,9 @@ export default function AdminDashboard() {
                 <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Email</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.email}</span></div>
                 <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Phone</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.phone}</span></div>
                 <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Submitted</span><span className="font-medium text-zinc-900 dark:text-white">{new Date(editingLead.createdAt).toLocaleString()}</span></div>
-                {editingLead.locations && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Locations</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.locations}</span></div>}
-                {editingLead.goal && <div className="col-span-2"><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Goal</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.goal}</span></div>}
-                {editingLead.interested && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Interested In</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.interested}</span></div>}
+                {editingLead.businessName && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Business Name</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.businessName}</span></div>}
+                {editingLead.category && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Category</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.category}</span></div>}
+                {editingLead.purpose && <div><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Purpose</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.purpose}</span></div>}
                 {editingLead.message && <div className="col-span-2"><span className="text-zinc-500 font-bold uppercase text-[10px] tracking-wider block">Message</span><span className="font-medium text-zinc-900 dark:text-white">{editingLead.message}</span></div>}
               </div>
             </div>
@@ -1495,6 +1692,131 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showEditUserModal && editingUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setShowEditUserModal(false)} />
+          <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl z-10 animate-scale-in">
+            <h2 className="text-xl font-extrabold text-zinc-950 dark:text-white mb-2">Edit Account & Reset Password</h2>
+            <p className="text-xs text-zinc-500 mb-6">Modify user profile info or input a new password to reset it.</p>
+            <form onSubmit={handleSaveUser} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Name</label>
+                <input 
+                  type="text" 
+                  required
+                  value={editUserForm.name}
+                  onChange={(e) => setEditUserForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Email Address</label>
+                <input 
+                  type="email" 
+                  required
+                  value={editUserForm.email}
+                  onChange={(e) => setEditUserForm(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Reset Password</label>
+                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500">Optional</span>
+                </div>
+                <input 
+                  type="password" 
+                  minLength={8}
+                  value={editUserForm.password}
+                  onChange={(e) => setEditUserForm(prev => ({ ...prev, password: e.target.value }))}
+                  placeholder="Leave blank to keep current"
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Role</label>
+                <select 
+                  required
+                  value={editUserForm.roleId}
+                  onChange={(e) => setEditUserForm(prev => ({ ...prev, roleId: e.target.value }))}
+                  className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[#F8F9FA] dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#FF4F18] text-sm text-zinc-900 dark:text-white cursor-pointer"
+                >
+                  {roles.map((role) => (
+                    <option key={role._id} value={role._id}>{role.name}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="pt-4 flex gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowEditUserModal(false)}
+                  className="flex-1 px-4 py-2.5 font-bold text-xs text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={savingUser}
+                  className="flex-1 bg-[#FF4F18] hover:bg-[#E03F0D] text-white py-2.5 rounded-full text-xs font-bold transition-all duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {savingUser ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-[100] max-w-sm w-full animate-slide-in">
+          <div className={`p-4 rounded-2xl shadow-xl border flex items-center justify-between gap-4 ${
+            toastMessage.type === 'error' 
+              ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400' 
+              : toastMessage.type === 'success' 
+              ? 'bg-[#FFF3EF] dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/50 text-[#FF4F18] dark:text-[#ff6a3c]' 
+              : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
+          }`}>
+            <span className="text-xs font-bold">{toastMessage.text}</span>
+            <button 
+              onClick={() => setToastMessage(null)}
+              className="text-xs font-bold hover:opacity-70 cursor-pointer shrink-0"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {confirmModal && confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-fade-in" onClick={() => setConfirmModal(null)} />
+          <div className="relative bg-white dark:bg-[#121214] border border-zinc-200 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl z-10 animate-scale-in">
+            <h2 className="text-base font-extrabold text-zinc-955 dark:text-white mb-2">{confirmModal.title}</h2>
+            <p className="text-xs text-zinc-555 dark:text-zinc-450 mb-6 leading-relaxed">{confirmModal.message}</p>
+            <div className="flex gap-3">
+              <button 
+                type="button" 
+                onClick={() => setConfirmModal(null)}
+                className="flex-1 px-4 py-2.5 font-bold text-xs text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={() => {
+                  confirmModal.onConfirm();
+                  setConfirmModal(null);
+                }}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-full text-xs font-bold transition-all duration-200 shadow-md flex items-center justify-center cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       )}
