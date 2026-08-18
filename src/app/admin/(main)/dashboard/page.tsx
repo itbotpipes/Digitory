@@ -1835,7 +1835,7 @@ export default function AdminDashboard({ activeTabProp }: { activeTabProp?: 'lea
             toastMessage.type === 'error' 
               ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400' 
               : toastMessage.type === 'success' 
-              ? 'bg-[#FFF3EF] dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/50 text-[#FF4F18] dark:text-[#ff6a3c]' 
+              ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400' 
               : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300'
           }`}>
             <span className="text-xs font-bold">{toastMessage.text}</span>

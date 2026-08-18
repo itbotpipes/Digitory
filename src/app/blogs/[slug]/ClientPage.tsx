@@ -646,7 +646,11 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                       const isEditingThis = editingCommentId === comment._id;
                       const isReplyingThis = replyingCommentId === comment._id;
                       const hasCurrentUserReported = reportedCommentIds.includes(comment._id);
-                      const hasLiked = comment.likes && comment.likes.includes(loggedInUserId);
+                      const hasLiked = comment.likes && (
+                        (loggedInUserId && comment.likes.includes(loggedInUserId)) ||
+                        (!loggedInUserId && guestClientId && comment.likes.includes(guestClientId)) ||
+                        (comment.likes.includes(localStorage.getItem('guest_client_id')))
+                      );
 
                       return (
                         <div

@@ -155,8 +155,25 @@ export default function TestSection() {
             <div className="w-full max-w-[440px] rounded-[32px] bg-[#F0EBE3] shadow-2xl overflow-hidden relative">
               <style dangerouslySetInnerHTML={{
                 __html: `
-                .dark-map {
-                  filter: invert(90%) hue-rotate(180deg);
+                .dark-map .bg-white {
+                  background-color: #1a1a1c !important;
+                }
+                .dark-map .text-zinc-800 {
+                  color: #ffffff !important;
+                }
+                .dark .bg-\\[\\#D9FDD3\\] {
+                  background-color: #1f1f22 !important;
+                  color: #ffffff !important;
+                }
+                .dark .bg-\\[\\#D9FDD3\\] p {
+                  color: #ffffff !important;
+                }
+                .dark .bg-\\[\\#D9FDD3\\] span {
+                  color: #FF4F18 !important;
+                }
+                /* Mute outgoing message time span color to match other bubble elements */
+                .dark .bg-\\[\\#D9FDD3\\] span.absolute {
+                  color: #71717a !important;
                 }
               `}} />
 
@@ -226,8 +243,8 @@ export default function TestSection() {
                       {/* Message Bubble */}
                       <div className={`rounded-2xl px-3.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.08)] max-w-[82%] relative flex flex-col ${
                         isOutgoing 
-                          ? 'bg-[#D9FDD3] rounded-tr-none text-zinc-900' 
-                          : 'bg-white rounded-tl-none text-zinc-800'
+                          ? 'bg-[#D9FDD3] dark:bg-zinc-850 text-zinc-900 dark:text-white rounded-tr-none' 
+                          : 'bg-white dark:bg-zinc-800/90 rounded-tl-none text-zinc-850 dark:text-zinc-100'
                       }`}>
                         <span className={`text-[11px] font-bold mb-0.5 leading-none ${
                           isOutgoing ? 'text-[#00a884]' : 'text-[#FF4F18]'

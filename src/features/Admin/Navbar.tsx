@@ -85,10 +85,10 @@ const links: ILink[] = [
     permission: "manage_users",
   },
   {
-    label: "Pages",
-    href: "/admin/pages",
-    Icon: FileText,
-    permission: "manage_blogs",
+    label: "Settings",
+    href: "/admin/settings",
+    Icon: SettingsIcon,
+    permission: "manage_users",
   },
 ];
 
@@ -137,6 +137,27 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
     window.location.href = '/admin/login';
   };
 
+  const [logoBlack, setLogoBlack] = useState('/digitory-black.png');
+  const [logoWhite, setLogoWhite] = useState('/digitory-white.png');
+
+  useEffect(() => {
+    const handleBrandingSync = () => {
+      const savedBlack = localStorage.getItem('branding_logo_black');
+      const savedWhite = localStorage.getItem('branding_logo_white');
+      if (savedBlack) setLogoBlack(savedBlack);
+      if (savedWhite) setLogoWhite(savedWhite);
+    };
+
+    // Load initial values
+    handleBrandingSync();
+
+    // Listen for real-time changes
+    window.addEventListener('branding_logo_update', handleBrandingSync);
+    return () => {
+      window.removeEventListener('branding_logo_update', handleBrandingSync);
+    };
+  }, []);
+
   return (
     <div className={clsx("w-64 flex-shrink-0 bg-white dark:bg-[#121214] border-r border-zinc-200 dark:border-zinc-800/80 transition-colors duration-300", className)}>
       <div className="flex h-full flex-col justify-between py-6 px-4">
@@ -144,21 +165,15 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         {/* Logo/Header area */}
         <div className="mb-8 px-2">
           <Link href="/admin/seo" className="block">
-            <Image
-              src="/digitory-black.png"
+            <img
+              src={logoBlack}
               alt="Digitory Logo"
-              width={130}
-              height={32}
               className="object-contain h-7 w-auto block dark:hidden"
-              priority
             />
-            <Image
-              src="/digitory-white.png"
+            <img
+              src={logoWhite}
               alt="Digitory Logo"
-              width={130}
-              height={32}
               className="object-contain h-7 w-auto hidden dark:block"
-              priority
             />
           </Link>
         </div>
