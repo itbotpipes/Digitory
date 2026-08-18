@@ -1,7 +1,5 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-function page() {
-  return <div className="flex"></div>;
+export default function AdminPage() {
+  redirect("/admin/leads");
 }
-
-export default page;

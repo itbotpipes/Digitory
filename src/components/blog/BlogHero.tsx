@@ -77,13 +77,28 @@ export default function BlogHero({
     }
   };
 
-  const categories = [
+  const [categories, setCategories] = useState<string[]>([
     'All Blogs',
     'Restaurant Operations',
     'Kitchen',
     'Inventory',
     'Analytics',
-  ];
+  ]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await api.get('/categories');
+        const cats = res.data?.docs || res.data?.results || (Array.isArray(res.data) ? res.data : []);
+        if (cats.length > 0) {
+          setCategories(['All Blogs', ...cats.map((c: any) => c.name)]);
+        }
+      } catch (err) {
+        console.warn('Failed to load categories, using defaults', err);
+      }
+    }
+    loadCategories();
+  }, []);
 
   // Static Fallback values
   const defaultTitle = "Why Restaurants in India Trust Digitory for Smart Operations & Growth";
@@ -183,7 +198,7 @@ export default function BlogHero({
               </p>
 
               <Link
-                href={`/blog/${slug}`}
+                href={`/blogs/${slug}`}
                 className="inline-flex justify-center items-center text-center rounded-full bg-[#FF4F18] px-6 py-3 text-[15px] font-semibold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer group"
               >
                 <span>Read article</span>

@@ -104,7 +104,7 @@ export default function LatestStories({
             {storiesToRender.slice(0, visibleCount).map((article) => (
               <Link
                 key={article.id}
-                href={`/blog/${article.slug}`}
+                href={`/blogs/${article.slug}`}
                 className="flex flex-col h-full bg-transparent group"
               >
                 <div className="relative aspect-16/10 w-full overflow-hidden rounded-[24px] bg-zinc-100 dark:bg-zinc-900 mb-4 border border-zinc-200/60 dark:border-zinc-800/60 shadow-2xs shrink-0">

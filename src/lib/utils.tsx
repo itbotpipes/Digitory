@@ -53,7 +53,7 @@ export const links: LinkSchema[] = [
       },
       {
         label: "Knowledge Hub",
-        path: "/blog",
+        path: "/blogs",
       },
       {
         label: "FAQs",

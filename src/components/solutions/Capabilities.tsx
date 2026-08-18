@@ -354,7 +354,7 @@ export default function Capabilities() {
                       
                       {item.isComingSoon && (
                         <div className="mb-3">
-                          <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-full">
+                          <span className="text-[10px] uppercase tracking-widest font-extrabold text-[#FF4F18] bg-[#FFF3EF] dark:bg-[#FF4F18]/10 px-2.5 py-1 rounded-full border border-orange-100 dark:border-transparent">
                             Coming Soon
                           </span>
                         </div>

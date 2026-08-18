@@ -19,75 +19,75 @@ interface ILink {
 
 const links: ILink[] = [
   {
+    label: "SEO Management",
+    href: "/admin/seo",
+    Icon: SearchIcon,
+    permission: "manage_blogs",
+  },
+  {
     label: "Demo Requests",
-    href: "/admin/dashboard?tab=leads",
+    href: "/admin/leads",
     Icon: Inbox,
     permission: "manage_leads",
   },
   {
     label: "Contact Messages",
-    href: "/admin/dashboard?tab=contacts",
+    href: "/admin/contacts",
     Icon: MessageSquare,
     permission: "manage_contacts",
   },
   {
     label: "Announcements",
-    href: "/admin/dashboard?tab=updates",
+    href: "/admin/updates",
     Icon: Megaphone,
     permission: "manage_blogs",
   },
   {
     label: "Blog Posts",
-    href: "/admin/dashboard?tab=blogs",
+    href: "/admin/blogs",
     Icon: FileText,
     permission: "manage_blogs",
   },
   {
     label: "Solutions",
-    href: "/admin/dashboard?tab=solutions",
+    href: "/admin/solutions",
     Icon: CheckCircle,
     permission: "manage_solutions",
   },
   {
     label: "Industries",
-    href: "/admin/dashboard?tab=industries",
+    href: "/admin/industries",
     Icon: HomeIcon,
     permission: "manage_industries",
   },
   {
     label: "Comments",
-    href: "/admin/dashboard?tab=comments",
+    href: "/admin/comments",
     Icon: MessageSquare,
     permission: "manage_comments",
   },
   {
     label: "Registered Users",
-    href: "/admin/dashboard?tab=users",
+    href: "/admin/users",
     Icon: Users,
     permission: "manage_users",
   },
   {
     label: "Staff / Admins",
-    href: "/admin/dashboard?tab=admins",
+    href: "/admin/admins",
     Icon: Users,
     permission: "manage_users",
   },
   {
     label: "Roles",
-    href: "/admin/dashboard?tab=roles",
+    href: "/admin/roles",
     Icon: SettingsIcon,
     permission: "manage_users",
   },
   {
     label: "Pages",
-    href: "/admin/dashboard?tab=pages",
+    href: "/admin/pages",
     Icon: FileText,
-    permission: "manage_blogs",
-  },
-  {
-    label: "SEO Management",
-    href: "/admin/seo",
-    Icon: SearchIcon,
     permission: "manage_blogs",
   },
 ];
@@ -190,9 +190,9 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         <div className="pt-6 mt-4 border-t border-zinc-150 dark:border-zinc-800/80 space-y-1">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center rounded-xl px-3 py-2.5 transition-all duration-200 font-semibold text-[14px] text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-600 dark:hover:text-red-400 group"
+            className="w-full flex items-center rounded-xl px-3 py-2.5 transition-all duration-200 font-bold text-[14px] text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/10 group cursor-pointer"
           >
-            <LogOut size={18} className="mr-3 shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5" strokeWidth={2} />
+            <LogOut size={18} className="mr-3 shrink-0 transition-transform duration-200 group-hover:-translate-x-0.5" strokeWidth={2.5} />
             Logout
           </button>
         </div>

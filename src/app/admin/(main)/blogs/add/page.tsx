@@ -14,7 +14,7 @@ function AddBlog() {
 
     try {
       await api.post("/posts", data, token);
-      router.push("/admin/blogs");
+      router.push("/admin/dashboard?tab=blogs");
     } catch (err) {
       console.error(err);
       alert("Failed to create blog");

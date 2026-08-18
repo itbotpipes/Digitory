@@ -66,7 +66,7 @@ export default function Header() {
     { label: 'About', href: '/about' },
     { label: 'Solutions', href: '/solutions' },
     { label: 'Restaurant Types', href: '/restaurant-types' },
-    { label: 'Resources', href: '/blog' },
+    { label: 'Resources', href: '/blogs' },
     { label: 'Contact', href: '/contact' },
   ];
 

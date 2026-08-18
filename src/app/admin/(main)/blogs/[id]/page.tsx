@@ -55,7 +55,7 @@ function EditBlogPage({ params }: PageProps) {
 
     try {
       await api.put(`/posts/${id}`, data, token);
-      router.push("/admin/blogs");
+      router.push("/admin/dashboard?tab=blogs");
     } catch (err) {
       console.error(err);
       alert("Failed to update blog");
@@ -69,7 +69,7 @@ function EditBlogPage({ params }: PageProps) {
 
       try {
         await api.delete(`/posts/${id}`, token);
-        router.push("/admin/blogs");
+        router.push("/admin/dashboard?tab=blogs");
       } catch (err) {
         console.error(err);
         alert("Failed to delete blog");
@@ -90,7 +90,7 @@ function EditBlogPage({ params }: PageProps) {
       <div className="absolute inset-0 z-50 bg-[#191919] flex flex-col items-center justify-center gap-4 text-[#8c8c8c]">
         <span>Blog not found.</span>
         <button
-          onClick={() => router.push("/admin/blogs")}
+          onClick={() => router.push("/admin/dashboard?tab=blogs")}
           className="bg-[#2eaadc] hover:bg-[#1a93c4] text-white px-4 py-1.5 text-xs font-semibold rounded cursor-pointer transition-all"
         >
           Go Back

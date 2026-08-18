@@ -370,7 +370,7 @@ export default function IndustriesPage() {
                             <span className="text-[10px] font-extrabold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 block">
                               Estimated Monthly Savings
                             </span>
-                            <span className="text-2xl md:text-3xl font-black text-[#FF4F18] leading-none mb-2">
+                            <span className="text-2xl md:text-3xl font-black text-emerald-500 leading-none mb-2">
                               ₹ {Math.round(monthlySavings).toLocaleString()} / month
                             </span>
                             <span className="text-xs font-bold text-zinc-500 dark:text-zinc-400">

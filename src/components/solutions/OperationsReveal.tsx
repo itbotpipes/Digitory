@@ -96,7 +96,7 @@ export default function OperationsReveal({
         } ${
           isActive 
             ? (isHighlighted ? 'text-[#FF4F18]' : 'text-zinc-900 dark:text-zinc-100') 
-            : 'text-zinc-300 dark:text-zinc-750'
+            : 'text-zinc-300 dark:text-zinc-700'
         }`}
       >
         {word}{" "}

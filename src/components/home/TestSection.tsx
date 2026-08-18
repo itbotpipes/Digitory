@@ -44,14 +44,20 @@ export default function TestSection() {
     },
   ];
 
-  const chatMessages = [
+  const [messages, setMessages] = React.useState<any[]>([
     {
       role: 'Chef',
       text: "Table 12's order isn't showing in the kitchen. 🍳",
       time: '7:42 PM',
       avatarColor: 'bg-emerald-100 text-emerald-700',
       avatarLabel: '👨‍🍳',
-    },
+    }
+  ]);
+
+  const [typedMessage, setTypedMessage] = React.useState('');
+  const chatContainerRef = React.useRef<HTMLDivElement>(null);
+
+  const presetMessages = [
     {
       role: 'Inventory',
       text: "We're out of paneer. Please stop taking paneer orders. 📦",
@@ -75,12 +81,62 @@ export default function TestSection() {
     },
     {
       role: 'Captain',
-      text: 'Three orders are getting delayed. Guests are asking. ⏱️',
+      text: 'Three orders are delayed. Guests are asking. ⏱️',
       time: '7:53 PM',
       avatarColor: 'bg-indigo-100 text-indigo-700',
       avatarLabel: '🤵',
     },
   ];
+
+  React.useEffect(() => {
+    let active = true;
+    let currentIdx = 0;
+    const interval = setInterval(() => {
+      if (!active) return;
+      if (currentIdx < presetMessages.length) {
+        const nextMsg = presetMessages[currentIdx];
+        setMessages(prev => {
+          if (prev.some(m => m.text === nextMsg.text)) {
+            return prev;
+          }
+          return [...prev, nextMsg];
+        });
+        currentIdx++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 1500);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!typedMessage.trim()) return;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setMessages(prev => [
+      ...prev,
+      {
+        role: 'You',
+        text: typedMessage,
+        time: timeStr,
+        avatarColor: 'bg-[#FFF3EF] text-[#FF4F18]',
+        avatarLabel: '👤',
+        isOutgoing: true,
+      }
+    ]);
+    setTypedMessage('');
+  };
 
   return (
     <div className="w-full">
@@ -99,35 +155,8 @@ export default function TestSection() {
             <div className="w-full max-w-[440px] rounded-[32px] bg-[#F0EBE3] shadow-2xl overflow-hidden relative">
               <style dangerouslySetInnerHTML={{
                 __html: `
-                @keyframes msgPop0 {
-                  0% { opacity: 0; transform: translateY(15px) scale(0.97); }
-                  3% { opacity: 1; transform: translateY(0) scale(1); }
-                  93% { opacity: 1; transform: translateY(0) scale(1); }
-                  96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
-                }
-                @keyframes msgPop1 {
-                  0%, 17% { opacity: 0; transform: translateY(15px) scale(0.97); }
-                  20% { opacity: 1; transform: translateY(0) scale(1); }
-                  93% { opacity: 1; transform: translateY(0) scale(1); }
-                  96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
-                }
-                @keyframes msgPop2 {
-                  0%, 33% { opacity: 0; transform: translateY(15px) scale(0.97); }
-                  37% { opacity: 1; transform: translateY(0) scale(1); }
-                  93% { opacity: 1; transform: translateY(0) scale(1); }
-                  96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
-                }
-                @keyframes msgPop3 {
-                  0%, 50% { opacity: 0; transform: translateY(15px) scale(0.97); }
-                  54% { opacity: 1; transform: translateY(0) scale(1); }
-                  93% { opacity: 1; transform: translateY(0) scale(1); }
-                  96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
-                }
-                @keyframes msgPop4 {
-                  0%, 67% { opacity: 0; transform: translateY(15px) scale(0.97); }
-                  71% { opacity: 1; transform: translateY(0) scale(1); }
-                  93% { opacity: 1; transform: translateY(0) scale(1); }
-                  96%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); }
+                .dark-map {
+                  filter: invert(90%) hue-rotate(180deg);
                 }
               `}} />
 
@@ -140,8 +169,12 @@ export default function TestSection() {
                   </svg>
 
                   {/* Group Avatar */}
-                  <div className="h-10 w-10 rounded-full bg-zinc-200/20 flex items-center justify-center font-semibold text-xs border border-white/10">
-                    Group
+                  <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0 border border-white/20 select-none">
+                    <img
+                      src="/icon.png"
+                      alt="Group Logo"
+                      className="h-8 w-8 object-contain"
+                    />
                   </div>
 
                   {/* Header Information */}
@@ -166,7 +199,7 @@ export default function TestSection() {
               </div>
 
               {/* Chat Area */}
-              <div className="p-4 space-y-4 min-h-[400px] max-h-[440px] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div ref={chatContainerRef} className="p-4 space-y-4 h-[400px] overflow-y-auto scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
                 {/* Date Separator */}
                 <div className="flex justify-center my-2">
@@ -176,66 +209,82 @@ export default function TestSection() {
                 </div>
 
                 {/* Chat Messages */}
-                {chatMessages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-2.5 transition-all duration-300 hover:translate-x-1"
-                    style={{
-                      animation: `msgPop${index} 15s infinite ease-in-out`,
-                      opacity: 0
-                    }}
-                  >
-                    {/* Avatar */}
-                    <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-xs shrink-0 text-sm select-none ${msg.avatarColor}`}>
-                      {msg.avatarLabel}
-                    </div>
+                {messages.map((msg, index) => {
+                  const isOutgoing = msg.role === 'You' || msg.isOutgoing;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex items-start gap-2.5 transition-all duration-300 hover:translate-x-1 animate-[fadeIn_0.3s_ease-out] ${
+                        isOutgoing ? 'flex-row-reverse justify-start' : ''
+                      }`}
+                    >
+                      {/* Avatar */}
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center shadow-xs shrink-0 text-sm select-none ${msg.avatarColor}`}>
+                        {msg.avatarLabel}
+                      </div>
 
-                    {/* Message Bubble */}
-                    <div className="bg-white rounded-2xl rounded-tl-none px-3.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.08)] max-w-[82%] relative flex flex-col">
-                      <span className="text-[11px] font-bold text-[#FF4F18] mb-0.5 leading-none">
-                        {msg.role}
-                      </span>
-                      <p className="text-[13px] text-zinc-800 leading-snug pr-8 py-0.5">
-                        {msg.text}
-                      </p>
-                      <span className="text-[9px] text-zinc-400 absolute bottom-1 right-2 leading-none">
-                        {msg.time}
-                      </span>
+                      {/* Message Bubble */}
+                      <div className={`rounded-2xl px-3.5 py-2 shadow-[0_1px_2px_rgba(0,0,0,0.08)] max-w-[82%] relative flex flex-col ${
+                        isOutgoing 
+                          ? 'bg-[#D9FDD3] rounded-tr-none text-zinc-900' 
+                          : 'bg-white rounded-tl-none text-zinc-800'
+                      }`}>
+                        <span className={`text-[11px] font-bold mb-0.5 leading-none ${
+                          isOutgoing ? 'text-[#00a884]' : 'text-[#FF4F18]'
+                        }`}>
+                          {msg.role}
+                        </span>
+                        <p className="text-[13px] leading-snug pr-8 py-0.5 whitespace-pre-wrap break-words">
+                          {msg.text}
+                        </p>
+                        <span className="text-[9px] text-zinc-400 absolute bottom-1 right-2 leading-none">
+                          {msg.time}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Mock Chat Input Bar */}
-              <div className="bg-[#F0F2F5] px-3 py-3 border-t border-zinc-200/50 flex items-center gap-2 select-none">
-                <div className="flex items-center gap-2.5 bg-white rounded-full px-3 py-2 flex-1 shadow-xs border border-zinc-200/20">
+              <form onSubmit={handleSendMessage} className="bg-[#F0F2F5] px-3 py-3 border-t border-zinc-200/50 flex items-center gap-2 select-none">
+                <div className="flex items-center gap-2 bg-white rounded-full px-3.5 py-1.5 flex-1 shadow-xs border border-zinc-200/20">
                   {/* Emoji Icon */}
-                  <svg className="h-5.5 w-5.5 text-zinc-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="h-5.5 w-5.5 text-zinc-500 cursor-pointer shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
 
-                  {/* Text Field */}
-                  <span className="text-zinc-400 text-xs flex-1 cursor-text">Type a message</span>
+                  {/* Text Field input */}
+                  <input
+                    type="text"
+                    value={typedMessage}
+                    onChange={(e) => setTypedMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    className="w-full bg-transparent text-zinc-800 text-xs focus:outline-none placeholder-zinc-400"
+                  />
 
                   {/* Attachment Icon */}
-                  <svg className="h-5 w-5 text-zinc-500 cursor-pointer -rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="h-5 w-5 text-zinc-500 cursor-pointer -rotate-45 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                  </svg>
-
-                  {/* Camera Icon */}
-                  <svg className="h-5 w-5 text-zinc-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
 
-                {/* Microphone Button */}
-                <button className="bg-[#00a884] h-9 w-9 rounded-full flex items-center justify-center text-white shadow-sm shrink-0 active:scale-95 transition-transform">
-                  <svg className="h-5.5 w-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
+                {/* Send/Microphone Button */}
+                <button 
+                  type="submit"
+                  className="bg-[#00a884] h-9 w-9 rounded-full flex items-center justify-center text-white shadow-sm shrink-0 active:scale-95 transition-transform cursor-pointer"
+                >
+                  {typedMessage.trim() ? (
+                    <svg className="h-5 w-5 fill-current text-white pl-0.5" viewBox="0 0 24 24">
+                      <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5.5 w-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  )}
                 </button>
-              </div>
+              </form>
 
             </div>
           </div>

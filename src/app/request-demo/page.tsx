@@ -5,6 +5,9 @@ import DemoForm from '../../components/request-demo/DemoForm';
 import RestaurantOSPage from '../../components/home/RestaurantOS';
 import FAQPage from '../../components/home/FAQ';
 import FooterPage from '../../components/Footer';
+import ScrollFocusWrapper from '../../components/ScrollFocusWrapper';
+import SolutionsStats from '../../components/solutions/SolutionsStats';
+import ToolIntegrations from '../../components/solutions/ToolIntegrations';
 import { generateSeoMetadata } from "@/lib/seo";
 
 export async function generateMetadata() {
@@ -28,12 +31,22 @@ export default function RequestDemoPage() {
 
         {/* Demo Booking Form */}
         <DemoForm />
+
+        {/* Counter Section */}
+        <ScrollFocusWrapper>
+          <SolutionsStats />
+        </ScrollFocusWrapper>
+
+        {/* Favorite Apps Section */}
+        <ScrollFocusWrapper>
+          <ToolIntegrations />
+        </ScrollFocusWrapper>
+
         {/* FAQs */}
         <FAQPage />
+
         {/* Testimonials (Chaos Stories) */}
         <RestaurantOSPage />
-
-
 
         {/* Footer */}
         <FooterPage />

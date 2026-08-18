@@ -99,7 +99,7 @@ export default function InsightsPage() {
   const renderCard = (item: InsightItem, isSlider: boolean = false) => {
     return (
       <Link 
-        href={`/blog/${item.slug}`}
+        href={`/blogs/${item.slug}`}
         className="flex flex-col h-full bg-white rounded-[28px] border border-zinc-200/60 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.01)] transition-all duration-300 hover:bg-zinc-50/50 group block cursor-pointer"
       >
         {/* Top Banner Graphic area - Full bleed image */}
@@ -146,7 +146,7 @@ export default function InsightsPage() {
           
           <div>
             <Link
-              href="/blog"
+              href="/blogs"
               className="inline-flex justify-center items-center text-center rounded-full border border-zinc-200 bg-white px-6 py-2.5 text-[15px] font-semibold text-zinc-900 transition-all duration-200 hover:bg-zinc-50 active:scale-[0.98] cursor-pointer"
             >
               <span>View all</span>

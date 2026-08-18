@@ -60,7 +60,7 @@ function BlogDetails({ blog }: BlogDetailsProps) {
     <article className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-20 animate-fade-in">
       {/* Back link */}
       <Link 
-        href="/blog" 
+        href="/blogs" 
         className="inline-flex items-center text-zinc-500 dark:text-zinc-400 hover:text-[#FF4F18] dark:hover:text-[#FF4F18] transition-colors mb-8 md:mb-12 font-bold text-xs uppercase tracking-widest gap-2 group"
       >
         <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" /> 

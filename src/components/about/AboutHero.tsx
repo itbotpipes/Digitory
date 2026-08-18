@@ -45,9 +45,9 @@ export default function AboutHero() {
 
         {/* Right Image Column */}
         <div className="lg:col-span-5 flex justify-center w-full relative">
-          <div className="relative w-full max-w-[500px] lg:max-w-[560px] aspect-[4/5] flex items-center justify-center">
+          <div className="relative w-full max-w-[500px] lg:max-w-[560px] aspect-[4/5] flex items-center justify-center select-none">
             <Image
-              src="/mascot_new.png"
+              src="/mascot_neww.png"
               alt="About Digitory Mascot"
               width={540}
               height={675}
@@ -56,8 +56,8 @@ export default function AboutHero() {
         w-full
         h-full
         object-contain
-        scale-[1.05]
-        hover:scale-[1.08]
+        scale-[1.02]
+        hover:scale-[1.05]
         transition-transform
         duration-500
         ease-out

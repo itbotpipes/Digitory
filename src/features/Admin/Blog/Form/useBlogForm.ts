@@ -12,6 +12,7 @@ const Schema = yup.object({
     .mixed<File | string>()
     .required("cover image is required"),
   category: yup.string().optional(),
+  author: yup.string().optional(),
   tags: yup
     .array()
     .of(yup.object({ tag: yup.string().required("tag is required") }))
@@ -34,6 +35,7 @@ export type PostRecord = {
   content: string;
   featuredImage?: string;
   category?: any;
+  author?: any;
   status: 'Draft' | 'Published';
   tags?: string[];
   seo?: {
@@ -62,6 +64,7 @@ export function useBlogForm(
       content: item?.content || "",
       featuredImage: item?.featuredImage || "",
       category: item?.category?._id || item?.category || "",
+      author: item?.author?._id || item?.author || "",
       tags: item?.tags?.map(t => ({ tag: t })) || [],
       status: item?.status || 'Draft',
       seo_title: item?.seo?.metaTitle || "",
@@ -79,6 +82,7 @@ export function useBlogForm(
       content: description,
       featuredImage: typeof data.featuredImage === 'string' ? data.featuredImage : undefined,
       category: data.category,
+      author: data.author || undefined,
       status: data.status,
       tags: data.tags?.map(t => t.tag) || [],
       seo: {

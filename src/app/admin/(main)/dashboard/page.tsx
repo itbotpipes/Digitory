@@ -5,9 +5,9 @@ import { api } from '@/lib/api';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ activeTabProp }: { activeTabProp?: 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users' | 'admins' | 'roles' | 'pages' }) {
   const searchParams = useSearchParams();
-  const tabParam = searchParams?.get('tab') || 'leads';
+  const tabParam = activeTabProp || searchParams?.get('tab') || 'leads';
   const activeTab = ['leads', 'contacts', 'updates', 'blogs', 'solutions', 'industries', 'comments', 'users', 'admins', 'roles', 'pages'].includes(tabParam)
     ? (tabParam as 'leads' | 'contacts' | 'updates' | 'blogs' | 'solutions' | 'industries' | 'comments' | 'users' | 'admins' | 'roles' | 'pages')
     : 'leads';
@@ -210,7 +210,8 @@ export default function AdminDashboard() {
             // Redirect to first available tab they have permission for
             const allowedTab = Object.keys(tabPermissions).find(tab => perms.includes(tabPermissions[tab]));
             if (allowedTab) {
-              window.location.href = `/admin/dashboard?tab=${allowedTab}`;
+              const directSlug = allowedTab === 'leads' ? 'leads' : allowedTab === 'contacts' ? 'contacts' : allowedTab;
+              window.location.href = `/admin/${directSlug}`;
               return;
             }
           }
@@ -692,8 +693,60 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div className="w-full sm:w-auto flex gap-2">
-                  <button type="submit" className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] transition-colors">
+                  <button type="submit" className="bg-[#FF4F18] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#E03F0D] transition-colors cursor-pointer">
                     Search
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        const headers = activeTab === 'leads'
+                          ? ['Name', 'Phone', 'Email', 'Business Name', 'Category', 'Purpose', 'Status', 'Created At', 'Last Contacted', 'Call Notes']
+                          : ['Name', 'Phone', 'Email', 'Business Name', 'Category', 'Purpose', 'Status', 'Message', 'Created At', 'Last Contacted', 'Call Notes'];
+                        
+                        const rows = data.map((item: any) => {
+                          const base = [
+                            `"${(item.name || '').replace(/"/g, '""')}"`,
+                            `"${(item.phone || '').replace(/"/g, '""')}"`,
+                            `"${(item.email || '').replace(/"/g, '""')}"`,
+                            `"${(item.businessName || '').replace(/"/g, '""')}"`,
+                            `"${(item.category || '').replace(/"/g, '""')}"`,
+                            `"${(item.purpose || '').replace(/"/g, '""')}"`,
+                            `"${(item.status || '').replace(/"/g, '""')}"`
+                          ];
+                          if (activeTab === 'contacts') {
+                            base.push(`"${(item.message || '').replace(/"/g, '""')}"`);
+                          }
+                          base.push(
+                            `"${item.createdAt ? new Date(item.createdAt).toLocaleString() : ''}"`,
+                            `"${item.lastContactedDate ? new Date(item.lastContactedDate).toLocaleString() : ''}"`,
+                            `"${(item.callNotes || '').replace(/"/g, '""')}"`
+                          );
+                          return base.join(',');
+                        });
+
+                        const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' 
+                          + [headers.join(','), ...rows].join('\n');
+                        
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement('a');
+                        link.setAttribute('href', encodedUri);
+                        link.setAttribute('download', `${activeTab}_export_${new Date().toISOString().slice(0, 10)}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        showToast('Exported successfully!', 'success');
+                      } catch (err) {
+                        console.error(err);
+                        showToast('Export failed', 'error');
+                      }
+                    }}
+                    className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors cursor-pointer flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Export Excel
                   </button>
                   {(leadSearch || leadStatusFilter || leadStartDate || leadEndDate) && (
                     <button 
@@ -932,6 +985,7 @@ export default function AdminDashboard() {
                       <th className="px-6 py-4 font-semibold">Name</th>
                       <th className="px-6 py-4 font-semibold">Comment</th>
                       <th className="px-6 py-4 font-semibold">Post</th>
+                      <th className="px-6 py-4 font-semibold">Likes</th>
                       <th className="px-6 py-4 font-semibold">Date</th>
                       <th className="px-6 py-4 font-semibold">Actions</th>
                     </>
@@ -1116,6 +1170,9 @@ export default function AdminDashboard() {
                             )}
                           </td>
                          <td className="px-6 py-4 max-w-[200px] truncate">{item.post?.title || 'Unknown Post'}</td>
+                         <td className="px-6 py-4 font-semibold text-zinc-650 dark:text-zinc-400">
+                           ❤️ {item.likesCount || item.likes?.length || 0}
+                         </td>
                          <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
                          <td className="px-6 py-4 space-x-2">
                            <button 

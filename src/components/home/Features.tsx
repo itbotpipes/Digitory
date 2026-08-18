@@ -104,7 +104,7 @@ export default function Features() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-10 md:mb-12">
           {/* Heading */}
           <div className="lg:col-span-7">
-            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] leading-[1.15]">
+            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight text-[#111111] dark:text-white leading-[1.15]">
               When your restaurant gets busy,
               <br />
               <span className="text-[#FF4F18]"> Digitory keeps everything running smoothly.</span>
@@ -113,7 +113,7 @@ export default function Features() {
 
           {/* Description & Action */}
           <div className="lg:col-span-5 flex flex-col items-start gap-6">
-            <p className="text-zinc-600 text-base md:text-lg leading-relaxed max-w-md">
+            <p className="text-zinc-600 dark:text-zinc-400 text-base md:text-lg leading-relaxed max-w-md">
               Connect your orders, kitchen, inventory, billing, and reports in one platform so your team can work faster and make fewer mistakes.
             </p>
             <Link
@@ -126,25 +126,25 @@ export default function Features() {
         </div>
 
         {/* Features Card Container with 3x2 inner grid */}
-        <div className="border border-zinc-200 rounded-[28px] overflow-hidden bg-white grid grid-cols-1 md:grid-cols-3">
+        <div className="border border-zinc-200 dark:border-zinc-800 rounded-[28px] overflow-hidden bg-white dark:bg-zinc-900 grid grid-cols-1 md:grid-cols-3">
           {features.map((item, idx) => {
             const borderClasses =
               idx === 0 || idx === 1
-                ? 'border-b border-zinc-200 md:border-r md:border-b'
+                ? 'border-b border-zinc-200 dark:border-zinc-800 md:border-r md:border-b'
                 : idx === 2
-                ? 'border-b border-zinc-200 md:border-b'
+                ? 'border-b border-zinc-200 dark:border-zinc-800 md:border-b'
                 : idx === 3 || idx === 4
-                ? 'border-b border-zinc-200 md:border-b-0 md:border-r'
+                ? 'border-b border-zinc-200 dark:border-zinc-800 md:border-b-0 md:border-r'
                 : 'border-b-0';
 
             return (
               <Link
                 key={idx}
                 href={`/solutions/${item.slug}`}
-                className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-50/50 cursor-pointer group ${borderClasses}`}
+                className={`p-8 sm:p-10 flex flex-col justify-start transition-all duration-300 hover:bg-zinc-100/60 dark:hover:bg-white/5 cursor-pointer group ${borderClasses}`}
               >
                 {/* Feature Index */}
-                <span className="text-sm font-bold text-zinc-400 mb-2">{item.num}</span>
+                <span className="text-sm font-bold text-zinc-400 dark:text-zinc-600 mb-2">{item.num}</span>
 
                 {/* Feature Image Mockup */}
                 <div className="w-full h-[140px] flex items-center justify-center my-4 select-none relative">
@@ -156,8 +156,8 @@ export default function Features() {
                 </div>
 
                 {/* Title & Description */}
-                <h3 className="text-lg font-bold text-zinc-950 mb-2 mt-4">{item.title}</h3>
-                <p className="text-zinc-550 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="text-lg font-bold text-zinc-950 dark:text-white mb-2 mt-4">{item.title}</h3>
+                <p className="text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
               </Link>
             );
           })}

@@ -157,7 +157,7 @@ export default function FooterPage() {
                     const isPhone = link.startsWith("+");
                     const hrefMap: Record<string, string> = {
                       "About": "/about",
-                      "Blog": "/blog",
+                      "Blog": "/blogs",
                       "Solutions": "/solutions",
                       "Contact": "/contact",
                       "Book a Demo": "/request-demo",

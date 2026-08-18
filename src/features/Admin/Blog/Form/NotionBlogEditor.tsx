@@ -41,7 +41,10 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
 }) => {
   const router = useRouter();
   const [categories, setCategories] = useState<{_id: string, name: string}[]>([]);
+  const [authors, setAuthors] = useState<{_id: string, name: string}[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
 
   const [activeTab, setActiveTab] = useState<"edit" | "seo" | "preview">("edit");
   const [seoGeneralOpen, setSeoGeneralOpen] = useState(true);
@@ -52,19 +55,22 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
   const [readingTime, setReadingTime] = useState(0);
 
   useEffect(() => {
-    // Fetch categories if available in backend
-    const fetchCats = async () => {
+    const fetchMeta = async () => {
       try {
         const token = localStorage.getItem('admin_token');
-        if (!token) return;
-        const res = await api.get('/categories', token);
-        const cats = res.data?.docs || res.data?.results || (Array.isArray(res.data) ? res.data : []);
+        const [catsRes, authorsRes] = await Promise.all([
+          api.get('/categories', token || undefined),
+          api.get('/users/authors'),
+        ]);
+        const cats = catsRes.data?.docs || catsRes.data?.results || (Array.isArray(catsRes.data) ? catsRes.data : []);
         setCategories(cats);
+        const authorList = authorsRes.data || [];
+        setAuthors(Array.isArray(authorList) ? authorList : []);
       } catch (err) {
-        console.error("Failed to fetch categories", err);
+        console.error('Failed to fetch metadata', err);
       }
     };
-    fetchCats();
+    fetchMeta();
   }, []);
 
   const { form, setDescription, handleSubmit } = useBlogForm(
@@ -83,7 +89,6 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
   const coverImageInputRef = useRef<HTMLInputElement>(null);
 
   const titleValue = form.watch("title");
-  const authorValue = "Admin";
   const slugValue = form.watch("slug");
   const excerptValue = form.watch("excerpt");
   const seoTitleValue = form.watch("seo_title");
@@ -241,7 +246,7 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#2c2c2c] bg-[#191919]/90 px-6 py-3 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => router.push("/admin/blogs")}
+            onClick={() => router.push("/admin/dashboard?tab=blogs")}
             className="flex items-center gap-1 rounded px-2 py-1 text-sm text-[#8c8c8c] hover:bg-[#252525] hover:text-white transition-all cursor-pointer"
             type="button"
           >
@@ -411,11 +416,11 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2 text-xs"><FolderOpen size={14} className="opacity-60" /><span>Category</span></div>
-                  <div>
+                  <div className="flex items-center gap-2 flex-wrap">
                     {categories && categories.length > 0 ? (
                       <select
                         {...form.register("category")}
-                        className="w-full bg-transparent text-white border-none outline-none focus:ring-0 p-0 text-sm focus:outline-none dark:bg-zinc-950"
+                        className="bg-transparent text-white border-none outline-none focus:ring-0 p-0 text-sm focus:outline-none dark:bg-zinc-950"
                       >
                         <option value="" className="bg-[#121214] text-zinc-400">Select Category (Optional)</option>
                         {categories.map((cat) => (
@@ -429,8 +434,56 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
                         type="text"
                         placeholder="Optional"
                         {...form.register("category")}
-                        className="w-full bg-transparent text-white border-none outline-none focus:ring-0 placeholder-[#3f3f3f] p-0 text-sm focus:outline-none"
+                        className="bg-transparent text-white border-none outline-none focus:ring-0 placeholder-[#3f3f3f] p-0 text-sm focus:outline-none"
                       />
+                    )}
+                    {/* Inline Create Category */}
+                    {isCreatingCategory ? (
+                      <div className="flex items-center gap-1.5 ml-2">
+                        <input
+                          type="text"
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          onKeyDown={async (e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              if (!newCategoryName.trim()) return;
+                              try {
+                                const token = localStorage.getItem('admin_token');
+                                const res = await api.post('/categories', { name: newCategoryName.trim() }, token || '');
+                                const newCat = res.data;
+                                setCategories(prev => [...prev, newCat]);
+                                form.setValue('category', newCat._id, { shouldDirty: true });
+                                setNewCategoryName('');
+                                setIsCreatingCategory(false);
+                              } catch (err) {
+                                console.error('Failed to create category', err);
+                              }
+                            }
+                            if (e.key === 'Escape') { setIsCreatingCategory(false); setNewCategoryName(''); }
+                          }}
+                          placeholder="Category name..."
+                          className="bg-[#202020] border border-[#2d2d2d] rounded px-1.5 py-0.5 text-xs text-white outline-none w-32"
+                          autoFocus
+                        />
+                        <button type="button" onClick={async () => {
+                          if (!newCategoryName.trim()) { setIsCreatingCategory(false); return; }
+                          try {
+                            const token = localStorage.getItem('admin_token');
+                            const res = await api.post('/categories', { name: newCategoryName.trim() }, token || '');
+                            const newCat = res.data;
+                            setCategories(prev => [...prev, newCat]);
+                            form.setValue('category', newCat._id, { shouldDirty: true });
+                            setNewCategoryName('');
+                            setIsCreatingCategory(false);
+                          } catch (err) {
+                            console.error('Failed to create category', err);
+                          }
+                        }} className="text-xs text-green-400 hover:text-green-300 font-bold cursor-pointer">✓</button>
+                        <button type="button" onClick={() => { setIsCreatingCategory(false); setNewCategoryName(''); }} className="text-xs text-red-400 hover:text-red-300 font-bold cursor-pointer">✕</button>
+                      </div>
+                    ) : (
+                      <button type="button" onClick={() => setIsCreatingCategory(true)} className="text-xs text-[#2eaadc] hover:underline cursor-pointer ml-2">+ New</button>
                     )}
                   </div>
 
@@ -439,6 +492,23 @@ const NotionBlogEditor: React.FC<NotionBlogEditorProps> = ({
                     <span>{readingTime || 1} min read</span>
                     <span className="opacity-20">•</span>
                     <span className="text-xs text-[#8c8c8c]">({wordCount} words, {charCount} chars)</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs"><User size={14} className="opacity-60" /><span>Author</span></div>
+                  <div>
+                    {authors.length > 0 ? (
+                      <select
+                        {...form.register("author")}
+                        className="bg-transparent text-white border-none outline-none focus:ring-0 p-0 text-sm focus:outline-none dark:bg-zinc-950"
+                      >
+                        <option value="" className="bg-[#121214] text-zinc-400">Select Author</option>
+                        {authors.map((a) => (
+                          <option key={a._id} value={a._id} className="bg-[#121214] text-white">{a.name}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className="text-sm text-[#8c8c8c]">Loading...</span>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-2 text-xs"><Tag size={14} className="opacity-60" /><span>Tags</span></div>

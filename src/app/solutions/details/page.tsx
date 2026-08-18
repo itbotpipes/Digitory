@@ -7,6 +7,7 @@ import FooterPage from '../../../components/Footer';
 import OperationsReveal from '../../../components/solutions/OperationsReveal';
 import InsightsPage from '../../../components/home/Insights';
 import { solutionsDb, SolutionData } from '../../data/solutionsDb';
+import SolutionsDetailsCta from '../../../components/solutions/SolutionsDetailsCta';
 import { api } from '@/lib/api';
 
 function SolutionsDetailsContent() {
@@ -566,51 +567,11 @@ function SolutionsDetailsContent() {
         {/* 10. Latest Insights Section */}
         <InsightsPage />
 
-        <section className="mx-auto max-w-7xl px-6 md:px-8 py-16 md:py-24 bg-white dark:bg-[#0d0d0e]">
-          {/* Top accent line */}
-          <div className="w-16 h-1 bg-[#FF4F18] mx-auto mb-12" />
-          
-          <div className="text-center max-w-3xl mx-auto space-y-6">
-            <h2 className="text-3xl sm:text-4xl md:text-[44px] font-[850] tracking-tight leading-[1.15] text-zinc-900 dark:text-white">
-              {(() => {
-                const words = (solution.ctaBlock.title || '').split(' ');
-                if (words.length <= 1) return solution.ctaBlock.title;
-                const splitIndex = words.length - 2;
-                return (
-                  <>
-                    {words.slice(0, splitIndex).join(' ')}{' '}
-                    <span className="text-[#FF4F18]">{words.slice(splitIndex).join(' ')}</span>
-                  </>
-                );
-              })()}
-            </h2>
-            <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-              {solution.ctaBlock.desc}
-            </p>
-          </div>
-
-          {/* Trust indicators row */}
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-10 mb-12">
-            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              No setup fee
-            </div>
-            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Free 15-min demo
-            </div>
-            <div className="flex items-center gap-2.5 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Go live in 48 hours
-            </div>
-          </div>
-
-          <div className="text-center">
-            <button className="inline-flex justify-center items-center rounded-full bg-[#FF4F18] px-10 py-4 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#E03F0D] shadow-[0_8px_20px_rgba(255,79,24,0.35)] hover:shadow-[0_10px_24px_rgba(255,79,24,0.45)] active:scale-[0.98] cursor-pointer">
-              Book a Demo
-            </button>
-          </div>
-        </section>
+        {/* 11. CTA Section */}
+        <SolutionsDetailsCta 
+          title={solution.ctaBlock?.title} 
+          desc={solution.ctaBlock?.desc} 
+        />
 
       </main>
 

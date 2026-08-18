@@ -884,7 +884,7 @@ export default function ClientPage({ article, similarArticles: initialSimilar = 
                 {similarPosts.map((simArticle) => (
                   <Link
                     key={simArticle.slug}
-                    href={`/blog/${simArticle.slug}`}
+                    href={`/blogs/${simArticle.slug}`}
                     className="group flex flex-col"
                   >
                     <div className="relative aspect-16/10 w-full overflow-hidden rounded-[24px] bg-zinc-100 dark:bg-zinc-900 mb-3.5 border border-zinc-200/60 dark:border-zinc-800/60 shadow-2xs">

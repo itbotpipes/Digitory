@@ -18,7 +18,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const requiredReason = searchParams.get('required');
-  const redirectTo = searchParams.get('redirect') || '/blog';
+  const redirectTo = searchParams.get('redirect') || '/blogs';
 
   React.useEffect(() => {
     const loadGoogleGSI = () => {

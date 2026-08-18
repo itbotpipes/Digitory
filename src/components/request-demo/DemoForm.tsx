@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { api } from '../../lib/api';
 
 export default function DemoForm() {
@@ -14,23 +14,20 @@ export default function DemoForm() {
     message: '',
   });
 
-  const [categories, setCategories] = useState<string[]>([]);
+  const categories = [
+    'Pop-up restaurant & food truck',
+    'Restaurant & retail hybrid',
+    'Casual & fine dining',
+    'Pizzeria, café & ice cream parlour',
+    'Cloud Kitchen',
+    'Quick Service Restaurant (QSR)',
+    'Micro Brewery',
+    'Nightclub & dance floor',
+    'Bar & restaurant',
+  ];
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await api.get('/industries');
-        const list = res.data?.docs || res.data || [];
-        setCategories(list.map((item: any) => item.title || item.shortLabel));
-      } catch (err) {
-        console.error('Failed to load categories', err);
-        setCategories(['Restaurant', 'Hotel', 'Cloud Kitchen']);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
