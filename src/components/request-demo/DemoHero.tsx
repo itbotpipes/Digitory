@@ -102,21 +102,19 @@ export default function DemoHero() {
       <section className="relative h-[80vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         {/* Background Video */}
         <div className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover scale-[1.01]"
-          >
-            <source src="/digitor-video.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          {/* Overlay Gradient for high contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/85" />
-        </div>
-      </section>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover scale-[1.01]"
+        >
+          <source src="/Digitory.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
     </>
   );
 }

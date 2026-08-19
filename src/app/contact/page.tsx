@@ -94,11 +94,9 @@ export default function ContactPage() {
               preload="auto"
               className="w-full h-full object-cover scale-[1.01]"
             >
-              <source src="/digitor-video.mp4" type="video/mp4" />
+              <source src="/Digitory.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            {/* Overlay Gradient for high contrast */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/85" />
           </div>
         </section>
 
