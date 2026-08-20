@@ -99,10 +99,10 @@ export default function DemoHero() {
       </section> */}
 
       {/* Cinematic Video Hero Section */}
-      <section className="relative h-[80vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
+      <section className="relative w-full h-[50vh] md:h-[80vh] md:min-h-[500px] flex items-center justify-center overflow-hidden">
         {/* Background Video */}
         <div className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none">
-          {/* Desktop Video */}
+          {/* Desktop Version */}
           <video
             autoPlay
             loop
@@ -114,7 +114,7 @@ export default function DemoHero() {
             <source src="/Digitory.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          {/* Mobile Video */}
+          {/* Mobile Version */}
           <video
             autoPlay
             loop
