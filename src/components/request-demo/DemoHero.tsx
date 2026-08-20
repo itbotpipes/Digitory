@@ -102,19 +102,32 @@ export default function DemoHero() {
       <section className="relative h-[80vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         {/* Background Video */}
         <div className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="w-full h-full object-cover scale-[1.01]"
-        >
-          <source src="/Digitory.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </section>
+          {/* Desktop Video */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="hidden md:block w-full h-full object-cover scale-[1.01]"
+          >
+            <source src="/Digitory.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {/* Mobile Video */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="block md:hidden w-full h-full object-cover scale-[1.01]"
+          >
+            <source src="/mobile.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
     </>
   );
 }
