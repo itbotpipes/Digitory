@@ -428,15 +428,11 @@ export default function Capabilities() {
       {/* Digitory AI Layer */}
       <div className="mt-24 border border-zinc-200/60 dark:border-zinc-800/60 rounded-[32px] p-8 md:p-12 lg:p-16">
         <div className="max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 mb-6">
-            <span className="text-[11px] font-extrabold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">The Intelligence Layer</span>
-          </div>
-
           <h3 className="text-3xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-6">
-            Digitory AI
+            Digitory <span className="text-[#FF4F18]">AI</span>
           </h3>
           
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed mb-10 max-w-3xl">
+          <p className="text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed mb-10 max-w-3xl">
             Forecasting, procurement, and anomaly detection built into every layer — so the system tells you what's coming, not just what happened. Not a bolt-on feature: a layer that touches inventory, procurement, analytics, and every outlet, and gets stronger with each release.
           </p>
 
