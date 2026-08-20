@@ -12,9 +12,8 @@ export default function CtaSection({ title, desc }: SolutionsDetailsCtaProps) {
       return (
         <>
           Still facing <span className="text-[#FF4F18]">issues</span> in your restaurant?
-          <br />
           <span className="block mt-4">
-            Try our <span className="text-[#FF4F18]">smart</span> and <span className="text-[#FF4F18]">free</span> Demo
+            Try our <span className="text-[#FF4F18]">free smart</span> Demo
           </span>
         </>
       );
